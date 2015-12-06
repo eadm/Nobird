@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Nobird</string>
+    <string name="sign_in_button">Войти через Твиттер</string>
+    <string name="action_settings">Настройки</string>
+    <string name="error_twitter_api">Критическая ошибка API Твиттера</string>
+    <string name="processing">Загрузка...</string>
+</resources>

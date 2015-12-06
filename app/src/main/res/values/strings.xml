@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name" translatable="false">Nobird</string>
+    <string name="action_settings">Settings</string>
+    <string name="sign_in_button">Sign in with Twitter</string>
+    <string name="error_twitter_api">Crititcal Twitter API error</string>
+    <string name="processing">Processing...</string>
+</resources>
