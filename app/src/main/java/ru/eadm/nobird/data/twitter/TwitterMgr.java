@@ -28,7 +28,6 @@ public class TwitterMgr {
     private Twitter twitter;
 
     private TwitterMgr(final Context context) {
-
         Log.d(TwitterMgr.TAG, "create new twitter");
         this.context = context;
         factory = new TwitterFactory();
@@ -61,4 +60,12 @@ public class TwitterMgr {
     public synchronized void authFailure() {
         login = null;
     }
+
+//    public User getUser(final long userID) throws TwitterException {
+//        if (twitter != null) {
+//            return twitter.showUser(userID);
+//        } else {
+//
+//        }
+//    }
 }

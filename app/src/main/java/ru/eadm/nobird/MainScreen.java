@@ -1,20 +1,20 @@
 package ru.eadm.nobird;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.fragment.Account;
+import ru.eadm.nobird.fragment.Home;
+import ru.eadm.nobird.listener.FragmentManager;
 import ru.eadm.nobird.notification.NotificationMgr;
 
-public class MainScreen extends AppCompatActivity {
+public class MainScreen extends AppCompatActivity implements FragmentManager {
     public static final String TAG = "mainScreen_activity";
 
     @Override
@@ -25,10 +25,10 @@ public class MainScreen extends AppCompatActivity {
         setContentView(R.layout.activity_main_screen);
         if (savedInstanceState == null) {
             if (PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID) != 0) {
-                /// timeline fragment
+                addFragment(0, new Home(), false);
                 NotificationMgr.getInstance().showSnackbar("Hello " + PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID), findViewById(R.id.fragment_container));
             } else {
-                getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, new Account(), Account.TAG).commit();
+                addFragment(0, new Account(), false);
             }
         } else {
             Log.d(MainScreen.TAG, "rotated: " + savedInstanceState.getBoolean("rotated"));
@@ -73,5 +73,25 @@ public class MainScreen extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("rotated", true);
+    }
+
+    @Override
+    public void addFragment(final int rootID, final Fragment fragment, final boolean backStack) {
+        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add((rootID == 0 ? R.id.fragment_container : rootID), fragment, fragment.getTag());
+        if (backStack) {
+            transaction.addToBackStack(null);
+        }
+        transaction.commit();
+    }
+
+    @Override
+    public void replaceFragment(final int rootID, final Fragment fragment, final boolean backStack) {
+        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace((rootID == 0 ? R.id.fragment_container : rootID), fragment, fragment.getTag());
+        if (backStack) {
+            transaction.addToBackStack(null);
+        }
+        transaction.commit();
     }
 }

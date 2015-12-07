@@ -26,4 +26,9 @@ public final class NotificationMgr {
         Snackbar.make(container, message, Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
     }
+
+    public void showSnackbar(final int messageID, final View container) {
+        Snackbar.make(container, context.getText(messageID), Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+    }
 }
