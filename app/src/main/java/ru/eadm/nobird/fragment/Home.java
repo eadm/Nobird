@@ -1,11 +1,15 @@
 package ru.eadm.nobird.fragment;
 
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NavUtils;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,21 +17,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ru.eadm.nobird.R;
+import ru.eadm.nobird.data.FontMgr;
 import ru.eadm.nobird.data.ImageMgr;
 import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.database.DBMgr;
 import ru.eadm.nobird.data.types.AccountElement;
+import ru.eadm.nobird.fragment.adapter.HomeViewPagerAdapter;
 import ru.eadm.nobird.notification.NotificationMgr;
 
-/**
- * Created by ruslandavletshin on 07/12/15.
- */
-public class Home extends Fragment {
+
+public class Home extends Fragment implements View.OnClickListener{
     public static final String TAG = "home_fragment";
     private TextView nameTextView, usernameTextView;
     private AccountElement account;
     private DrawerLayout page;
     private ImageView userImageView;
+
+
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -36,7 +42,9 @@ public class Home extends Fragment {
         page = (DrawerLayout) inflater.inflate(R.layout.fragment_home, container, false);
 
         nameTextView = (TextView) page.findViewById(R.id.drawer_info_name);
+        nameTextView.setTypeface(FontMgr.getInstance().RobotoLigth);
         usernameTextView = (TextView) page.findViewById(R.id.drawer_info_username);
+        usernameTextView.setTypeface(FontMgr.getInstance().RobotoLigth);
         userImageView = (ImageView) page.findViewById(R.id.drawer_info_image);
 
         if (savedInstanceState != null) {
@@ -45,6 +53,19 @@ public class Home extends Fragment {
         } else {
             new AccountInitTask().execute();
         }
+
+        final ViewPager viewPager = (ViewPager) page.findViewById(R.id.fragment_home_view_pager);
+        final HomeViewPagerAdapter adapter = new HomeViewPagerAdapter(getChildFragmentManager());
+
+        adapter.add(new Feed(), getString(R.string.fragment_home_tab_feed));
+        adapter.add(new Feed(), getString(R.string.fragment_home_tab_mentions));
+
+        viewPager.setAdapter(adapter);
+
+        final TabLayout tabLayout = (TabLayout) page.findViewById(R.id.fragment_home_tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
+        page.findViewById(R.id.fragment_home_menu).setOnClickListener(this);
+
 
         return page;
     }
@@ -83,6 +104,13 @@ public class Home extends Fragment {
             } else {
                 NotificationMgr.getInstance().showSnackbar(R.string.error_account_init, page);
             }
+        }
+    }
+
+    @Override
+    public void onClick(final View view) {
+        if (view.getId() == R.id.fragment_home_menu) {
+            page.openDrawer(GravityCompat.START); // only open cause we can't press it when drawer opened
         }
     }
 }

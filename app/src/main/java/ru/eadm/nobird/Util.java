@@ -4,6 +4,7 @@ import android.content.Context;
 
 import ru.eadm.nobird.data.FontMgr;
 import ru.eadm.nobird.data.ImageMgr;
+import ru.eadm.nobird.data.MemoryMgr;
 import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.database.DBMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
@@ -16,6 +17,7 @@ public final class Util {
         FontMgr.init(context);
         ImageMgr.init(context);
         TwitterMgr.init(context);
+        MemoryMgr.init(context);
         NotificationMgr.init(context);
         PreferenceMgr.init(context);
     }

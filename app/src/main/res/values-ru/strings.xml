@@ -6,4 +6,6 @@
     <string name="error_twitter_api">Критическая ошибка API Твиттера</string>
     <string name="processing">Загрузка...</string>
     <string name="error_account_init">Ошибка чтения учетной записи</string>
+    <string name="fragment_home_tab_feed">Лента</string>
+    <string name="fragment_home_tab_mentions">Упоминания</string>
 </resources>

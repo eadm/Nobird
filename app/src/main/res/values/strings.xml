@@ -5,4 +5,6 @@
     <string name="error_twitter_api">Crititcal Twitter API error</string>
     <string name="processing">Processing...</string>
     <string name="error_account_init">Unable to retrieve your account</string>
+    <string name="fragment_home_tab_feed">Feed</string>
+    <string name="fragment_home_tab_mentions">Mentions</string>
 </resources>
