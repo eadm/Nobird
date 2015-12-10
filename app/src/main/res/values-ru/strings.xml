@@ -8,4 +8,6 @@
     <string name="error_account_init">Ошибка чтения учетной записи</string>
     <string name="fragment_home_tab_feed">Лента</string>
     <string name="fragment_home_tab_mentions">Упоминания</string>
+    <string name="search">Поиск</string>
+    <string name="menu">Меню</string>
 </resources>

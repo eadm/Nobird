@@ -9,14 +9,15 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ru.eadm.nobird.R;
+import ru.eadm.nobird.data.types.TweetElement;
 
-public class FeedRecycleViewAdapter extends RecyclerView.Adapter<FeedRecycleViewAdapter.ViewHolder> {
-    private final ArrayList<String> data;
-    public FeedRecycleViewAdapter() {
+public class TweetRecycleViewAdapter extends RecyclerView.Adapter<TweetRecycleViewAdapter.ViewHolder> {
+    private final ArrayList<TweetElement> data;
+    public TweetRecycleViewAdapter() {
         this(null);
     }
 
-    public FeedRecycleViewAdapter(final ArrayList<String> data) {
+    public TweetRecycleViewAdapter(final ArrayList<TweetElement> data) {
         if (data != null) {
             this.data = data;
         } else {
@@ -24,7 +25,7 @@ public class FeedRecycleViewAdapter extends RecyclerView.Adapter<FeedRecycleView
         }
     }
 
-    public ArrayList<String> getData() {
+    public ArrayList<TweetElement> getData() {
         return data;
     }
 
@@ -38,7 +39,7 @@ public class FeedRecycleViewAdapter extends RecyclerView.Adapter<FeedRecycleView
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.textView.setText(data.get(position));
+        holder.textView.setText(data.get(position).text);
     }
 
     @Override
@@ -46,7 +47,7 @@ public class FeedRecycleViewAdapter extends RecyclerView.Adapter<FeedRecycleView
         return data.size();
     }
 
-    public void add(final String s) {
+    public void add(final TweetElement s) {
         data.add(s);
     }
 

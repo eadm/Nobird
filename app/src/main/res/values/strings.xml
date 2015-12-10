@@ -7,4 +7,6 @@
     <string name="error_account_init">Unable to retrieve your account</string>
     <string name="fragment_home_tab_feed">Feed</string>
     <string name="fragment_home_tab_mentions">Mentions</string>
+    <string name="search">Search</string>
+    <string name="menu">Menu</string>
 </resources>

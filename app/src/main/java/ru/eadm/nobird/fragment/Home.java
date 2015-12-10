@@ -58,13 +58,14 @@ public class Home extends Fragment implements View.OnClickListener{
         final HomeViewPagerAdapter adapter = new HomeViewPagerAdapter(getChildFragmentManager());
 
         adapter.add(new Feed(), getString(R.string.fragment_home_tab_feed));
-        adapter.add(new Feed(), getString(R.string.fragment_home_tab_mentions));
+        adapter.add(new Mentions(), getString(R.string.fragment_home_tab_mentions));
 
         viewPager.setAdapter(adapter);
 
         final TabLayout tabLayout = (TabLayout) page.findViewById(R.id.fragment_home_tab_layout);
         tabLayout.setupWithViewPager(viewPager);
         page.findViewById(R.id.fragment_home_menu).setOnClickListener(this);
+        page.findViewById(R.id.fragment_home_search).setOnClickListener(this);
 
 
         return page;
@@ -81,7 +82,6 @@ public class Home extends Fragment implements View.OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
     }
 
     @Override
@@ -109,8 +109,13 @@ public class Home extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(final View view) {
-        if (view.getId() == R.id.fragment_home_menu) {
-            page.openDrawer(GravityCompat.START); // only open cause we can't press it when drawer opened
+        switch (view.getId()) {
+            case R.id.fragment_home_menu: {
+                page.openDrawer(GravityCompat.START); // only open cause we can't press it when drawer opened
+            }
+            case R.id.fragment_home_search: {
+                // open search fragment
+            }
         }
     }
 }

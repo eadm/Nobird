@@ -30,8 +30,11 @@
                     android:id="@+id/fragment_home_menu"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+
                     android:src="@mipmap/ic_menu"
                     android:background="@drawable/hover_background_light"
+                    android:contentDescription="@string/menu"
+
                     android:paddingLeft="12dp"
                     android:paddingRight="12dp"/>
 
@@ -43,6 +46,21 @@
                     android:layout_toRightOf="@id/fragment_home_menu"
                     android:layout_toEndOf="@id/fragment_home_menu"
                     />
+
+                <ImageView
+                    android:id="@+id/fragment_home_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+
+                    android:src="@mipmap/search"
+                    android:background="@drawable/hover_background_light"
+                    android:contentDescription="@string/search"
+
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"/>
             </RelativeLayout>
         </android.support.design.widget.AppBarLayout>
 

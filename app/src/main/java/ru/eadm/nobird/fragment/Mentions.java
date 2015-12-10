@@ -9,8 +9,8 @@ import ru.eadm.nobird.fragment.state.AbsTweetRecycleViewState;
 import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewFragment;
 import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewRefreshTask;
 
-public final class Feed extends AbsTweetRecycleViewFragment{
-    public static final String TAG = "feed_fragment";
+public final class Mentions extends AbsTweetRecycleViewFragment{
+    public static final String TAG = "mentions_fragment";
 
     private ArrayList<TweetElement> getData() {
         final ArrayList<TweetElement> data = new ArrayList<>();
@@ -28,7 +28,7 @@ public final class Feed extends AbsTweetRecycleViewFragment{
 
     @Override
     protected AbsTweetRecycleViewRefreshTask createTask() {
-        return new FeedDataGetTask(this);
+        return new MentionsDataGetTask(this);
     }
 
     @Override
@@ -36,9 +36,9 @@ public final class Feed extends AbsTweetRecycleViewFragment{
         return FeedFragmentState.getInstance();
     }
 
-    private final class FeedDataGetTask extends AbsTweetRecycleViewRefreshTask {
-        private FeedDataGetTask(final Feed feed) {
-            super(feed);
+    private final class MentionsDataGetTask extends AbsTweetRecycleViewRefreshTask {
+        private MentionsDataGetTask(final Mentions fragment) {
+            super(fragment);
         }
 
         @Override
