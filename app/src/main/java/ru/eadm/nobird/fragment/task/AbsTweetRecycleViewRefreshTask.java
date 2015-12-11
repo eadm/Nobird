@@ -5,26 +5,34 @@ import android.os.AsyncTask;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.types.TweetElement;
+import ru.eadm.nobird.notification.NotificationMgr;
 
 public abstract class AbsTweetRecycleViewRefreshTask extends AsyncTask<Void, Void, ArrayList<TweetElement>> {
+    enum TaskState {
+        PROCESSING,
+        COMPLETED,
+        ERROR
+    }
+
     private WeakReference<AbsTweetRecycleViewFragment> fragment;
-    private boolean completed;
+    private TaskState taskState;
 
     public AbsTweetRecycleViewRefreshTask(final AbsTweetRecycleViewFragment fragment) {
         this.fragment = new WeakReference<>(fragment);
-        completed = false;
+        taskState = TaskState.PROCESSING;
     }
 
     public void attachFragment(final AbsTweetRecycleViewFragment fragment) {
         this.fragment = new WeakReference<>(fragment);
-        if (!completed) {
+        if (getState() == TaskState.PROCESSING) {
             fragment.setRefreshing(true);
         }
     }
 
-    public boolean isCompleted() {
-        return completed;
+    public TaskState getState() {
+        return taskState;
     }
 
     @Override
@@ -39,15 +47,21 @@ public abstract class AbsTweetRecycleViewRefreshTask extends AsyncTask<Void, Voi
 
     @Override
     protected void onPostExecute(ArrayList<TweetElement> data) {
-        super.onPostExecute(data);
-        if (fragment.get() != null) {
-            for (final TweetElement s : data) {
-                fragment.get().adapter.add(s);
-                fragment.get().adapter.notifyItemInserted(fragment.get().adapter.getItemCount() - 1);
+        if (data == null) {
+            taskState = TaskState.ERROR;
+            if (fragment.get() != null) {
+                NotificationMgr.getInstance().showSnackbar(R.string.error_twitter_api, fragment.get().refreshLayout);
             }
-            fragment.get().setRefreshing(false);
+        } else {
+            if (fragment.get() != null) {
+                for (final TweetElement s : data) {
+                    fragment.get().adapter.add(s);
+                    fragment.get().adapter.notifyItemInserted(fragment.get().adapter.getItemCount() - 1);
+                }
+            }
+            taskState = TaskState.COMPLETED;
         }
+        fragment.get().setRefreshing(false);
 
-        completed = true;
     }
 }
