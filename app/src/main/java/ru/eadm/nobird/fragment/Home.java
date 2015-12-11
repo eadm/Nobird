@@ -21,6 +21,7 @@ import ru.eadm.nobird.data.FontMgr;
 import ru.eadm.nobird.data.ImageMgr;
 import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.database.DBMgr;
+import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.AccountElement;
 import ru.eadm.nobird.fragment.adapter.HomeViewPagerAdapter;
 import ru.eadm.nobird.notification.NotificationMgr;
@@ -93,7 +94,10 @@ public class Home extends Fragment implements View.OnClickListener{
     private final class AccountInitTask extends AsyncTask<Void, Void, AccountElement> {
         @Override
         protected AccountElement doInBackground(Void... params) {
-            return DBMgr.getInstance().getAccount(PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID));
+            final AccountElement accountElement = DBMgr.getInstance()
+                    .getAccount(PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID));
+            TwitterMgr.getInstance().localAuth(accountElement);
+            return accountElement;
         }
 
         @Override

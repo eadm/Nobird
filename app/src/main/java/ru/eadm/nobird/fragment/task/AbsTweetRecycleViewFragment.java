@@ -53,19 +53,8 @@ public abstract class AbsTweetRecycleViewFragment extends Fragment implements Sw
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onActivityCreated(final Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         getState().setData(adapter.getData());
     }
-
 }

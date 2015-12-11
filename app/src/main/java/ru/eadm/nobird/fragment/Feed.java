@@ -4,20 +4,15 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.fragment.state.AbsTweetRecycleViewState;
 import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewFragment;
 import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewRefreshTask;
+import twitter4j.TwitterException;
 
 public final class Feed extends AbsTweetRecycleViewFragment{
     public static final String TAG = "feed_fragment";
-
-    private ArrayList<TweetElement> getData() {
-        final ArrayList<TweetElement> data = new ArrayList<>();
-        Log.d(Feed.TAG, "Data recreated");
-        for (int i = 0; i < 1000; i++) data.add(new TweetElement("Item: " + i));
-        return data;
-    }
 
     @Override
     public void onRefresh() {
@@ -43,15 +38,12 @@ public final class Feed extends AbsTweetRecycleViewFragment{
 
         @Override
         protected ArrayList<TweetElement> doInBackground(Void... params) {
-            for (int i = 0; i < 5; i ++) {
-                try {
-                    Thread.sleep(1000);
-                    Log.d(Feed.TAG, "Wait: " + (i + 1) * 1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            try {
+                return TwitterMgr.getInstance().getHomeTimeline(0, 0);
+            } catch (TwitterException e) {
+                Log.e(Feed.TAG, "Error: " + e.getMessage());
+                return null;
             }
-            return getData();
         }
     }
 

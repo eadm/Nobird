@@ -5,7 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ru.eadm.nobird.data.types.AccountElement;
+import ru.eadm.nobird.data.types.TweetElement;
+import twitter4j.Status;
 import twitter4j.User;
 import twitter4j.auth.AccessToken;
 
@@ -61,5 +66,13 @@ public final class DBMgr {
         }
         cursor.close();
         return account;
+    }
+
+    public ArrayList<TweetElement> saveStatuses(final List<Status> statuses) { // converts and saves statuses for N
+        final ArrayList<TweetElement> tweets = new ArrayList<>(statuses.size());
+        for (final Status status : statuses) {
+            tweets.add(new TweetElement(status.getText()));
+        }
+        return tweets;
     }
 }
