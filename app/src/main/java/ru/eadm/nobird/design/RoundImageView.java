@@ -37,7 +37,7 @@ public final class RoundImageView extends ImageView {
 
     @Override
     protected void onDraw(final Canvas canvas) {
-        // Round some corners betch!
+        final long time = System.currentTimeMillis();
         final Drawable maiDrawable = getDrawable();
         if (maiDrawable instanceof BitmapDrawable && mCornerRadius > 0) {
             final Paint paint = ((BitmapDrawable) maiDrawable).getPaint();
@@ -66,6 +66,8 @@ public final class RoundImageView extends ImageView {
             super.onDraw(canvas);
             paint.setXfermode(oldMode);
             canvas.restoreToCount(saveCount);
+
+//            Log.d("roundImage", System.currentTimeMillis() - time + "ms | " + bitmapBounds.width() + "x" + bitmapBounds.height());
         } else {
             super.onDraw(canvas);
         }

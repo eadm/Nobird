@@ -7,9 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +16,6 @@ import android.widget.TextView;
 import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.FontMgr;
 import ru.eadm.nobird.data.ImageMgr;
-import ru.eadm.nobird.data.PreferenceMgr;
-import ru.eadm.nobird.data.database.DBMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.AccountElement;
 import ru.eadm.nobird.fragment.adapter.HomeViewPagerAdapter;
@@ -43,9 +38,9 @@ public class Home extends Fragment implements View.OnClickListener{
         page = (DrawerLayout) inflater.inflate(R.layout.fragment_home, container, false);
 
         nameTextView = (TextView) page.findViewById(R.id.drawer_info_name);
-        nameTextView.setTypeface(FontMgr.getInstance().RobotoLigth);
+        nameTextView.setTypeface(FontMgr.getInstance().RobotoLight);
         usernameTextView = (TextView) page.findViewById(R.id.drawer_info_username);
-        usernameTextView.setTypeface(FontMgr.getInstance().RobotoLigth);
+        usernameTextView.setTypeface(FontMgr.getInstance().RobotoLight);
         userImageView = (ImageView) page.findViewById(R.id.drawer_info_image);
 
         if (savedInstanceState != null) {
@@ -94,10 +89,7 @@ public class Home extends Fragment implements View.OnClickListener{
     private final class AccountInitTask extends AsyncTask<Void, Void, AccountElement> {
         @Override
         protected AccountElement doInBackground(Void... params) {
-            final AccountElement accountElement = DBMgr.getInstance()
-                    .getAccount(PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID));
-            TwitterMgr.getInstance().localAuth(accountElement);
-            return accountElement;
+            return TwitterMgr.getInstance().localAuth();
         }
 
         @Override

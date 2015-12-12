@@ -8,6 +8,7 @@ import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemor
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.nostra13.universalimageloader.utils.StorageUtils;
@@ -24,8 +25,7 @@ public final class ImageMgr {
 
     public final ImageLoader imageLoader;
     public final PauseOnScrollListener listener;
-    public final DisplayImageOptions options;
-
+    public final DisplayImageOptions options, options_round;
 
     private ImageMgr(final Context context) {
         this.context = context;
@@ -49,6 +49,13 @@ public final class ImageMgr {
                 .showStubImage(R.drawable.bg_white_round)
                 .build();
 
+        options_round = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .showStubImage(R.drawable.bg_white_round)
+                .displayer(new RoundedBitmapDisplayer(999999)) // ~ infinite to get round
+                .build();
+
         listener = new PauseOnScrollListener(imageLoader, true, true);
     }
 
@@ -63,6 +70,6 @@ public final class ImageMgr {
     }
 
     public void displayImage(final String url, final ImageView i){
-        imageLoader.displayImage(url, i, options);
+        imageLoader.displayImage(url, i, options_round);
     }
 }

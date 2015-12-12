@@ -34,14 +34,14 @@ public final class Account extends Fragment implements View.OnClickListener {
         final View page = inflater.inflate(R.layout.fragment_account, container, false);
 
 
-        ((TextView) page.findViewById(R.id.account_fragment_title)).setTypeface(FontMgr.getInstance().RobotoLigth);
+        ((TextView) page.findViewById(R.id.account_fragment_title)).setTypeface(FontMgr.getInstance().RobotoLight);
 
         sign_in_button = (TextView) page.findViewById(R.id.account_fragment_sign_in);
-        sign_in_button.setTypeface(FontMgr.getInstance().RobotoLigth);
+        sign_in_button.setTypeface(FontMgr.getInstance().RobotoLight);
         sign_in_button.setOnClickListener(this);
 
         processing = (TextView) page.findViewById(R.id.account_fragment_processing);
-        processing.setTypeface(FontMgr.getInstance().RobotoLigth);
+        processing.setTypeface(FontMgr.getInstance().RobotoLight);
 
         webView = (WebView) page.findViewById(R.id.account_fragment_web);
         webView.setWebViewClient(new WebClient());

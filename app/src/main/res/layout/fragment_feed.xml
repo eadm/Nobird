@@ -2,10 +2,12 @@
 <android.support.v4.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        android:id="@+id/fragment_feed_recycle_view"/>
+        android:id="@+id/fragment_feed_recycle_view"
+        android:listDivider="@drawable/list_divider"/>
 </android.support.v4.widget.SwipeRefreshLayout>

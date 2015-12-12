@@ -5,15 +5,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import ru.eadm.nobird.R;
+import ru.eadm.nobird.data.ImageMgr;
+import ru.eadm.nobird.design.DividerItemDecoration;
 import ru.eadm.nobird.fragment.adapter.TweetRecycleViewAdapter;
 import ru.eadm.nobird.fragment.state.AbsTweetRecycleViewState;
 
 public abstract class AbsTweetRecycleViewFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+
     public SwipeRefreshLayout refreshLayout;
     public TweetRecycleViewAdapter adapter;
 
@@ -25,7 +29,7 @@ public abstract class AbsTweetRecycleViewFragment extends Fragment implements Sw
 
         final RecyclerView recyclerView = (RecyclerView) refreshLayout.findViewById(R.id.fragment_feed_recycle_view);
 
-        if (savedInstanceState == null) {
+        if (getState().getData() == null) {
             adapter = new TweetRecycleViewAdapter();
             getState().setTask(createTask());
             getState().getTask().execute();
@@ -39,6 +43,8 @@ public abstract class AbsTweetRecycleViewFragment extends Fragment implements Sw
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(
+                getContext(), R.drawable.list_divider, DividerItemDecoration.VERTICAL_LIST));
 
         return refreshLayout;
     }
@@ -48,7 +54,10 @@ public abstract class AbsTweetRecycleViewFragment extends Fragment implements Sw
 
     public void setRefreshing(final boolean state) {
         refreshLayout.post(new Runnable() {
-            @Override public void run() { refreshLayout.setRefreshing(state); }
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(state);
+            }
         });
     }
 

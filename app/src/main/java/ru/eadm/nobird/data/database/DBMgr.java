@@ -71,7 +71,14 @@ public final class DBMgr {
     public ArrayList<TweetElement> saveStatuses(final List<Status> statuses) { // converts and saves statuses for N
         final ArrayList<TweetElement> tweets = new ArrayList<>(statuses.size());
         for (final Status status : statuses) {
-            tweets.add(new TweetElement(status.getText()));
+            tweets.add(new TweetElement(
+                    status.getUser().getName(),
+                    status.getUser().getScreenName(),
+                    status.getUser().getOriginalProfileImageURL(),
+
+                    status.getText(),
+                    status.getCreatedAt()
+                    ));
         }
         return tweets;
     }

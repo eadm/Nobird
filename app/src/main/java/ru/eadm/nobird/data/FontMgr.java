@@ -7,7 +7,7 @@ public final class FontMgr {
     private final Context context;
     private static FontMgr instance;
 
-    public Typeface RobotoLigth;
+    public Typeface RobotoLight, RobotoMedium, RobotoSlabLight, RobotoSlabRegular;
 
     private FontMgr(final Context context) {
         this.context = context;
@@ -21,7 +21,10 @@ public final class FontMgr {
     }
 
     private void initFonts() {
-        RobotoLigth = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf");
+        RobotoLight = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf");
+        RobotoMedium = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Medium.ttf");
+        RobotoSlabLight = Typeface.createFromAsset(context.getAssets(), "fonts/RobotoSlab-Light.ttf");
+        RobotoSlabRegular = Typeface.createFromAsset(context.getAssets(), "fonts/RobotoSlab-Regular.ttf");
     }
 
     public synchronized static FontMgr getInstance() {
