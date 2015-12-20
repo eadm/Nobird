@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import ru.eadm.nobird.data.database.DBMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.fragment.state.AbsTweetRecycleViewState;
@@ -15,15 +16,8 @@ public final class Mentions extends AbsTweetRecycleViewFragment{
     public static final String TAG = "mentions_fragment";
 
     @Override
-    public void onRefresh() {
-        // do some refresh
-        Log.d(Feed.TAG, "refreshing");
-//        page.setRefreshing(false); // stop refresh animation
-    }
-
-    @Override
-    protected AbsTweetRecycleViewRefreshTask createTask() {
-        return new MentionsDataGetTask(this);
+    protected AbsTweetRecycleViewRefreshTask createTask(final int position, final AbsTweetRecycleViewRefreshTask.Source source) {
+        return new MentionsDataGetTask(this, position, source);
     }
 
     @Override
@@ -32,18 +26,23 @@ public final class Mentions extends AbsTweetRecycleViewFragment{
     }
 
     private final class MentionsDataGetTask extends AbsTweetRecycleViewRefreshTask {
-        private MentionsDataGetTask(final Mentions fragment) {
-            super(fragment);
+        private MentionsDataGetTask(final Mentions fragment, final int position, final Source source) {
+            super(fragment, position, source);
         }
 
         @Override
-        protected ArrayList<TweetElement> doInBackground(Void... params) {
-            try {
-                return TwitterMgr.getInstance().getMentionsTimeline(0, 0);
-            } catch (TwitterException e) {
-                Log.e(Mentions.TAG, "Error: " + e.getMessage());
-                return null;
+        protected ArrayList<TweetElement> doInBackground(final Long... params) {
+            if (source == Source.CACHE &&
+                    DBMgr.getInstance().getCachedStatusesCount(DBMgr.TYPE_MENTIONS) != 0) {
+                return DBMgr.getInstance().getCachedStatuses(DBMgr.TYPE_MENTIONS);
+            } else {
+                try {
+                    return TwitterMgr.getInstance().getMentionsTimeline(params[0], params[1]);
+                } catch (TwitterException e) {
+                    Log.e(Feed.TAG, "Error: " + e.getMessage());
+                }
             }
+            return null;
         }
     }
 

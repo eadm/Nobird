@@ -3,11 +3,19 @@ package ru.eadm.nobird.data.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
+import android.text.SpannableStringBuilder;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import ru.eadm.nobird.data.PreferenceMgr;
+import ru.eadm.nobird.data.twitter.TwitterMgr;
+import ru.eadm.nobird.data.twitter.TwitterUtils;
 import ru.eadm.nobird.data.types.AccountElement;
 import ru.eadm.nobird.data.types.TweetElement;
 import twitter4j.Status;
@@ -15,6 +23,11 @@ import twitter4j.User;
 import twitter4j.auth.AccessToken;
 
 public final class DBMgr {
+    private final String TAG = this.getClass().getName();
+
+    public final static int TYPE_FEED = 0;
+    public final static int TYPE_MENTIONS = 1;
+
     private final Context context;
     private static DBMgr instance;
 
@@ -68,18 +81,90 @@ public final class DBMgr {
         return account;
     }
 
-    public ArrayList<TweetElement> saveStatuses(final List<Status> statuses) { // converts and saves statuses for N
-        final ArrayList<TweetElement> tweets = new ArrayList<>(statuses.size());
-        for (final Status status : statuses) {
-            tweets.add(new TweetElement(
-                    status.getUser().getName(),
-                    status.getUser().getScreenName(),
-                    status.getUser().getOriginalProfileImageURL(),
+    public ArrayList<TweetElement> getCachedStatuses(final int type) {
+        return getCachedStatuses(PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID), type);
+    }
+    public ArrayList<TweetElement> getCachedStatuses(final long userID, final int type) {
+        final ArrayList<TweetElement> tweets = new ArrayList<>();
+        final Cursor cursor = db.rawQuery("SELECT * FROM " + DBHelper.TABLE_TWEETS + " " +
+                "WHERE type = ? " +
+                "AND ownerID = ? " +
+                "ORDER BY tweetID DESC " +
+                "LIMIT ?", new String[]{type + "", userID + "", TwitterMgr.TWEETS_PER_PAGE + ""});
+        if (cursor.moveToFirst()) {
+            do {
+                tweets.add(new TweetElement(
+                        cursor.getLong(cursor.getColumnIndex("tweetID")),
+                        cursor.getLong(cursor.getColumnIndex("userID")),
 
-                    status.getText(),
-                    status.getCreatedAt()
-                    ));
+                        cursor.getString(cursor.getColumnIndex("name")),
+                        cursor.getString(cursor.getColumnIndex("username")),
+                        cursor.getString(cursor.getColumnIndex("profile_image_url")),
+                        new SpannableStringBuilder(cursor.getString(cursor.getColumnIndex("tweet_text"))),
+
+                        new Date(cursor.getLong(cursor.getColumnIndex("pubDate"))),
+                        cursor.getString(cursor.getColumnIndex("attachment_url"))
+                ));
+            } while (cursor.moveToNext());
         }
+
+        cursor.close();
         return tweets;
+    }
+
+    public ArrayList<TweetElement> saveStatuses(final List<Status> statuses, final int type) { // converts and saves statuses for N
+        final ArrayList<TweetElement> tweets = new ArrayList<>(statuses.size());
+        db.beginTransaction();
+        final SQLiteStatement st = db.compileStatement(DBHelper.TABLE_TWEETS_PATTERN);
+        for (final Status status : statuses) {
+            final TweetElement tweet = TwitterUtils.statusToTweetElement(status, context);
+            tweets.add(tweet); // add to array
+
+            st.bindLong(1, tweet.tweetID);
+            st.bindLong(2, tweet.user.userID);
+            st.bindString(3, tweet.user.name);
+            st.bindString(4, tweet.user.username);
+            st.bindString(5, tweet.user.image);
+            st.bindString(6, tweet.text.toString());
+            st.bindString(7, tweet.image);
+            st.bindLong(8, tweet.date.getTime());
+
+            st.bindLong(9, PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID));
+            st.bindLong(10, type);
+            st.executeInsert(); // add to db
+        }
+        st.close();
+        final long count = getCachedStatusesCount(type);
+        if (count > TwitterMgr.TWEETS_PER_PAGE) {
+            clearCachedStatuses(count - TwitterMgr.TWEETS_PER_PAGE, type); // delete useless statuses
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        return tweets;
+    }
+
+    private void clearCachedStatuses(final long count, final int type) { // delete last n tweets in table
+        db.execSQL(DBHelper.TABLE_TWEET_CLEAR_PATTERN, new Object[]{
+                PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID),
+                type,
+                count
+        });
+    }
+
+//    public boolean isEmpty(final String table, final String selection, final String[] selectors) {
+//        return getItemCount(table, selection, selectors) == 0;
+//    }
+
+    public long getItemCount(final String table, final String selection, final String[] selectors) {
+        return DatabaseUtils.queryNumEntries(db, table, selection, selectors);
+    }
+
+    public long getCachedStatusesCount(final int type) {
+        Log.d(TAG, type + "");
+        return getItemCount(DBHelper.TABLE_TWEETS, "type = ? AND ownerID = ?",
+                new String[]{
+                        type + "",
+                        PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID) + ""
+                });
     }
 }

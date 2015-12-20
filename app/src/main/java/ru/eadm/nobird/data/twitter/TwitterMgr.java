@@ -17,7 +17,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 
 public class TwitterMgr {
-    private final static int TWEETS_PER_PAGE = 100;
+    public final static int TWEETS_PER_PAGE = 100;
 
     private final Context context;
     private static TwitterMgr instance;
@@ -77,12 +77,12 @@ public class TwitterMgr {
 
     public ArrayList<TweetElement> getHomeTimeline (final long sinceID, final long maxID) throws TwitterException {
         if (twitter == null) localAuth();
-        return DBMgr.getInstance().saveStatuses(twitter.getHomeTimeline(getPaging(sinceID, maxID)));
+        return DBMgr.getInstance().saveStatuses(twitter.getHomeTimeline(getPaging(sinceID, maxID)), DBMgr.TYPE_FEED);
     }
 
     public ArrayList<TweetElement> getMentionsTimeline (final long sinceID, final long maxID) throws TwitterException {
         if (twitter == null) localAuth();
-        return DBMgr.getInstance().saveStatuses(twitter.getMentionsTimeline(getPaging(sinceID, maxID)));
+        return DBMgr.getInstance().saveStatuses(twitter.getMentionsTimeline(getPaging(sinceID, maxID)), DBMgr.TYPE_MENTIONS);
     }
 
     private Paging getPaging(final long sinceID, final long maxID) {

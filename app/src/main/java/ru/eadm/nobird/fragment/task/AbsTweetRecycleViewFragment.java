@@ -11,12 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ru.eadm.nobird.R;
-import ru.eadm.nobird.data.ImageMgr;
 import ru.eadm.nobird.design.DividerItemDecoration;
 import ru.eadm.nobird.fragment.adapter.TweetRecycleViewAdapter;
 import ru.eadm.nobird.fragment.state.AbsTweetRecycleViewState;
 
 public abstract class AbsTweetRecycleViewFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+    private final String TAG = this.getClass().getName();
+
+    public static final int POSITION_START = 0;
+    public static final int POSITION_END = 1;
 
     public SwipeRefreshLayout refreshLayout;
     public TweetRecycleViewAdapter adapter;
@@ -29,10 +32,12 @@ public abstract class AbsTweetRecycleViewFragment extends Fragment implements Sw
 
         final RecyclerView recyclerView = (RecyclerView) refreshLayout.findViewById(R.id.fragment_feed_recycle_view);
 
+
         if (getState().getData() == null) {
             adapter = new TweetRecycleViewAdapter();
-            getState().setTask(createTask());
-            getState().getTask().execute();
+            getState().setData(adapter.getData());
+            getState().setTask(createTask(POSITION_END, AbsTweetRecycleViewRefreshTask.Source.CACHE));
+            getState().getTask().execute(0L, 0L);
         } else {
             adapter = new TweetRecycleViewAdapter(getState().getData());
 
@@ -46,10 +51,44 @@ public abstract class AbsTweetRecycleViewFragment extends Fragment implements Sw
         recyclerView.addItemDecoration(new DividerItemDecoration(
                 getContext(), R.drawable.list_divider, DividerItemDecoration.VERTICAL_LIST));
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(final RecyclerView recyclerView, final int dx, final int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                final LinearLayoutManager layoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
+                if (layoutManager.getItemCount() - recyclerView.getChildCount()
+                        <= layoutManager.findFirstVisibleItemPosition()) {
+                    onScrolledToEnd();
+                }
+            }
+        });
+
+
         return refreshLayout;
     }
 
-    protected abstract AbsTweetRecycleViewRefreshTask createTask();
+    @Override
+    public void onRefresh() {
+        if (getState().getTask() != null
+                && getState().getTask().getState() == AbsTweetRecycleViewRefreshTask.TaskState.COMPLETED) {
+            getState().setTask(createTask(POSITION_START, AbsTweetRecycleViewRefreshTask.Source.API));
+            getState().getTask().execute((adapter.getItemCount() == 0) ? 0 : adapter.getData().get(0).tweetID, 0L);
+
+            Log.d(TAG, "onRefresh");
+        }
+    }
+
+    public void onScrolledToEnd() {
+        if (getState().getTask() != null
+                && getState().getTask().getState() == AbsTweetRecycleViewRefreshTask.TaskState.COMPLETED) {
+            getState().setTask(createTask(POSITION_END, AbsTweetRecycleViewRefreshTask.Source.API));
+            getState().getTask().execute(0L, adapter.getData().get(adapter.getData().size() - 1).tweetID - 1);
+
+            Log.d(TAG, "onScrolledToEnd");
+        }
+    }
+
+    protected abstract AbsTweetRecycleViewRefreshTask createTask(final int position, final AbsTweetRecycleViewRefreshTask.Source source);
     protected abstract AbsTweetRecycleViewState getState();
 
     public void setRefreshing(final boolean state) {
@@ -64,6 +103,9 @@ public abstract class AbsTweetRecycleViewFragment extends Fragment implements Sw
     @Override
     public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
-        getState().setData(adapter.getData());
+        Log.d(TAG, "onSaveInstanceState");
+        if (adapter != null) { // cause sometimes adapter = null, during screen rotation
+            getState().setData(adapter.getData());
+        }
     }
 }

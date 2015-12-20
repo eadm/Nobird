@@ -68,9 +68,21 @@
 
             android:layout_marginTop="8dp"
 
-            android:textColor="@color/dark"
+            android:textColor="#111"
             android:textSize="14sp"
             android:lineSpacingExtra="4sp"/>
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxHeight="160dp"
+            android:id="@+id/tweet_element_attachment"
+
+            android:contentDescription="@string/processing"
+            android:cropToPadding="true"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:layout_marginTop="8dp"
+            />
     </LinearLayout>
 </RelativeLayout>

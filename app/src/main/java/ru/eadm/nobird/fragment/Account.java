@@ -1,6 +1,5 @@
 package ru.eadm.nobird.fragment;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.FontMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
-import ru.eadm.nobird.listener.FragmentManager;
 import ru.eadm.nobird.notification.NotificationMgr;
 import twitter4j.TwitterException;
 
@@ -25,7 +23,6 @@ public final class Account extends Fragment implements View.OnClickListener {
     public static final String TAG = "account_fragment";
     private WebView webView;
     private TextView sign_in_button, processing;
-    private FragmentManager fragmentManager;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -70,18 +67,6 @@ public final class Account extends Fragment implements View.OnClickListener {
                 webView.restoreState(savedInstanceState);
             }
         }
-    }
-
-    @Override
-    public void onAttach(final Activity context) {
-        super.onAttach(context);
-        fragmentManager = (FragmentManager) context;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        fragmentManager = null;
     }
 
     @Override
@@ -145,7 +130,7 @@ public final class Account extends Fragment implements View.OnClickListener {
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success) {
-                fragmentManager.replaceFragment(0, new Home(), false);
+                FragmentMgr.getInstance().replaceFragment(0, new Home(), false);
                 /// timeline fragment
             } else {
                 sign_in_button.setVisibility(View.VISIBLE);

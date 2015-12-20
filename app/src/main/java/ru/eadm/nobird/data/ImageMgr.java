@@ -25,7 +25,7 @@ public final class ImageMgr {
 
     public final ImageLoader imageLoader;
     public final PauseOnScrollListener listener;
-    public final DisplayImageOptions options, options_round;
+    public final DisplayImageOptions options, options_round, options_dark;
 
     private ImageMgr(final Context context) {
         this.context = context;
@@ -46,13 +46,19 @@ public final class ImageMgr {
         options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
-                .showStubImage(R.drawable.bg_white_round)
+                .showStubImage(R.drawable.image_placeholder_light)
+                .build();
+
+        options_dark = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .showStubImage(R.drawable.image_placeholder_dark)
                 .build();
 
         options_round = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
-                .showStubImage(R.drawable.bg_white_round)
+                .showStubImage(R.drawable.image_placeholder_light)
                 .displayer(new RoundedBitmapDisplayer(999999)) // ~ infinite to get round
                 .build();
 
@@ -70,6 +76,14 @@ public final class ImageMgr {
     }
 
     public void displayImage(final String url, final ImageView i){
+        imageLoader.displayImage(url, i, options);
+    }
+
+    public void displayRoundImage(final String url, final ImageView i){
         imageLoader.displayImage(url, i, options_round);
+    }
+
+    public void displayDarkImage(final String url, final ImageView i){
+        imageLoader.displayImage(url, i, options_dark);
     }
 }

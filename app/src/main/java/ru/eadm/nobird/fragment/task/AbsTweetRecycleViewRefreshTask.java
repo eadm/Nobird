@@ -9,18 +9,31 @@ import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.notification.NotificationMgr;
 
-public abstract class AbsTweetRecycleViewRefreshTask extends AsyncTask<Void, Void, ArrayList<TweetElement>> {
+public abstract class AbsTweetRecycleViewRefreshTask extends AsyncTask<Long, Void, ArrayList<TweetElement>> {
     enum TaskState {
         PROCESSING,
         COMPLETED,
         ERROR
     }
 
+    public enum Source { // to get statuses from db an network
+        CACHE,
+        API
+    }
+
     private WeakReference<AbsTweetRecycleViewFragment> fragment;
     private TaskState taskState;
 
-    public AbsTweetRecycleViewRefreshTask(final AbsTweetRecycleViewFragment fragment) {
+    private final int position;
+    protected final Source source;
+
+    public AbsTweetRecycleViewRefreshTask(
+            final AbsTweetRecycleViewFragment fragment,
+            final int position,
+            final Source source) {
         this.fragment = new WeakReference<>(fragment);
+        this.position = position;
+        this.source = source;
         taskState = TaskState.PROCESSING;
     }
 
@@ -43,7 +56,7 @@ public abstract class AbsTweetRecycleViewRefreshTask extends AsyncTask<Void, Voi
         }
     }
 
-    protected abstract ArrayList<TweetElement> doInBackground(Void... params);
+    protected abstract ArrayList<TweetElement> doInBackground(Long... params);
 
     @Override
     protected void onPostExecute(ArrayList<TweetElement> data) {
@@ -54,9 +67,13 @@ public abstract class AbsTweetRecycleViewRefreshTask extends AsyncTask<Void, Voi
             }
         } else {
             if (fragment.get() != null) {
-                for (final TweetElement s : data) {
-                    fragment.get().adapter.add(s);
-                    fragment.get().adapter.notifyItemInserted(fragment.get().adapter.getItemCount() - 1);
+                if (position == AbsTweetRecycleViewFragment.POSITION_END) {
+                    final int start = fragment.get().adapter.getItemCount();
+                    fragment.get().adapter.addAll(data);
+                    fragment.get().adapter.notifyItemRangeInserted(start, data.size());
+                } else if (position == AbsTweetRecycleViewFragment.POSITION_START) {
+                    fragment.get().adapter.addAll(0, data);
+                    fragment.get().adapter.notifyItemRangeInserted(0, data.size());
                 }
             }
             taskState = TaskState.COMPLETED;

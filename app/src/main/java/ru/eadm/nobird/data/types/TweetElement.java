@@ -1,20 +1,39 @@
 package ru.eadm.nobird.data.types;
 
+import android.text.SpannableStringBuilder;
+
 import java.util.Date;
 
 public class TweetElement {
-    public final String name, username, text, user_image;
+    public final long tweetID;
+    public final String image;
     public final Date date;
 
-    public TweetElement(final String name,
+    public final UserElement user;
+
+    public final SpannableStringBuilder text;
+
+    public TweetElement(final long tweetID,
+                        final long userID,
+
+                        final String name,
                         final String username,
                         final String user_image,
-                        final String text,
-                        final Date date) {
-        this.name = name;
-        this.username = "@" + username.toLowerCase();
+
+                        final SpannableStringBuilder text,
+                        final Date date,
+                        final String image) {
+        this.tweetID = tweetID;
+
+        this.user = new UserElement(
+                userID,
+                name,
+                username,
+                user_image
+        );
+
+        this.image = image;
         this.text = text;
-        this.user_image = user_image;
         this.date = date;
     }
 }
