@@ -27,7 +27,7 @@ public class TwitterUtils {
                 status.getUser().getId(),
 
                 status.getUser().getName(),
-                status.getUser().getScreenName(),
+                status.getUser().getScreenName().toLowerCase(),
                 status.getUser().getOriginalProfileImageURL(),
 
                 TwitterStatusParser.getTweetText(status),

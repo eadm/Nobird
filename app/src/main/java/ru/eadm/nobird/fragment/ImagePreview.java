@@ -34,9 +34,7 @@ public class ImagePreview extends Fragment {
         page.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(final View v, final MotionEvent event) {
-                Log.d(TAG, "onTouch");
                 gestureDetector.onTouchEvent(event);
-
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     image.setTranslationY(0);
                     image.setAlpha(1.0f);
