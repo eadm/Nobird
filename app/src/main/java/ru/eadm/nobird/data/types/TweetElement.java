@@ -1,8 +1,8 @@
 package ru.eadm.nobird.data.types;
 
-import android.text.SpannableStringBuilder;
-
 import java.util.Date;
+
+import ru.eadm.nobird.data.twitter.utils.TwitterStatusText;
 
 public class TweetElement {
     public final long tweetID;
@@ -11,7 +11,7 @@ public class TweetElement {
 
     public final UserElement user;
 
-    public final SpannableStringBuilder text;
+    public final TwitterStatusText text;
 
     public TweetElement(final long tweetID,
                         final long userID,
@@ -20,7 +20,7 @@ public class TweetElement {
                         final String username,
                         final String user_image,
 
-                        final SpannableStringBuilder text,
+                        final TwitterStatusText text,
                         final Date date,
                         final String image) {
         this.tweetID = tweetID;

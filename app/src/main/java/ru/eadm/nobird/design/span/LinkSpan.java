@@ -1,21 +1,20 @@
 package ru.eadm.nobird.design.span;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextPaint;
-import android.text.style.ClickableSpan;
 import android.view.View;
 
+import ru.eadm.nobird.fragment.FragmentMgr;
 
-public class LinkSpan extends ClickableSpan {
 
-    private final Context context;
+public class LinkSpan extends AbsSpan {
+    public final static char SPAN_TAG = 'l';
+
     private final String url;
-    public LinkSpan(final String url, final Context context) {
+    public LinkSpan(final String url) {
         super();
         this.url = url;
-        this.context = context;
     }
 
     @Override
@@ -26,6 +25,12 @@ public class LinkSpan extends ClickableSpan {
 
     @Override
     public void onClick(final View widget) {
-        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        FragmentMgr.getInstance().getContext()
+                .startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+    }
+
+    @Override
+    public String getData() {
+        return SPAN_TAG + "|" + url;
     }
 }

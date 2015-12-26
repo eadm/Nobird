@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
-import android.text.SpannableStringBuilder;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -16,6 +15,7 @@ import java.util.List;
 import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.twitter.TwitterUtils;
+import ru.eadm.nobird.data.twitter.utils.TwitterStatusText;
 import ru.eadm.nobird.data.types.AccountElement;
 import ru.eadm.nobird.data.types.TweetElement;
 import twitter4j.Status;
@@ -100,8 +100,10 @@ public final class DBMgr {
                         cursor.getString(cursor.getColumnIndex("name")),
                         cursor.getString(cursor.getColumnIndex("username")),
                         cursor.getString(cursor.getColumnIndex("profile_image_url")),
-                        new SpannableStringBuilder(cursor.getString(cursor.getColumnIndex("tweet_text"))),
-
+                        TwitterStatusText.parse(
+                                cursor.getString(cursor.getColumnIndex("tweet_text")),
+                                cursor.getString(cursor.getColumnIndex("tweet_text_parse_key"))
+                        ),
                         new Date(cursor.getLong(cursor.getColumnIndex("pubDate"))),
                         cursor.getString(cursor.getColumnIndex("attachment_url"))
                 ));
@@ -117,20 +119,22 @@ public final class DBMgr {
         db.beginTransaction();
         final SQLiteStatement st = db.compileStatement(DBHelper.TABLE_TWEETS_PATTERN);
         for (final Status status : statuses) {
-            final TweetElement tweet = TwitterUtils.statusToTweetElement(status, context);
+            final TweetElement tweet = TwitterUtils.statusToTweetElement(status);
             tweets.add(tweet); // add to array
 
+            Log.d(TAG, tweet.text.getParseKey());
             st.bindLong(1, tweet.tweetID);
             st.bindLong(2, tweet.user.userID);
             st.bindString(3, tweet.user.name);
             st.bindString(4, tweet.user.username);
             st.bindString(5, tweet.user.image);
-            st.bindString(6, tweet.text.toString());
-            st.bindString(7, tweet.image);
-            st.bindLong(8, tweet.date.getTime());
+            st.bindString(6, tweet.text.getText().toString());
+            st.bindString(7, tweet.text.getParseKey());
+            st.bindString(8, tweet.image);
+            st.bindLong(9, tweet.date.getTime());
 
-            st.bindLong(9, PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID));
-            st.bindLong(10, type);
+            st.bindLong(10, PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID));
+            st.bindLong(11, type);
             st.executeInsert(); // add to db
         }
         st.close();

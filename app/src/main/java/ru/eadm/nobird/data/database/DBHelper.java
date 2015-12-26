@@ -12,7 +12,7 @@ public final class DBHelper extends SQLiteOpenHelper {
 
     public final static String TABLE_TWEETS = "tweets";
     public final static String TABLE_TWEETS_PATTERN = "insert into " + TABLE_TWEETS +
-            " values (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            " values (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public final static String TABLE_TWEET_CLEAR_PATTERN = "DELETE FROM " + TABLE_TWEETS + " " +
             "WHERE id IN " +
             "(SELECT id FROM " + TABLE_TWEETS + " WHERE ownerID = ? AND type = ? " +
@@ -41,6 +41,7 @@ public final class DBHelper extends SQLiteOpenHelper {
                 + "username text,"
                 + "profile_image_url text,"
                 + "tweet_text text,"
+                + "tweet_text_parse_key text,"
                 + "attachment_url text,"
                 + "pubDate integer," +
                 "" +

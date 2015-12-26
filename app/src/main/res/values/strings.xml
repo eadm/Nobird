@@ -9,4 +9,5 @@
     <string name="fragment_home_tab_mentions">Mentions</string>
     <string name="search">Search</string>
     <string name="menu">Menu</string>
+    <string name="username_placeholder" translatable="false">\@%s</string>
 </resources>

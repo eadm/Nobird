@@ -63,6 +63,7 @@ public final class ImageMgr {
                 .build();
 
         listener = new PauseOnScrollListener(imageLoader, true, true);
+
     }
 
     public synchronized static void init(final Context context) {

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ru.eadm.nobird.R;
+import ru.eadm.nobird.data.ImageMgr;
 import ru.eadm.nobird.design.DividerItemDecoration;
 import ru.eadm.nobird.fragment.adapter.TweetRecycleViewAdapter;
 import ru.eadm.nobird.fragment.state.AbsTweetRecycleViewState;
@@ -60,6 +61,12 @@ public abstract class AbsTweetRecycleViewFragment extends Fragment implements Sw
                         <= layoutManager.findFirstVisibleItemPosition()) {
                     onScrolledToEnd();
                 }
+            }
+
+            @Override
+            public void onScrollStateChanged(final RecyclerView recyclerView, final int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                ImageMgr.getInstance().listener.onScrollStateChanged(null, newState);
             }
         });
 

@@ -1,6 +1,5 @@
 package ru.eadm.nobird.data.twitter;
 
-import android.content.Context;
 import android.util.Log;
 
 import ru.eadm.nobird.data.twitter.utils.TwitterStatusParser;
@@ -22,7 +21,7 @@ public class TwitterUtils {
         return "";
     }
 
-    public static TweetElement statusToTweetElement(final Status status, final Context context) {
+    public static TweetElement statusToTweetElement(final Status status) {
         return new TweetElement(
                 status.getId(),
                 status.getUser().getId(),
@@ -31,7 +30,7 @@ public class TwitterUtils {
                 status.getUser().getScreenName(),
                 status.getUser().getOriginalProfileImageURL(),
 
-                TwitterStatusParser.getTweetText(status, context),
+                TwitterStatusParser.getTweetText(status),
                 status.getCreatedAt(),
                 getAttachment(status));
     }

@@ -2,6 +2,7 @@ package ru.eadm.nobird.fragment.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,14 +61,17 @@ public class TweetRecycleViewAdapter extends RecyclerView.Adapter<TweetRecycleVi
 
         final TweetItemClickListener tweetItemClickListener = new TweetItemClickListener(data.get(position));
 
-        holder.text.setText(data.get(position).text);
+        holder.text.setText(data.get(position).text.getText());
         holder.text.setOnClickListener(tweetItemClickListener);
         holder.date.setText(Util.dateDifference(data.get(position).date));
         holder.date.setOnClickListener(tweetItemClickListener);
 
-        if (data.get(position).image != null) {
+        if (data.get(position).image != null && data.get(position).image.length() > 0) {
             holder.attachment.setOnClickListener(new ImageClickListener(data.get(position).image));
             ImageMgr.getInstance().displayImage(data.get(position).image, holder.attachment);
+            holder.attachment.setVisibility(View.VISIBLE);
+        } else {
+            holder.attachment.setVisibility(View.GONE);
         }
 
         holder.page.setOnClickListener(tweetItemClickListener);

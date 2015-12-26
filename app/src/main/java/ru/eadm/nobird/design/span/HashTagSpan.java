@@ -5,11 +5,10 @@ import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;
 
-/**
- * Created by ruslandavletshin on 15/12/15.
- */
-public class HashTagSpan extends ClickableSpan {
-    public final static String TAG = "LinkSpan";
+public class HashTagSpan extends AbsSpan {
+    public final static String TAG = "HashTagSpan";
+    public final static char SPAN_TAG = 'h';
+
 
     private final String hashTag;
     public HashTagSpan(final String hashTag) {
@@ -26,5 +25,10 @@ public class HashTagSpan extends ClickableSpan {
     @Override
     public void onClick(View widget) {
         Log.d(TAG, hashTag);
+    }
+
+    @Override
+    public String getData() {
+        return SPAN_TAG + "|" + hashTag;
     }
 }

@@ -1,12 +1,13 @@
 package ru.eadm.nobird.design.span;
 
 import android.text.TextPaint;
-import android.text.style.ClickableSpan;
 import android.view.View;
 
 import ru.eadm.nobird.fragment.ImagePreview;
 
-public class MediaSpan extends ClickableSpan {
+public class MediaSpan extends AbsSpan {
+    public final static char SPAN_TAG = 'm';
+
     private final String url;
     public MediaSpan(final String url) {
         this.url = url;
@@ -23,4 +24,8 @@ public class MediaSpan extends ClickableSpan {
         ds.setColor(0xFF659dd6);
     }
 
+    @Override
+    public String getData() {
+        return SPAN_TAG + "|" + url;
+    }
 }

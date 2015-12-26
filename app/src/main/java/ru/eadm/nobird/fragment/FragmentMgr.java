@@ -1,5 +1,6 @@
 package ru.eadm.nobird.fragment;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -61,4 +62,6 @@ public class FragmentMgr {
 
         app.get().getSupportFragmentManager().popBackStack();
     }
+
+    public Context getContext() { return app.get(); }
 }

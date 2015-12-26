@@ -74,8 +74,7 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxHeight="160dp"
+            android:layout_height="160dp"
             android:id="@+id/tweet_element_attachment"
 
             android:contentDescription="@string/processing"
@@ -83,6 +82,7 @@
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
             android:layout_marginTop="8dp"
+            android:visibility="gone"
             />
     </LinearLayout>
 </RelativeLayout>
