@@ -1,34 +1,40 @@
 package ru.eadm.nobird.design.span;
 
 import android.text.TextPaint;
-import android.text.style.ClickableSpan;
-import android.util.Log;
 import android.view.View;
+
+import ru.eadm.nobird.data.types.UserElement;
+import ru.eadm.nobird.fragment.UserFragment;
+import twitter4j.UserMentionEntity;
 
 public class UserSpan extends AbsSpan {
     public final static String TAG = "UserSpan";
     public final static char SPAN_TAG = 'u';
 
 
-    private final long userID;
+    private final UserElement user;
     public UserSpan(final long userID) {
         super();
-        this.userID = userID;
+        this.user = new UserElement(userID, "", "", "");
+    }
+
+    public UserSpan(final UserMentionEntity entity) {
+        super();
+        this.user = new UserElement(entity.getId(), entity.getName(), entity.getScreenName(), "");
     }
 
     @Override
     public void updateDrawState(final TextPaint ds) {
-//        super.updateDrawState(ds);
         ds.setColor(0xFF777777);
     }
 
     @Override
     public void onClick(View widget) {
-        Log.d(TAG, userID + "");
+        UserFragment.showUser(user);
     }
 
     @Override
     public String getData() {
-        return SPAN_TAG + "|" + userID;
+        return SPAN_TAG + "|" + user.userID;
     }
 }

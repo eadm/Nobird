@@ -53,10 +53,11 @@ public class TwitterStatusParser {
 
         for (final UserMentionEntity entity : status.getUserMentionEntities()) {
             final int start = string.indexOf('@' + entity.getText());
+
             if (start != -1) {
                 return getSpannableString(
                         string,
-                        new UserSpan(entity.getId()),
+                        new UserSpan(entity),
                         start, // to include @
                         start + entity.getText().length() + 1,
                         offset

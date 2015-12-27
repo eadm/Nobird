@@ -94,7 +94,7 @@ public class TwitterMgr {
         return paging;
     }
 
-    public User getUser(final long userID) throws TwitterException {
+    public User showUser(final long userID) throws TwitterException {
         if (twitter == null) localAuth();
         return twitter.showUser(userID);
     }

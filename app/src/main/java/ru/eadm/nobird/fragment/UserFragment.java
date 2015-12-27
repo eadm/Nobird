@@ -29,7 +29,7 @@ import twitter4j.User;
 
 public class UserFragment extends Fragment {
     private TextView name, username;
-    private ImageView background;
+    private ImageView background, userimage;
     private User user;
 
     @Override
@@ -47,20 +47,23 @@ public class UserFragment extends Fragment {
         recyclerView.setAdapter(new TweetRecycleViewAdapter());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        ImageMgr.getInstance().displayRoundImage(getArguments().getString("image"), (ImageView) page.findViewById(R.id.fragment_user_image));
+        userimage = (ImageView) page.findViewById(R.id.fragment_user_image);
 
         name = (TextView) page.findViewById(R.id.fragment_user_name);
         name.setTypeface(FontMgr.getInstance().RobotoLight);
-        name.setText(getArguments().getString("name"));
 
         username = (TextView) page.findViewById(R.id.fragment_user_username);
         username.setTypeface(FontMgr.getInstance().RobotoLight);
-        username.setText(String.format(getString(R.string.username_placeholder), getArguments().getString("username")));
 
         background = (ImageView) page.findViewById(R.id.fragment_user_background);
 
         if (savedInstanceState == null) {
+            name.setText(getArguments().getString("name"));
+            username.setText(String.format(getString(R.string.username_placeholder), getArguments().getString("username")));
+            ImageMgr.getInstance().displayRoundImage(getArguments().getString("image"), userimage);
+
             new UserLoaderTask(this).execute(getArguments().getLong("userID"));
+
         } else {
             setUser((User) savedInstanceState.getSerializable("user"));
         }
@@ -85,7 +88,10 @@ public class UserFragment extends Fragment {
     private void setUser(final User user) {
         if (user == null) return;
         this.user = user;
+        ImageMgr.getInstance().displayRoundImage(user.getOriginalProfileImageURLHttps(), userimage);
         ImageMgr.getInstance().displayImage(user.getProfileBannerIPadRetinaURL(), background);
+        name.setText(user.getName());
+        username.setText(String.format(getString(R.string.username_placeholder), user.getScreenName()));
     }
 
     private static final String TAG = "UserFragment";
@@ -112,7 +118,7 @@ public class UserFragment extends Fragment {
         @Override
         protected User doInBackground(Long... params) {
             try {
-                return TwitterMgr.getInstance().getUser(params[0]);
+                return TwitterMgr.getInstance().showUser(params[0]);
             } catch (TwitterException e) {
                 return null;
             }
