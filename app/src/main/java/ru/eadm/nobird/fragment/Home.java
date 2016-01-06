@@ -2,6 +2,7 @@ package ru.eadm.nobird.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.FontMgr;
 import ru.eadm.nobird.data.ImageMgr;
+import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.AccountElement;
 import ru.eadm.nobird.fragment.adapter.HomeViewPagerAdapter;
@@ -29,8 +31,6 @@ public class Home extends Fragment implements View.OnClickListener{
     private DrawerLayout page;
     private ImageView userImageView;
 
-
-
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
@@ -38,10 +38,16 @@ public class Home extends Fragment implements View.OnClickListener{
         page = (DrawerLayout) inflater.inflate(R.layout.fragment_home, container, false);
 
         nameTextView = (TextView) page.findViewById(R.id.drawer_info_name);
-        nameTextView.setTypeface(FontMgr.getInstance().RobotoLight);
         usernameTextView = (TextView) page.findViewById(R.id.drawer_info_username);
-        usernameTextView.setTypeface(FontMgr.getInstance().RobotoLight);
+
         userImageView = (ImageView) page.findViewById(R.id.drawer_info_image);
+
+        page.findViewById(R.id.drawer_info_container).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserFragment.showUser(PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID));
+            }
+        });
 
         if (savedInstanceState != null) {
             account = savedInstanceState.getParcelable("account");
@@ -63,8 +69,25 @@ public class Home extends Fragment implements View.OnClickListener{
         page.findViewById(R.id.fragment_home_menu).setOnClickListener(this);
         page.findViewById(R.id.fragment_home_search).setOnClickListener(this);
 
+        final FloatingActionButton fab = (FloatingActionButton) page.findViewById(R.id.fragment_home_tweet_button);
+        fab.setOnClickListener(this);
 
         return page;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        nameTextView = null;
+        usernameTextView = null;
+        page = null;
+        userImageView = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        account = null;
     }
 
     private void updateAccountInfo() {
@@ -106,12 +129,15 @@ public class Home extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(final View view) {
         switch (view.getId()) {
-            case R.id.fragment_home_menu: {
+            case R.id.fragment_home_menu:
                 page.openDrawer(GravityCompat.START); // only open cause we can't press it when drawer opened
-            }
-            case R.id.fragment_home_search: {
+            break;
+            case R.id.fragment_home_search:
                 // open search fragment
-            }
+            break;
+            case R.id.fragment_home_tweet_button:
+                CreateStatusFragment.open();
+            break;
         }
     }
 }

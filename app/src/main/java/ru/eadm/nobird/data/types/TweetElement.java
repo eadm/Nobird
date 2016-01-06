@@ -4,7 +4,7 @@ import java.util.Date;
 
 import ru.eadm.nobird.data.twitter.utils.TwitterStatusText;
 
-public class TweetElement {
+public class TweetElement implements Element{
     public final long tweetID;
     public final String image;
     public final Date date;
@@ -35,5 +35,10 @@ public class TweetElement {
         this.image = image;
         this.text = text;
         this.date = date;
+    }
+
+    @Override
+    public long getID() {
+        return tweetID;
     }
 }

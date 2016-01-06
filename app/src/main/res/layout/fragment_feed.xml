@@ -1,13 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+
     android:layout_height="match_parent"
-    android:background="@color/colorWhite">
-    <android.support.v7.widget.RecyclerView
+    android:layout_width="match_parent">
+
+    <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:id="@+id/fragment_feed_recycle_view"
-        android:listDivider="@drawable/list_divider"/>
-</android.support.v4.widget.SwipeRefreshLayout>
+        android:id="@+id/fragment_feed_swipe_refresh_layout">
+
+        <android.support.v7.widget.RecyclerView
+            android:background="@color/colorWhite"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:id="@+id/fragment_feed_recycle_view"
+            android:listDivider="@drawable/list_divider"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+
+        android:id="@+id/fragment_feed_counter"
+        android:visibility="gone"
+
+        android:background="@drawable/bg_fragment_feed_counter"/>
+</RelativeLayout>

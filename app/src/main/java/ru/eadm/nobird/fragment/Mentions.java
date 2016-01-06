@@ -8,11 +8,11 @@ import ru.eadm.nobird.data.database.DBMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.fragment.state.AbsTweetRecycleViewState;
-import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewFragment;
+import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewFragmentNested;
 import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewRefreshTask;
 import twitter4j.TwitterException;
 
-public final class Mentions extends AbsTweetRecycleViewFragment{
+public final class Mentions extends AbsTweetRecycleViewFragmentNested {
     public static final String TAG = "mentions_fragment";
 
     @Override

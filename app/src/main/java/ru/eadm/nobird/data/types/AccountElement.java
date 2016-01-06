@@ -3,7 +3,7 @@ package ru.eadm.nobird.data.types;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class AccountElement implements Parcelable{
+public class AccountElement implements Parcelable, Element {
     public final long userID;
     public final String name, username, image, token, token_secret;
     public AccountElement(
@@ -55,5 +55,10 @@ public class AccountElement implements Parcelable{
         dest.writeString(image);
         dest.writeString(token);
         dest.writeString(token_secret);
+    }
+
+    @Override
+    public long getID() {
+        return userID;
     }
 }

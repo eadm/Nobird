@@ -5,11 +5,15 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import ru.eadm.nobird.data.PageableArrayList;
 import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.database.DBHelper;
 import ru.eadm.nobird.data.database.DBMgr;
 import ru.eadm.nobird.data.types.AccountElement;
 import ru.eadm.nobird.data.types.TweetElement;
+import ru.eadm.nobird.data.types.UserElement;
+import twitter4j.CursorSupport;
+import twitter4j.PagableResponseList;
 import twitter4j.Paging;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -19,6 +23,7 @@ import twitter4j.auth.AccessToken;
 
 public class TwitterMgr {
     public final static int TWEETS_PER_PAGE = 100;
+    public final static int USER_PER_PAGE = 100;
 
     private final Context context;
     private static TwitterMgr instance;
@@ -97,5 +102,37 @@ public class TwitterMgr {
     public User showUser(final long userID) throws TwitterException {
         if (twitter == null) localAuth();
         return twitter.showUser(userID);
+    }
+
+    public ArrayList<TweetElement> getUserTimeline(final long userID, final long sinceID, final long maxID) throws TwitterException {
+        if (twitter == null) localAuth();
+        return TwitterUtils.statusToTweetElement(twitter.getUserTimeline(userID, getPaging(sinceID, maxID)));
+    }
+
+    public PageableArrayList<UserElement> getUserFollowers(final long userID, final long cursor) throws TwitterException {
+        final PagableResponseList<User> users = twitter.getFollowersList(userID, cursor, USER_PER_PAGE, true, false);
+
+        final PageableArrayList<UserElement> result = new PageableArrayList<>(users.size());
+        for (final User user : users) {
+            result.add(new UserElement(user));
+        }
+        result.setCursors(users);
+        return result;
+    }
+
+    public PageableArrayList<UserElement> getUserFriends(final long userID, final long cursor) throws TwitterException {
+        final PagableResponseList<User> users = twitter.getFriendsList(userID, cursor, USER_PER_PAGE, true, false);
+
+        final PageableArrayList<UserElement> result = new PageableArrayList<>(users.size());
+        for (final User user : users) {
+            result.add(new UserElement(user));
+        }
+        result.setCursors(users);
+        return result;
+    }
+
+    public void manageUserBlock(final long userID, final boolean block) {
+        if (twitter == null) localAuth();
+//        twitter.
     }
 }

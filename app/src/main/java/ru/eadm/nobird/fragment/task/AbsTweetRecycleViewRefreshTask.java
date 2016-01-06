@@ -10,7 +10,7 @@ import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.notification.NotificationMgr;
 
 public abstract class AbsTweetRecycleViewRefreshTask extends AsyncTask<Long, Void, ArrayList<TweetElement>> {
-    enum TaskState {
+    public enum TaskState {
         PROCESSING,
         COMPLETED,
         ERROR
@@ -60,25 +60,26 @@ public abstract class AbsTweetRecycleViewRefreshTask extends AsyncTask<Long, Voi
 
     @Override
     protected void onPostExecute(ArrayList<TweetElement> data) {
+        if (fragment.get() == null) return;
         if (data == null) {
             taskState = TaskState.ERROR;
-            if (fragment.get() != null) {
-                NotificationMgr.getInstance().showSnackbar(R.string.error_twitter_api, fragment.get().refreshLayout);
-            }
+            NotificationMgr.getInstance().showSnackbar(R.string.error_twitter_api, fragment.get().refreshLayout);
         } else {
-            if (fragment.get() != null) {
-                if (position == AbsTweetRecycleViewFragment.POSITION_END) {
+            if (fragment.get().adapter != null) {
+                if (position == AbsTweetRecycleViewFragmentNested.POSITION_END) { // adding to end of list
                     final int start = fragment.get().adapter.getItemCount();
                     fragment.get().adapter.addAll(data);
                     fragment.get().adapter.notifyItemRangeInserted(start, data.size());
-                } else if (position == AbsTweetRecycleViewFragment.POSITION_START) {
+                } else if (position == AbsTweetRecycleViewFragmentNested.POSITION_START) { // adding to start
                     fragment.get().adapter.addAll(0, data);
                     fragment.get().adapter.notifyItemRangeInserted(0, data.size());
+                    fragment.get().showCounter(data.size());
                 }
             }
             taskState = TaskState.COMPLETED;
         }
-        fragment.get().setRefreshing(false);
-
+        if (fragment.get().adapter != null) {
+            fragment.get().setRefreshing(false);
+        }
     }
 }

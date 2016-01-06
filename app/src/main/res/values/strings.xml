@@ -10,4 +10,10 @@
     <string name="search">Search</string>
     <string name="menu">Menu</string>
     <string name="username_placeholder" translatable="false">\@%s</string>
+    <string name="digit_placeholder" translatable="false">%d</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+    <string name="type_something">Type something...</string>
+    <string name="fragment_create_status_title">New tweet</string>
+    <string name="block_user">Block user</string>
 </resources>

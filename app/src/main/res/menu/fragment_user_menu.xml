@@ -5,4 +5,9 @@
         android:title="@string/action_settings"
         app:showAsAction="never"
         android:icon="@drawable/mountain"/>
+    <item
+        android:id="@+id/action_block"
+        android:title="@string/block_user"
+        app:showAsAction="never"
+        android:icon="@drawable/mountain"/>
 </menu>

@@ -1,6 +1,8 @@
 package ru.eadm.nobird.data.types;
 
-public class UserElement {
+import twitter4j.User;
+
+public class UserElement implements Element {
     public final long userID;
     public final String name, username, image;
 
@@ -12,5 +14,17 @@ public class UserElement {
         this.name = name;
         this.username = username;
         this.image = image;
+    }
+
+    public UserElement(final User user) {
+        this.userID = user.getId();
+        this.name = user.getName();
+        this.username = user.getScreenName();
+        this.image = user.getOriginalProfileImageURLHttps();
+    }
+
+    @Override
+    public long getID() {
+        return userID;
     }
 }

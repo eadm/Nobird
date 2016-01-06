@@ -2,6 +2,9 @@ package ru.eadm.nobird.data.twitter;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ru.eadm.nobird.data.twitter.utils.TwitterStatusParser;
 import ru.eadm.nobird.data.types.TweetElement;
 import twitter4j.Status;
@@ -19,6 +22,12 @@ public class TwitterUtils {
             Log.d(TAG + "-" + status.getId(), urlEntity.getText());
         }
         return "";
+    }
+
+    public static ArrayList<TweetElement> statusToTweetElement(final List<Status> statuses) {
+        final ArrayList<TweetElement> tweets = new ArrayList<>(statuses.size());
+        for (final Status status : statuses) tweets.add(statusToTweetElement(status));
+        return tweets;
     }
 
     public static TweetElement statusToTweetElement(final Status status) {

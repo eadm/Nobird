@@ -2,40 +2,29 @@ package ru.eadm.nobird.fragment.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import ru.eadm.nobird.R;
 import ru.eadm.nobird.Util;
 import ru.eadm.nobird.data.FontMgr;
 import ru.eadm.nobird.data.ImageMgr;
+import ru.eadm.nobird.data.PageableArrayList;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.fragment.adapter.listener.ImageClickListener;
 import ru.eadm.nobird.fragment.adapter.listener.TweetItemClickListener;
 import ru.eadm.nobird.fragment.adapter.listener.UserClickListener;
 
-public class TweetRecycleViewAdapter extends RecyclerView.Adapter<TweetRecycleViewAdapter.ViewHolder> {
-    private final ArrayList<TweetElement> data;
+public class TweetRecycleViewAdapter extends AbsRecycleViewAdapter<TweetElement, TweetRecycleViewAdapter.ViewHolder> {
     public TweetRecycleViewAdapter() {
-        this(null);
+        super();
     }
 
-    public TweetRecycleViewAdapter(final ArrayList<TweetElement> data) {
-        if (data != null) {
-            this.data = data;
-        } else {
-            this.data = new ArrayList<>();
-        }
-    }
-
-    public ArrayList<TweetElement> getData() {
-        return data;
+    public TweetRecycleViewAdapter(final PageableArrayList<TweetElement> data) {
+        super(data);
     }
 
     @Override
@@ -75,26 +64,6 @@ public class TweetRecycleViewAdapter extends RecyclerView.Adapter<TweetRecycleVi
         }
 
         holder.page.setOnClickListener(tweetItemClickListener);
-    }
-
-    @Override
-    public int getItemCount() {
-        return data.size();
-    }
-
-    public void add(final TweetElement s) {
-        data.add(s);
-    }
-    public void addAll(final ArrayList<TweetElement> elements) {
-        data.addAll(elements);
-    }
-
-    public void add(final int index, final TweetElement element) {
-        data.add(index, element);
-    }
-
-    public void addAll(final int index, final ArrayList<TweetElement> elements) {
-        data.addAll(index, elements);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

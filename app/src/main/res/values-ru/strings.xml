@@ -10,4 +10,10 @@
     <string name="fragment_home_tab_mentions">Упоминания</string>
     <string name="search">Поиск</string>
     <string name="menu">Меню</string>
+    <string name="followers">Подписчики</string>
+    <string name="following">Подписки</string>
+    <string name="type_something">Напишите что-нибудь...</string>
+    <string name="username_placeholder" translatable="false"></string>
+    <string name="fragment_create_status_title">Новый твит</string>
+    <string name="block_user">Заблокировать</string>
 </resources>

@@ -19,7 +19,6 @@ public class LinkSpan extends AbsSpan {
 
     @Override
     public void updateDrawState(final TextPaint ds) {
-//        super.updateDrawState(ds);
         ds.setColor(0xFF659dd6);
     }
 

@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <LinearLayout
+            android:id="@+id/drawer_info_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="32dp"
@@ -25,14 +26,14 @@
 
                 android:id="@+id/drawer_info_image"/>
 
-            <TextView
+            <ru.eadm.nobird.design.RobotoLightTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/dark"
                 android:textSize="18sp"
                 android:id="@+id/drawer_info_name"/>
 
-            <TextView
+            <ru.eadm.nobird.design.RobotoLightTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/medium"

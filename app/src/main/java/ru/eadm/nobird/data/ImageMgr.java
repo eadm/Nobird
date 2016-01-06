@@ -1,6 +1,9 @@
 package ru.eadm.nobird.data;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
@@ -8,12 +11,16 @@ import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemor
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 
 import ru.eadm.nobird.R;
 
@@ -86,5 +93,21 @@ public final class ImageMgr {
 
     public void displayDarkImage(final String url, final ImageView i){
         imageLoader.displayImage(url, i, options_dark);
+    }
+
+    public void loadImage(final String url, final ImageLoadingListener listener) {
+        imageLoader.loadImage(url, listener);
+    }
+
+    public void loadBackgroundImage(final String url, final View target) {
+        final WeakReference<View> targetReference = new WeakReference<>(target);
+        imageLoader.loadImage(url, new ImageSize(target.getWidth(), target.getHeight()), options, new SimpleImageLoadingListener() {
+            @Override
+            public void onLoadingComplete(final String imageUri, final View view, final Bitmap loadedImage) {
+                if (targetReference.get() != null) {
+                    targetReference.get().setBackground(new BitmapDrawable(context.getResources(), loadedImage));
+                }
+            }
+        });
     }
 }

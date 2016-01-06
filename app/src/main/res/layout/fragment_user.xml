@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_user"
     android:layout_width="match_parent"
@@ -10,80 +11,236 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:id="@+id/fragment_user_appbar_layout">
+
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_user_info_container"
+
+            app:contentScrim="?attr/colorPrimaryDark"
+
             app:expandedTitleMarginEnd="@dimen/activity_horizontal_margin"
             app:expandedTitleMarginStart="@dimen/activity_horizontal_margin"
+            app:title=""
+
+            app:expandedTitleTextAppearance="@android:color/transparent"
+
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_collapseMode="parallax">
+                android:layout_height="wrap_content"
+                android:background="@color/dark"
+                app:layout_collapseMode="pin">
+
                 <ImageView
                     android:id="@+id/fragment_user_background"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@null"
-                    android:scaleType="centerCrop" />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/dark"
-                    android:alpha="0.8">
-                </LinearLayout>
-
-                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:orientation="vertical"
-                    android:gravity="center">
+
+                    android:layout_alignLeft="@+id/fragment_user_info"
+                    android:layout_alignStart="@+id/fragment_user_info"
+                    android:layout_alignRight="@+id/fragment_user_info"
+                    android:layout_alignEnd="@+id/fragment_user_info"
+                    android:layout_alignTop="@+id/fragment_user_info"
+                    android:layout_alignBottom="@+id/fragment_user_info"
+
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@null"
+                    android:scaleType="centerCrop"
+                    android:alpha="0.2"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:id="@+id/fragment_user_info"
+
+                    android:paddingTop="32dp"
+                    android:paddingBottom="32dp"
+
+                    android:paddingLeft="16dp"
+                    android:paddingStart="16dp"
+
+                    android:paddingRight="16dp"
+                    android:paddingEnd="16dp">
                     <ImageView
                         android:layout_width="96dp"
                         android:layout_height="96dp"
                         android:id="@+id/fragment_user_image"
                         android:scaleType="centerCrop"
                         android:contentDescription="@null"
-                        android:adjustViewBounds="true" />
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="16dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/fragment_user_name"
-                        android:textSize="18sp"
-                        android:layout_marginTop="16dp"
-                        android:textColor="@color/colorWhite"/>
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_below="@id/fragment_user_image">
+                        <ru.eadm.nobird.design.RobotoLightTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/fragment_user_name"
+                            android:textSize="18sp"
+                            style="@style/TextAppearance.AppCompat.Title"
+                            android:textColor="@color/colorWhite"/>
+                        <ru.eadm.nobird.design.RobotoLightTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/fragment_user_username"
+                            android:textSize="14sp"
+                            style="@style/TextAppearance.AppCompat.Subhead"
+                            android:textColor="@color/lightBlue"/>
+                        <ru.eadm.nobird.design.RobotoLightTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/fragment_user_description"
+                            android:textSize="14sp"
+                            android:textColor="@color/colorWhite"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center"/>
+
+                        <ru.eadm.nobird.design.RobotoLightTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/fragment_user_location"
+                            android:textSize="14sp"
+                            android:textColor="@color/gray"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center"
+                            android:visibility="gone"/>
+                        <ru.eadm.nobird.design.RobotoLightTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/fragment_user_link"
+                            android:textSize="14sp"
+                            android:textColor="@color/colorPrimary"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center"
+                            android:visibility="gone"/>
+                    </LinearLayout>
+                </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:baselineAligned="false"
+
+                    android:layout_below="@id/fragment_user_info"
+
+                    android:background="@color/lightGray">
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/fragment_user_username"
-                        android:textSize="14sp"
-                        android:textColor="@color/lightBlue"/>
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:id="@+id/fragment_user_followers_container">
+                        <ru.eadm.nobird.design.RobotoLightTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/followers"
+                            android:textSize="12sp"
+                            android:textAllCaps="true"
+                            android:textColor="@color/dark"/>
+                        <ru.eadm.nobird.design.RobotoLightTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/fragment_user_followers"
+                            android:textColor="@color/dark"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:id="@+id/fragment_user_following_container">
+                        <ru.eadm.nobird.design.RobotoLightTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/following"
+                            android:textSize="12sp"
+                            android:textAllCaps="true"
+                            android:textColor="@color/dark"/>
+                        <ru.eadm.nobird.design.RobotoLightTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/fragment_user_following"
+                            android:textColor="@color/dark"/>
+                    </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/fragment_user_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                android:title="@string/app_name" />
+                app:title="">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:alpha="0"
+                    android:id="@+id/fragment_user_info_small">
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/fragment_user_image_small"
+                        android:scaleType="centerCrop"
+                        android:contentDescription="@null"
+                        android:adjustViewBounds="true"
+
+                        android:layout_marginRight="8dp"
+                        android:layout_marginEnd="8dp"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="start"
+                        android:layout_toRightOf="@id/fragment_user_image_small"
+                        android:layout_toEndOf="@id/fragment_user_image_small"
+                        android:layout_centerVertical="true">
+                        <ru.eadm.nobird.design.RobotoLightTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/fragment_user_name_small"
+                            android:textSize="14sp"
+                            style="@style/TextAppearance.AppCompat.Title"
+                            android:textColor="@color/colorWhite"/>
+                        <ru.eadm.nobird.design.RobotoLightTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/fragment_user_username_small"
+                            android:textSize="12sp"
+                            style="@style/TextAppearance.AppCompat.Subhead"
+                            android:textColor="@color/lightBlue"/>
+                    </LinearLayout>
+                </RelativeLayout>
+            </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
+
+    <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:id="@+id/fragment_user_actions"
-        android:listDivider="@drawable/list_divider"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
+        android:id="@+id/fragment_user_swipe_refresh_layout"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/fragment_user_timeline"
+            android:scrollbars="vertical"
+            android:listDivider="@drawable/list_divider"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </android.support.design.widget.CoordinatorLayout>
