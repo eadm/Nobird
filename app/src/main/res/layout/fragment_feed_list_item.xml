@@ -40,25 +40,36 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tweet_element_username"
-
-                android:layout_toRightOf="@id/tweet_element_name"
-                android:layout_toEndOf="@id/tweet_element_name"
-                android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp"
-
-                android:textColor="@color/medium"
-                android:textSize="14sp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/tweet_element_date"
 
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tweet_element_username"
+
+                android:layout_toRightOf="@id/tweet_element_name"
+                android:layout_toEndOf="@id/tweet_element_name"
+
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+
+                android:layout_toLeftOf="@id/tweet_element_date"
+                android:layout_toStartOf="@id/tweet_element_date"
+
+                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
+
+                android:textColor="@color/medium"
+                android:textSize="14sp"
+
+                android:scrollHorizontally="true"
+                android:ellipsize="end"
+                android:maxLines="1"/>
         </RelativeLayout>
 
         <TextView

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +16,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ru.eadm.nobird.R;
-import ru.eadm.nobird.data.FontMgr;
 import ru.eadm.nobird.data.ImageMgr;
 import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.AccountElement;
 import ru.eadm.nobird.fragment.adapter.HomeViewPagerAdapter;
 import ru.eadm.nobird.notification.NotificationMgr;
+import twitter4j.TwitterException;
 
 
 public class Home extends Fragment implements View.OnClickListener{
@@ -93,7 +94,7 @@ public class Home extends Fragment implements View.OnClickListener{
     private void updateAccountInfo() {
         if (account != null) {
             nameTextView.setText(account.name);
-            usernameTextView.setText("@" + account.username);
+            usernameTextView.setText(String.format(getString(R.string.username_placeholder), account.username));
             ImageMgr.getInstance().displayImage(account.image, userImageView);
         }
     }
@@ -133,6 +134,18 @@ public class Home extends Fragment implements View.OnClickListener{
                 page.openDrawer(GravityCompat.START); // only open cause we can't press it when drawer opened
             break;
             case R.id.fragment_home_search:
+                Log.d("fragment_home_search", "hello");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            TwitterMgr.getInstance().getRateLimits();
+                        } catch (TwitterException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+
                 // open search fragment
             break;
             case R.id.fragment_home_tweet_button:

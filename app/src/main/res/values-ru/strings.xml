@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Nobird</string>
     <string name="sign_in_button">Войти через Твиттер</string>
     <string name="action_settings">Настройки</string>
     <string name="error_twitter_api">Критическая ошибка API Твиттера</string>
-    <string name="processing">Загрузка...</string>
+    <string name="processing">Загрузка…</string>
     <string name="error_account_init">Ошибка чтения учетной записи</string>
     <string name="fragment_home_tab_feed">Лента</string>
     <string name="fragment_home_tab_mentions">Упоминания</string>
@@ -12,8 +11,23 @@
     <string name="menu">Меню</string>
     <string name="followers">Подписчики</string>
     <string name="following">Подписки</string>
-    <string name="type_something">Напишите что-нибудь...</string>
+    <string name="type_something">Напишите что-нибудь…</string>
     <string name="username_placeholder" translatable="false"></string>
     <string name="fragment_create_status_title">Новый твит</string>
-    <string name="block_user">Заблокировать</string>
+    <string name="action_block">Заблокировать</string>
+    <string name="follow">Подписаться</string>
+    <string name="unfollow">Отписаться</string>
+    <string name="success_followed">Вы подписались на @%s</string>
+    <string name="success_unfollowed">Вы отписалсь от @%s</string>
+    <string name="error_twitter_88">Вы превысили количество обращений к серверу Twitter, Пожалуйста, попробуйте позже.</string>
+    <string name="action_unmute">Перестать игнорировать</string>
+    <string name="action_mute">Игнорировать</string>
+    <string name="success_muted">Вы начали игнорировать @%s</string>
+    <string name="success_unmuted">Вы перестали игнорировать @%s</string>
+    <string name="action_unblock">Разблокировать</string>
+    <string name="action_spam">Сообщить о Спаме</string>
+    <string name="success_blocked">Вы заблокировали @%s</string>
+    <string name="success_unblocked">Вы разблокировали @%s</string>
+    <string name="success_spam_reported">Вы сообщили о спаме со стороны @%s</string>
+    <string name="action_message">Сообщение</string>
 </resources>

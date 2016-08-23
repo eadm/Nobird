@@ -10,11 +10,6 @@ import ru.eadm.nobird.data.types.Element;
 import ru.eadm.nobird.notification.NotificationMgr;
 
 public abstract class AbsRecycleViewRefreshTask<E extends Element> extends AsyncTask<Long, Void, PageableArrayList<E>> {
-    public enum TaskState {
-        PROCESSING,
-        COMPLETED,
-        ERROR
-    }
 
     public enum Position {
         START,

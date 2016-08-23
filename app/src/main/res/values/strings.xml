@@ -2,8 +2,8 @@
     <string name="app_name" translatable="false">Nobird</string>
     <string name="action_settings">Settings</string>
     <string name="sign_in_button">Sign in with Twitter</string>
-    <string name="error_twitter_api">Crititcal Twitter API error</string>
-    <string name="processing">Processing...</string>
+    <string name="error_twitter_api">Critical Twitter API error</string>
+    <string name="processing">Processing…</string>
     <string name="error_account_init">Unable to retrieve your account</string>
     <string name="fragment_home_tab_feed">Feed</string>
     <string name="fragment_home_tab_mentions">Mentions</string>
@@ -13,7 +13,22 @@
     <string name="digit_placeholder" translatable="false">%d</string>
     <string name="followers">Followers</string>
     <string name="following">Following</string>
-    <string name="type_something">Type something...</string>
+    <string name="type_something">Type something…</string>
     <string name="fragment_create_status_title">New tweet</string>
-    <string name="block_user">Block user</string>
+    <string name="action_block">Block</string>
+    <string name="follow">Follow</string>
+    <string name="unfollow">Unfollow</string>
+    <string name="success_followed">You have followed @%s</string>
+    <string name="success_unfollowed">You have unfollowed @%s</string>
+    <string name="error_twitter_88">Limit of Twitter API calls was exceeded. Please try again later.</string>
+    <string name="action_mute">Mute</string>
+    <string name="action_unmute">Unmute</string>
+    <string name="success_muted">You have muted @%s</string>
+    <string name="success_unmuted">You have unmuted @%s</string>
+    <string name="action_unblock">Unblock</string>
+    <string name="action_spam">Report for Spam</string>
+    <string name="success_blocked">You have blocked @%s</string>
+    <string name="success_unblocked">You have unblocked @%s</string>
+    <string name="success_spam_reported">You have reported about spam from @%s</string>
+    <string name="action_message">Direct Message</string>
 </resources>

@@ -75,7 +75,7 @@ public abstract class AbsTweetRecycleViewFragmentNested extends AbsTweetRecycleV
     @Override
     public void onRefresh() {
         if (getState().getTask() != null
-                && getState().getTask().getState() == AbsTweetRecycleViewRefreshTask.TaskState.COMPLETED) {
+                && getState().getTask().getState() == TaskState.COMPLETED) {
             getState().setTask(createTask(POSITION_START, AbsTweetRecycleViewRefreshTask.Source.API));
             getState().getTask().execute((adapter.getItemCount() == 0) ? 0 : adapter.getData().get(0).tweetID, 0L);
 
@@ -85,7 +85,7 @@ public abstract class AbsTweetRecycleViewFragmentNested extends AbsTweetRecycleV
 
     public void onScrolledToEnd() {
         if (getState().getTask() != null
-                && getState().getTask().getState() == AbsTweetRecycleViewRefreshTask.TaskState.COMPLETED) {
+                && getState().getTask().getState() == TaskState.COMPLETED) {
             getState().setTask(createTask(POSITION_END, AbsTweetRecycleViewRefreshTask.Source.API));
             getState().getTask().execute(0L, adapter.getData().get(adapter.getData().size() - 1).tweetID - 1);
 

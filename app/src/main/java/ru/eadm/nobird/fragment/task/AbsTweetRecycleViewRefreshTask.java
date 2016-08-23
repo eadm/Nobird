@@ -10,11 +10,6 @@ import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.notification.NotificationMgr;
 
 public abstract class AbsTweetRecycleViewRefreshTask extends AsyncTask<Long, Void, ArrayList<TweetElement>> {
-    public enum TaskState {
-        PROCESSING,
-        COMPLETED,
-        ERROR
-    }
 
     public enum Source { // to get statuses from db an network
         CACHE,

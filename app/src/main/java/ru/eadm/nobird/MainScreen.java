@@ -2,7 +2,6 @@ package ru.eadm.nobird;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import ru.eadm.nobird.data.PreferenceMgr;
@@ -17,11 +16,12 @@ public class MainScreen extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main_screen);
+
         Util.initMgr(this);
         FragmentMgr.getInstance().attach(this);
         NotificationMgr.getInstance().attach(this, findViewById(R.id.fragment_container));
 
-        setContentView(R.layout.activity_main_screen);
         if (savedInstanceState == null) {
             if (PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID) != 0) {
                 FragmentMgr.getInstance().addFragment(0, new Home(), false);

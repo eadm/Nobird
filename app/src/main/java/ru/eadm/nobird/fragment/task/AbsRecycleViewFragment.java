@@ -89,7 +89,7 @@ public abstract class AbsRecycleViewFragment<E extends Element> extends Fragment
     @Override
     public void onRefresh() {
         if (task != null &&
-                task.getState() == AbsRecycleViewRefreshTask.TaskState.COMPLETED &&
+                task.getState() == TaskState.COMPLETED &&
                 data.hasPrevious()) {
             task = createTask(AbsRecycleViewRefreshTask.Position.START);
             task.execute(data.getPreviousCursor(), 0L);
@@ -100,7 +100,7 @@ public abstract class AbsRecycleViewFragment<E extends Element> extends Fragment
 
     private void onScrolledToEnd() {
         if (task != null &&
-                task.getState() == AbsRecycleViewRefreshTask.TaskState.COMPLETED &&
+                task.getState() == TaskState.COMPLETED &&
                 data.hasNext()) {
             task = createTask(AbsRecycleViewRefreshTask.Position.END);
             task.execute(0L, data.getNextCursor());
