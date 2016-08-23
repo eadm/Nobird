@@ -29,6 +29,8 @@ import ru.eadm.nobird.data.ImageMgr;
 import ru.eadm.nobird.data.PageableArrayList;
 import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
+import ru.eadm.nobird.data.twitter.TwitterUtils;
+import ru.eadm.nobird.data.twitter.utils.TwitterStatusParser;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.data.types.UserElement;
 import ru.eadm.nobird.design.DividerItemDecoration;
@@ -137,7 +139,7 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
         action_block = menu.findItem(R.id.action_block);
         action_unblock = menu.findItem(R.id.action_unblock);
 
-        action_unblock = menu.findItem(R.id.action_message);
+        action_message = menu.findItem(R.id.action_message);
 
         if (relationship != null) {
             setRelationship(relationship);
@@ -164,7 +166,6 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
         if (action_unblock != null) action_unblock.setVisible(relationship.isSourceBlockingTarget());
 
         if (action_message != null) action_message.setVisible(relationship.canSourceDm());
-//        relationship.
     }
 
     @Override
@@ -239,6 +240,11 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
 
         action_follow = null;
         action_unfollow = null;
+        action_mute = null;
+        action_unmute = null;
+        action_block = null;
+        action_unblock = null;
+        action_message = null;
     }
 
     @Override
@@ -273,7 +279,7 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
         username.setText(String.format(getString(R.string.username_placeholder), user.getScreenName().toLowerCase()));
         username_small.setText(String.format(getString(R.string.username_placeholder), user.getScreenName().toLowerCase()));
 
-        description.setText(user.getDescription());
+        description.setText(TwitterStatusParser.getUserDescription(user).getText());
         ImageMgr.getInstance().displayImage(user.getProfileBannerIPadRetinaURL(), background);
 
         followers.setText(String.format(getString(R.string.digit_placeholder), user.getFollowersCount()));

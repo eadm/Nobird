@@ -4,6 +4,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ru.eadm.nobird.data.twitter.utils.TwitterStatusParser;
 import ru.eadm.nobird.data.types.TweetElement;
@@ -13,13 +15,28 @@ import twitter4j.URLEntity;
 public class TwitterUtils {
     public static final String TAG = "TwitterUtils";
 
+    private static final Pattern[] patterns = {
+            Pattern.compile("/(?:(?:http|https)://)?(?:www.)?(?:instagram.com|instagr.am)/.*"),
+            Pattern.compile("/(?:(?:http|https)://)?(?:www.)?(?:youtube.com|youtu.be)(?:/watch\\?v=|/)([^&]+)")
+    };
+
     public static String getAttachment(final Status status) {
         if (status.getMediaEntities().length > 0) {
             return status.getMediaEntities()[0].getMediaURLHttps();
         }
 
         for (final URLEntity urlEntity : status.getURLEntities()) {
-            Log.d(TAG + "-" + status.getId(), urlEntity.getText());
+            Matcher matcher = patterns[0].matcher(urlEntity.getExpandedURL());
+            if (matcher.find()) {
+                return urlEntity.getExpandedURL() + "media/?size=l";
+            }
+
+            matcher = patterns[1].matcher(urlEntity.getExpandedURL());
+            if (matcher.find()) {
+                return "http://img.youtube.com/vi/" + matcher.group(1) + "/hqdefault.jpg";
+            }
+
+            Log.d(TAG + "-" + status.getId(), urlEntity.getExpandedURL());
         }
         return "";
     }

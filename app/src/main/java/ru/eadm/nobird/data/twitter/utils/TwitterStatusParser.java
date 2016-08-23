@@ -13,6 +13,7 @@ import twitter4j.HashtagEntity;
 import twitter4j.MediaEntity;
 import twitter4j.Status;
 import twitter4j.URLEntity;
+import twitter4j.User;
 import twitter4j.UserMentionEntity;
 
 public class TwitterStatusParser {
@@ -24,8 +25,12 @@ public class TwitterStatusParser {
         return new TwitterStatusText(span, click.getData() + "|" + (offset + start) + "|" + (offset + end));
     }
 
-    private static TwitterStatusText getSpan(final String string, final Status status, final int offset) {
-        for (final URLEntity entity : status.getURLEntities()) {
+    private static TwitterStatusText getSpan(final String string,
+                                             final URLEntity[] urlEntities, final MediaEntity[] mediaEntities,
+                                             final UserMentionEntity[] userMentionEntities, final HashtagEntity[] hashtagEntities,
+                                             final int offset) {
+        if (urlEntities != null)
+        for (final URLEntity entity : urlEntities) {
             final int start = string.indexOf(entity.getText());
             if (start != -1) {
                 return getSpannableString(
@@ -38,7 +43,8 @@ public class TwitterStatusParser {
             }
         }
 
-        for (final MediaEntity entity : status.getMediaEntities()) {
+        if (mediaEntities != null)
+        for (final MediaEntity entity : mediaEntities) {
             final int start = string.indexOf(entity.getText());
             if (start != -1) {
                 return getSpannableString(
@@ -51,7 +57,8 @@ public class TwitterStatusParser {
             }
         }
 
-        for (final UserMentionEntity entity : status.getUserMentionEntities()) {
+        if (userMentionEntities != null)
+        for (final UserMentionEntity entity : userMentionEntities) {
             final int start = string.indexOf('@' + entity.getText());
 
             if (start != -1) {
@@ -65,7 +72,8 @@ public class TwitterStatusParser {
             }
         }
 
-        for (final HashtagEntity entity : status.getHashtagEntities()) {
+        if (hashtagEntities != null)
+        for (final HashtagEntity entity : hashtagEntities) {
             final int start = string.indexOf('#' + entity.getText());
             if (start != -1) {
                 return getSpannableString(
@@ -82,14 +90,25 @@ public class TwitterStatusParser {
     }
 
     public static TwitterStatusText getTweetText(final Status status) {
-        final String[] strings = status.getText().split(" ");
+        return getParsedText(status.getText(),
+                status.getURLEntities(), status.getMediaEntities(),
+                status.getUserMentionEntities(), status.getHashtagEntities());
+    }
 
+
+    public static TwitterStatusText getUserDescription(final User user) {
+        return getParsedText(user.getDescription(), user.getDescriptionURLEntities(), null, null, null);
+    }
+
+    public static TwitterStatusText getParsedText(final String text,
+                                                  final URLEntity[] urlEntities, final MediaEntity[] mediaEntities,
+                                                  final UserMentionEntity[] userMentionEntities, final HashtagEntity[] hashtagEntities) {
+        final String[] strings = text.split(" ");
         final TwitterStatusText statusText = new TwitterStatusText();
-
 
         for (final String string : strings) {
             if (string.length() == 0) continue;
-            statusText.append(getSpan(string, status, statusText.length()));
+            statusText.append(getSpan(string, urlEntities, mediaEntities, userMentionEntities, hashtagEntities, statusText.length()));
         }
 
         return statusText;
