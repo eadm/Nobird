@@ -17,7 +17,7 @@ public class TwitterUtils {
 
     private static final Pattern[] patterns = {
             Pattern.compile("/(?:(?:http|https)://)?(?:www.)?(?:instagram.com|instagr.am)/.*"),
-            Pattern.compile("/(?:(?:http|https)://)?(?:www.)?(?:youtube.com|youtu.be)(?:/watch\\?v=|/)([^&]+)")
+            Pattern.compile("/(?:(?:http|https)://)?(?:www.)?(?:youtube.com/watch\\?v=|youtu.be/)([^&]+)")
     };
 
     public static String getAttachment(final Status status) {
@@ -26,6 +26,7 @@ public class TwitterUtils {
         }
 
         for (final URLEntity urlEntity : status.getURLEntities()) {
+            Log.d(TAG + "-" + status.getId(), urlEntity.getExpandedURL());
             Matcher matcher = patterns[0].matcher(urlEntity.getExpandedURL());
             if (matcher.find()) {
                 return urlEntity.getExpandedURL() + "media/?size=l";
@@ -35,8 +36,6 @@ public class TwitterUtils {
             if (matcher.find()) {
                 return "http://img.youtube.com/vi/" + matcher.group(1) + "/hqdefault.jpg";
             }
-
-            Log.d(TAG + "-" + status.getId(), urlEntity.getExpandedURL());
         }
         return "";
     }
@@ -48,7 +47,11 @@ public class TwitterUtils {
     }
 
     public static TweetElement statusToTweetElement(final Status status) {
-        return new TweetElement(
+        return statusToTweetElement(status, false);
+    }
+
+    public static TweetElement statusToTweetElement(final Status status, boolean keepStatus) {
+        final TweetElement tweetElement = new TweetElement(
                 status.getId(),
                 status.getUser().getId(),
 
@@ -59,5 +62,7 @@ public class TwitterUtils {
                 TwitterStatusParser.getTweetText(status),
                 status.getCreatedAt(),
                 getAttachment(status));
+        if (keepStatus) tweetElement.status = status;
+        return tweetElement;
     }
 }

@@ -46,5 +46,8 @@ public abstract class AbsRecycleViewAdapter<E extends Element, V extends Recycle
     public void add(final int index, final E e) {
         data.add(index, e);
     }
+    public void set(final int index, final E e) {
+        data.set(index, e);
+    }
 
 }

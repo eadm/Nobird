@@ -1,7 +1,9 @@
 package ru.eadm.nobird.data;
 
 import android.content.Context;
+import android.databinding.BindingAdapter;
 import android.graphics.Typeface;
+import android.widget.TextView;
 
 public final class FontMgr {
     private final Context context;
@@ -29,5 +31,11 @@ public final class FontMgr {
 
     public synchronized static FontMgr getInstance() {
         return instance;
+    }
+
+
+    @BindingAdapter({"typeface"})
+    public static void setTypeface(final TextView view, final Typeface typeface) {
+        view.setTypeface(typeface);
     }
 }

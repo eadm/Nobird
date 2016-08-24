@@ -31,4 +31,5 @@
     <string name="success_unblocked">You have unblocked @%s</string>
     <string name="success_spam_reported">You have reported about spam from @%s</string>
     <string name="action_message">Direct Message</string>
+    <string name="fragment_status">Tweet</string>
 </resources>

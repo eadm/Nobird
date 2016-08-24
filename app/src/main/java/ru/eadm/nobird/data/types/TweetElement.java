@@ -3,8 +3,10 @@ package ru.eadm.nobird.data.types;
 import java.util.Date;
 
 import ru.eadm.nobird.data.twitter.utils.TwitterStatusText;
+import ru.eadm.nobird.fragment.StatusFragment;
+import twitter4j.Status;
 
-public class TweetElement implements Element{
+public class TweetElement implements Element {
     public final long tweetID;
     public final String image;
     public final Date date;
@@ -12,6 +14,8 @@ public class TweetElement implements Element{
     public final UserElement user;
 
     public final TwitterStatusText text;
+
+    public Status status;
 
     public TweetElement(final long tweetID,
                         final long userID,
@@ -40,5 +44,9 @@ public class TweetElement implements Element{
     @Override
     public long getID() {
         return tweetID;
+    }
+
+    public void onClick() {
+        StatusFragment.showStatus(this);
     }
 }

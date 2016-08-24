@@ -3,13 +3,20 @@ package ru.eadm.nobird.design.span;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextPaint;
+import android.util.Log;
 import android.view.View;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import ru.eadm.nobird.fragment.FragmentMgr;
+import ru.eadm.nobird.fragment.StatusFragment;
 
 
 public class LinkSpan extends AbsSpan {
+
     public final static char SPAN_TAG = 'l';
+    private final static Pattern statusPattern = Pattern.compile("/(?:(?:http|https)://)?(?:www.)?.*twitter.com/.*/status/([^&]+)");
 
     private final String url;
     public LinkSpan(final String url) {
@@ -24,8 +31,13 @@ public class LinkSpan extends AbsSpan {
 
     @Override
     public void onClick(final View widget) {
-        FragmentMgr.getInstance().getContext()
-                .startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        final Matcher matcher = statusPattern.matcher(url);
+        if (matcher.find() && matcher.groupCount() > 0) {
+            StatusFragment.showStatus(Long.parseLong(matcher.group(1)));
+        } else {
+            FragmentMgr.getInstance().getContext()
+                    .startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        }
     }
 
     @Override

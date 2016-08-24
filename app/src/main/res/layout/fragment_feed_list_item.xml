@@ -1,99 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
-    <ImageView
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:id="@+id/tweet_element_user_image"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="android.view.View"/>
+        <import type="android.text.method.LinkMovementMethod"/>
 
-        android:contentDescription="@string/processing"
-        android:cropToPadding="true"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"/>
+        <import type="ru.eadm.nobird.Util"/>
+        <import type="ru.eadm.nobird.data.FontMgr"/>
+        <import type="ru.eadm.nobird.fragment.ImagePreview"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        <variable name="tweet" type="ru.eadm.nobird.data.types.TweetElement" />
+    </data>
+    <RelativeLayout
         android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
 
-        android:layout_toRightOf="@id/tweet_element_user_image"
-        android:layout_toEndOf="@id/tweet_element_user_image"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tweet_element_name"
-
-                android:textColor="@color/dark"
-                android:textSize="14sp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tweet_element_date"
-
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:textSize="12sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tweet_element_username"
-
-                android:layout_toRightOf="@id/tweet_element_name"
-                android:layout_toEndOf="@id/tweet_element_name"
-
-                android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp"
-
-                android:layout_toLeftOf="@id/tweet_element_date"
-                android:layout_toStartOf="@id/tweet_element_date"
-
-                android:layout_marginRight="8dp"
-                android:layout_marginEnd="8dp"
-
-                android:textColor="@color/medium"
-                android:textSize="14sp"
-
-                android:scrollHorizontally="true"
-                android:ellipsize="end"
-                android:maxLines="1"/>
-        </RelativeLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tweet_element_text"
-
-            android:layout_marginTop="8dp"
-
-            android:textColor="#111"
-            android:textSize="14sp"
-            android:lineSpacingExtra="4sp"/>
-
+        android:onClick="@{ () -> tweet.onClick() }">
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:id="@+id/tweet_element_attachment"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:id="@+id/tweet_element_user_image"
 
             android:contentDescription="@string/processing"
             android:cropToPadding="true"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"
-            />
-    </LinearLayout>
-</RelativeLayout>
+
+            android:onClick="@{() -> tweet.user.onClick()}"
+
+            app:imageUrl="@{tweet.user.image}"
+            app:roundImage="@{true}"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+
+            android:layout_toRightOf="@id/tweet_element_user_image"
+            android:layout_toEndOf="@id/tweet_element_user_image"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tweet_element_name"
+
+                    android:textColor="@color/dark"
+                    android:textSize="14sp"
+
+                    android:text="@{tweet.user.name}"
+                    android:onClick="@{() -> tweet.user.onClick()}"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tweet_element_date"
+
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="12sp"
+
+                    android:text="@{Util.dateDifference(tweet.date)}"
+                    app:typeface="@{FontMgr.getInstance().RobotoLight}" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_toRightOf="@id/tweet_element_name"
+                    android:layout_toEndOf="@id/tweet_element_name"
+
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+
+                    android:layout_toLeftOf="@id/tweet_element_date"
+                    android:layout_toStartOf="@id/tweet_element_date"
+
+                    android:layout_marginRight="8dp"
+                    android:layout_marginEnd="8dp"
+
+                    android:textColor="@color/medium"
+                    android:textSize="14sp"
+
+                    android:scrollHorizontally="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+
+                    android:text='@{"@" + tweet.user.username}'
+                    android:onClick="@{() -> tweet.user.onClick()}"
+                    app:typeface="@{FontMgr.getInstance().RobotoLight}" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tweet_element_text"
+
+                android:layout_marginTop="8dp"
+
+                android:textColor="#111"
+                android:textSize="14sp"
+                android:lineSpacingExtra="4sp"
+
+                android:text="@{tweet.text.getText()}"
+                app:typeface="@{FontMgr.getInstance().RobotoSlabLight}"
+                app:movementMethod="@{LinkMovementMethod.getInstance()}"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+
+                android:contentDescription="@string/processing"
+                android:cropToPadding="true"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:layout_marginTop="8dp"
+                android:visibility="@{tweet.image.length() == 0 ? View.GONE : View.VISIBLE}"
+
+                android:onClick="@{() -> ImagePreview.openImagePreview(tweet.image)}"
+                app:imageUrl="@{tweet.image}"
+                app:roundImage="@{false}" />
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

@@ -1,6 +1,7 @@
 package ru.eadm.nobird.data;
 
 import android.content.Context;
+import android.databinding.BindingAdapter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
@@ -81,6 +82,15 @@ public final class ImageMgr {
 
     public synchronized static ImageMgr getInstance() {
         return instance;
+    }
+
+    @BindingAdapter({"imageUrl", "roundImage"})
+    public static void displayImage(final ImageView view, final String src, final boolean rounded) {
+        if (rounded) {
+            ImageMgr.getInstance().displayRoundImage(src, view);
+        } else {
+            ImageMgr.getInstance().displayImage(src, view);
+        }
     }
 
     public void displayImage(final String url, final ImageView i){

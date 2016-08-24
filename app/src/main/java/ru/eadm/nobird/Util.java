@@ -26,6 +26,7 @@ public final class Util {
 
 
     public static String dateDifference(final Date d2){
+        if (d2 == null) return "";
         final long now = System.currentTimeMillis();
         final Date d1 = new Date (now);
         final long difference = d1.getTime() - d2.getTime();

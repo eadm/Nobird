@@ -1,41 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="ru.eadm.nobird.data.FontMgr"/>
 
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:id="@+id/list_item_user_image"
-        android:scaleType="centerCrop"
-        android:contentDescription="@null"
-        android:adjustViewBounds="true"
-
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp"/>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        <variable name="user" type="ru.eadm.nobird.data.types.UserElement" />
+    </data>
+    <RelativeLayout
         android:orientation="vertical"
-        android:gravity="start"
-        android:layout_toRightOf="@id/list_item_user_image"
-        android:layout_toEndOf="@id/list_item_user_image"
-        android:layout_centerVertical="true">
-        <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+
+        android:onClick="@{ () -> user.onClick() }">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/list_item_user_image"
+            android:scaleType="centerCrop"
+            android:contentDescription="@null"
+            android:adjustViewBounds="true"
+
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
+
+            app:imageUrl="@{user.image}"
+            app:roundImage="@{true}"
+            />
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/list_item_user_name"
-            android:textSize="14sp"
-            android:textColor="@color/dark"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/list_item_user_username"
-            android:textSize="12sp"
-            android:textColor="@color/medium"/>
-    </LinearLayout>
-</RelativeLayout>
+            android:orientation="vertical"
+            android:gravity="start"
+            android:layout_toRightOf="@id/list_item_user_image"
+            android:layout_toEndOf="@id/list_item_user_image"
+            android:layout_centerVertical="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/list_item_user_name"
+                android:textSize="14sp"
+                android:textColor="@color/dark"
+
+                app:typeface="@{FontMgr.getInstance().RobotoLight}"
+                android:text="@{ user.name }"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/list_item_user_username"
+                android:textSize="12sp"
+                android:textColor="@color/medium"
+
+                app:typeface="@{FontMgr.getInstance().RobotoLight}"
+                android:text='@{"@" + user.username }'/>
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

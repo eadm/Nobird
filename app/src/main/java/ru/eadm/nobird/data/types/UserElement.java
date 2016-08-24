@@ -1,5 +1,6 @@
 package ru.eadm.nobird.data.types;
 
+import ru.eadm.nobird.fragment.UserFragment;
 import twitter4j.User;
 
 public class UserElement implements Element {
@@ -26,5 +27,9 @@ public class UserElement implements Element {
     @Override
     public long getID() {
         return userID;
+    }
+
+    public void onClick() {
+        UserFragment.showUser(this);
     }
 }

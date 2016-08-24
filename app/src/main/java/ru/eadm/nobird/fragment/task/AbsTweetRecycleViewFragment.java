@@ -25,7 +25,7 @@ public class AbsTweetRecycleViewFragment extends Fragment  {
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {
-                refreshLayout.setRefreshing(state);
+                if (refreshLayout != null) refreshLayout.setRefreshing(state);
             }
         });
     }
@@ -37,8 +37,8 @@ public class AbsTweetRecycleViewFragment extends Fragment  {
         counter.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.slide_down));
     }
 
-    public void hideCounter() {
-        if (counter.getVisibility() == View.GONE) return;
+    public void hideCounter() { // always be ready that you view can suddenly disappear
+        if (counter == null || counter.getVisibility() == View.GONE) return;
         final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override

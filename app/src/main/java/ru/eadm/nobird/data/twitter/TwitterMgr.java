@@ -13,13 +13,12 @@ import ru.eadm.nobird.data.database.DBMgr;
 import ru.eadm.nobird.data.types.AccountElement;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.data.types.UserElement;
-import twitter4j.CursorSupport;
-import twitter4j.Friendship;
 import twitter4j.PagableResponseList;
 import twitter4j.Paging;
+import twitter4j.Query;
 import twitter4j.RateLimitStatus;
 import twitter4j.Relationship;
-import twitter4j.ResponseList;
+import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -257,5 +256,29 @@ public class TwitterMgr {
         }
     }
 
+    /**
+     * Requests status with specified id
+     * @param statusID - id of tweet
+     * @return {Status} - converted element
+     * @throws TwitterException
+     */
+    public Status showStatus(final long statusID) throws TwitterException {
+        if (twitter == null) localAuth();
+        return twitter.showStatus(statusID);
+    }
 
+
+    public ArrayList<TweetElement> getReplies(final long statusID, final String username, final long sinceID, final long maxID) throws TwitterException {
+        final Query query = new Query("to:" + username);
+        query.setSinceId(sinceID != 0 ? sinceID : statusID);
+        if (maxID != 0) {
+            query.setMaxId(maxID);
+        }
+
+        final ArrayList<TweetElement> result = new ArrayList<>();
+        for (final Status status : twitter.search(query).getTweets()) {
+            if (status.getInReplyToStatusId() == statusID) result.add(TwitterUtils.statusToTweetElement(status));
+        }
+        return result;
+    }
 }

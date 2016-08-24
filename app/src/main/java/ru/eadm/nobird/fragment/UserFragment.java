@@ -29,7 +29,6 @@ import ru.eadm.nobird.data.ImageMgr;
 import ru.eadm.nobird.data.PageableArrayList;
 import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
-import ru.eadm.nobird.data.twitter.TwitterUtils;
 import ru.eadm.nobird.data.twitter.utils.TwitterStatusParser;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.data.types.UserElement;
@@ -209,7 +208,7 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
     public void onRefresh() {
         if (timelineTask != null &&
                 timelineTask.getState() == TaskState.COMPLETED) {
-            timelineTask = new UserTimelineTask(this, userID, POSITION_END);
+            timelineTask = new UserTimelineTask(this, userID, POSITION_START);
             timelineTask.execute((adapter.getItemCount() == 0) ? 0 : adapter.getData().get(0).tweetID, 0L);
         }
     }
