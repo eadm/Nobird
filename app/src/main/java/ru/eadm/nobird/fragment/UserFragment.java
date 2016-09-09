@@ -199,6 +199,11 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
             case R.id.action_message:
                 item.setVisible(true);
                 return true;
+
+            case R.id.action_reply:
+                item.setVisible(true);
+                ComposeFragment.open(0, '@' + user.getName() + ' ');
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -478,10 +483,10 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
         private AbsUserLoadTask(final UserFragment fragment) { super(fragment); }
 
         @Override
-        protected void obtainData(final User data) {
-            fragmentWeakReference.get().setUser(data);
+        protected void obtainData(final UserFragment fragment, final User data) {
+            fragment.setUser(data);
 
-            new RelationshipLoaderTask(this.fragmentWeakReference.get()).execute(
+            new RelationshipLoaderTask(fragment).execute(
                     PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID),
                     data.getId()
             );
@@ -522,8 +527,8 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
         }
 
         @Override
-        protected void obtainData(final Relationship data) {
-            fragmentWeakReference.get().setRelationship(data);
+        protected void obtainData(final UserFragment fragment, final Relationship data) {
+            fragment.setRelationship(data);
         }
     }
 

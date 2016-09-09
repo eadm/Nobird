@@ -92,7 +92,7 @@ public class Home extends Fragment implements View.OnClickListener{
     }
 
     private void updateAccountInfo() {
-        if (account != null) {
+        if (isAdded() && account != null) {
             nameTextView.setText(account.name);
             usernameTextView.setText(String.format(getString(R.string.username_placeholder), account.username));
             ImageMgr.getInstance().displayImage(account.image, userImageView);
@@ -149,7 +149,7 @@ public class Home extends Fragment implements View.OnClickListener{
                 // open search fragment
             break;
             case R.id.fragment_home_tweet_button:
-                CreateStatusFragment.open();
+                ComposeFragment.open();
             break;
         }
     }

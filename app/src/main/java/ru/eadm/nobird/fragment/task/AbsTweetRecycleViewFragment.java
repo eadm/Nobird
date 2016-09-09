@@ -2,6 +2,7 @@ package ru.eadm.nobird.fragment.task;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -22,6 +23,7 @@ public class AbsTweetRecycleViewFragment extends Fragment  {
     protected TextView counter;
 
     public void setRefreshing(final boolean state) {
+        if (refreshLayout == null) return;
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -59,5 +61,11 @@ public class AbsTweetRecycleViewFragment extends Fragment  {
         refreshLayout = null;
         adapter = null;
         counter = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
     }
 }

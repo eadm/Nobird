@@ -1,5 +1,8 @@
 package ru.eadm.nobird.fragment;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.text.LoginFilter;
 import android.util.Log;
 
 import java.util.ArrayList;

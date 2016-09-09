@@ -32,4 +32,19 @@
     <string name="success_spam_reported">You have reported about spam from @%s</string>
     <string name="action_message">Direct Message</string>
     <string name="fragment_status">Tweet</string>
+    <string name="in_reply_to">In reply to…</string>
+    <string name="btn_reply">Reply</string>
+    <string name="btn_like">Like</string>
+    <string name="btn_retweet">Retweet</string>
+    <string name="btn_export">Exort</string>
+    <string name="export_dialog_copy_tweet_text">Copy tweet text</string>
+    <string name="export_dialog_copy_tweet_link">Copy link to tweet</string>
+    <string name="show_retweeters">List of retweets</string>
+    <string name="show_likers">List of likes</string>
+    <string name="send">Send</string>
+    <string name="error_location">Unable to retrieve your location</string>
+    <string name="draft_dialog_title">Draft</string>
+    <string name="draft_dialog_message">Do you want to save this tweet to drafts?</string>
+    <string name="action_destroy_status">Delete tweet</string>
+    <string name="success_status_destroyed">Tweet was deleted</string>
 </resources>

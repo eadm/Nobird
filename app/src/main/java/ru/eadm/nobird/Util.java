@@ -1,6 +1,9 @@
 package ru.eadm.nobird;
 
+import android.content.Context;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
+import android.view.inputmethod.InputMethodManager;
 
 import java.util.Date;
 
@@ -24,6 +27,14 @@ public final class Util {
         FragmentMgr.init(context);
     }
 
+    private static char[] numberShortcuts = { 0, 'k', 'm', 'b'};
+    public static String numberShortcut(long number) {
+        int i = 0;
+        for (; number / 1000 > 0; ++i) {
+            number /= 1000;
+        }
+        return Long.toString(number) + numberShortcuts[i];
+    }
 
     public static String dateDifference(final Date d2){
         if (d2 == null) return "";
@@ -46,5 +57,10 @@ public final class Util {
             return "now";
         else
             return differenceBack+"s";
+    }
+
+    public static void closeKeyboard(final Context c, final IBinder windowToken) {
+        final InputMethodManager mgr = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
+        mgr.hideSoftInputFromWindow(windowToken, 0);
     }
 }

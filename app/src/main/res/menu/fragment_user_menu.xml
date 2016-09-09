@@ -1,11 +1,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_reply"
+        android:visible="true"
+        android:title="@string/btn_reply"
+        android:icon="@drawable/ic_reply"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/action_message"
         android:visible="false"
         android:title="@string/action_message"
-        android:icon="@mipmap/ic_dm"
-        app:showAsAction="ifRoom"/>
+        android:icon="@drawable/ic_dm"
+        app:showAsAction="never"/>
     <item
         android:id="@+id/action_follow"
         android:title="@string/follow"

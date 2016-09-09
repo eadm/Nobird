@@ -8,125 +8,236 @@
         <import type="ru.eadm.nobird.Util"/>
         <import type="ru.eadm.nobird.data.FontMgr"/>
         <import type="ru.eadm.nobird.fragment.ImagePreview"/>
+        <import type="ru.eadm.nobird.data.types.TweetElementObserver"/>
 
         <variable name="tweet" type="ru.eadm.nobird.data.types.TweetElement" />
+        <variable name="adapter" type="ru.eadm.nobird.fragment.adapter.TweetRecycleViewAdapter" />
     </data>
-    <RelativeLayout
+    <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:background="@drawable/bg_border_bottom"
+            android:visibility="@{ (tweet.status != null &amp;&amp; tweet.status.getInReplyToStatusId() != -1) ? View.VISIBLE : View.GONE }">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_up"
+                android:layout_centerVertical="true"
+                android:contentDescription="@null"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/in_reply_to"
+                android:layout_marginLeft="32dp"
+                android:layout_marginStart="32dp"
+                android:layout_centerVertical="true"
+                android:textColor="@color/baseDeepBlue"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
 
-        android:onClick="@{ () -> tweet.onClick() }">
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:id="@+id/tweet_element_user_image"
+            android:onClick="@{ () -> tweet.status == null ? tweet.onClick() : void }">
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:id="@+id/tweet_element_user_image"
 
-            android:contentDescription="@string/processing"
-            android:cropToPadding="true"
-            android:scaleType="fitCenter"
-            android:adjustViewBounds="true"
+                android:contentDescription="@string/processing"
+                android:cropToPadding="true"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
 
-            android:onClick="@{() -> tweet.user.onClick()}"
+                android:onClick="@{() -> tweet.user.onClick()}"
 
-            app:imageUrl="@{tweet.user.image}"
-            app:roundImage="@{true}"/>
+                app:imageUrl="@{tweet.user.image}"
+                app:roundImage="@{true}"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+
+                android:layout_toRightOf="@id/tweet_element_user_image"
+                android:layout_toEndOf="@id/tweet_element_user_image"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tweet_element_name"
+
+                        android:textColor="@color/dark"
+                        android:textSize="14sp"
+
+                        android:text="@{tweet.user.name}"
+                        android:onClick="@{() -> tweet.user.onClick()}"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tweet_element_date"
+
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:textSize="12sp"
+
+                        android:text="@{Util.dateDifference(tweet.date)}"
+                        app:typeface="@{FontMgr.getInstance().RobotoLight}" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_toRightOf="@id/tweet_element_name"
+                        android:layout_toEndOf="@id/tweet_element_name"
+
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
+
+                        android:layout_toLeftOf="@id/tweet_element_date"
+                        android:layout_toStartOf="@id/tweet_element_date"
+
+                        android:layout_marginRight="8dp"
+                        android:layout_marginEnd="8dp"
+
+                        android:textColor="@color/medium"
+                        android:textSize="14sp"
+
+                        android:scrollHorizontally="true"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+
+                        android:text='@{"@" + tweet.user.username}'
+                        android:onClick="@{() -> tweet.user.onClick()}"
+                        app:typeface="@{FontMgr.getInstance().RobotoLight}" />
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tweet_element_text"
+
+                    android:layout_marginTop="8dp"
+
+                    android:textColor="#111"
+                    android:textSize="14sp"
+                    android:lineSpacingExtra="4sp"
+
+                    android:text="@{tweet.text.getText()}"
+                    app:typeface="@{FontMgr.getInstance().RobotoSlabLight}"
+                    app:movementMethod="@{LinkMovementMethod.getInstance()}"/>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+
+                    android:contentDescription="@string/processing"
+                    android:cropToPadding="true"
+                    android:scaleType="centerCrop"
+                    android:adjustViewBounds="true"
+                    android:layout_marginTop="8dp"
+
+                    android:id="@+id/tweet_element_attachment"
+
+                    android:onClick="@{() -> ImagePreview.openImagePreview(tweet.image)}" />
+            </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-
-            android:layout_toRightOf="@id/tweet_element_user_image"
-            android:layout_toEndOf="@id/tweet_element_user_image"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tweet_element_name"
-
-                    android:textColor="@color/dark"
-                    android:textSize="14sp"
-
-                    android:text="@{tweet.user.name}"
-                    android:onClick="@{() -> tweet.user.onClick()}"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tweet_element_date"
-
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:textSize="12sp"
-
-                    android:text="@{Util.dateDifference(tweet.date)}"
-                    app:typeface="@{FontMgr.getInstance().RobotoLight}" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:layout_toRightOf="@id/tweet_element_name"
-                    android:layout_toEndOf="@id/tweet_element_name"
-
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginStart="8dp"
-
-                    android:layout_toLeftOf="@id/tweet_element_date"
-                    android:layout_toStartOf="@id/tweet_element_date"
-
-                    android:layout_marginRight="8dp"
-                    android:layout_marginEnd="8dp"
-
-                    android:textColor="@color/medium"
-                    android:textSize="14sp"
-
-                    android:scrollHorizontally="true"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-
-                    android:text='@{"@" + tweet.user.username}'
-                    android:onClick="@{() -> tweet.user.onClick()}"
-                    app:typeface="@{FontMgr.getInstance().RobotoLight}" />
-            </RelativeLayout>
-
-            <TextView
+            android:orientation="horizontal"
+            android:baselineAligned="false"
+            android:background="@drawable/bg_border_top"
+            android:visibility="@{ tweet.status != null ? View.VISIBLE : View.GONE }">
+            <LinearLayout
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/tweet_element_text"
+                android:layout_weight="1"
+                android:orientation="horizontal"
 
-                android:layout_marginTop="8dp"
-
-                android:textColor="#111"
-                android:textSize="14sp"
-                android:lineSpacingExtra="4sp"
-
-                android:text="@{tweet.text.getText()}"
-                app:typeface="@{FontMgr.getInstance().RobotoSlabLight}"
-                app:movementMethod="@{LinkMovementMethod.getInstance()}"/>
-
-            <ImageView
+                android:onClick="@{() -> TweetElementObserver.reply(tweet)}">
+                <ImageView
+                    android:duplicateParentState="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/btn_reply_default"
+                    android:contentDescription="@string/btn_reply"/>
+            </LinearLayout>
+            <LinearLayout
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
 
-                android:contentDescription="@string/processing"
-                android:cropToPadding="true"
-                android:scaleType="centerCrop"
-                android:adjustViewBounds="true"
-                android:layout_marginTop="8dp"
-                android:visibility="@{tweet.image.length() == 0 ? View.GONE : View.VISIBLE}"
+                android:onClick="@{(view) -> TweetElementObserver.like(adapter, tweet)}">
+                <ImageView
+                    android:duplicateParentState="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@{ tweet.status.isFavorited() ? @drawable/btn_like_active_default : @drawable/btn_like_default }"
+                    android:contentDescription="@string/btn_like"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginLeft="2dp"
+                    android:maxLines="1"
+                    android:textColor="@{ tweet.status.isFavorited() ? 0xFFFC4349 : @color/baseDeepBlue }"
+                    android:text='@{ Util.numberShortcut(tweet.status.getFavoriteCount()) }' />
+            </LinearLayout>
+            <LinearLayout
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
 
-                android:onClick="@{() -> ImagePreview.openImagePreview(tweet.image)}"
-                app:imageUrl="@{tweet.image}"
-                app:roundImage="@{false}" />
+                android:onClick="@{(view) -> TweetElementObserver.retweet(adapter, tweet)}">
+                <ImageView
+                    android:duplicateParentState="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@{ tweet.status.isRetweetedByMe() ? @drawable/btn_retweet_active_default : @drawable/btn_retweet_default }"
+                    android:contentDescription="@string/btn_retweet"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginLeft="2dp"
+                    android:maxLines="1"
+                    android:textColor="@{ tweet.status.isRetweetedByMe() ? 0xFF6DBCDB : @color/baseDeepBlue }"
+                    android:text='@{ Util.numberShortcut(tweet.status.getRetweetCount()) }' />
+            </LinearLayout>
+            <LinearLayout
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+
+                android:onClick="@{() -> TweetElementObserver.export(tweet)}">
+                <ImageView
+                    android:duplicateParentState="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/btn_export_default"
+                    android:contentDescription="@string/btn_export"/>
+            </LinearLayout>
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 </layout>

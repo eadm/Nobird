@@ -47,7 +47,7 @@ public abstract class AbsRecycleViewRefreshTask<E extends Element> extends Async
                 NotificationMgr.getInstance().showSnackbar(R.string.error_twitter_api, null);
             }
         } else {
-            if (fragment.get() != null) {
+            if (fragment.get() != null && fragment.get().adapter != null) {
                 if (position == Position.END) { // adding to end of list
                     final int start = fragment.get().adapter.getItemCount();
                     fragment.get().adapter.addAll(data);

@@ -1,8 +1,10 @@
 package ru.eadm.nobird.data.twitter;
 
 import android.content.Context;
+import android.location.Location;
 import android.util.Log;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -13,12 +15,14 @@ import ru.eadm.nobird.data.database.DBMgr;
 import ru.eadm.nobird.data.types.AccountElement;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.data.types.UserElement;
+import twitter4j.GeoLocation;
 import twitter4j.PagableResponseList;
 import twitter4j.Paging;
 import twitter4j.Query;
 import twitter4j.RateLimitStatus;
 import twitter4j.Relationship;
 import twitter4j.Status;
+import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -42,6 +46,7 @@ public class TwitterMgr {
 
     private TwitterLogin login;
     private Twitter twitter;
+    public AccountElement account;
 
     private TwitterMgr(final Context context) {
         Log.d(TwitterMgr.TAG, "create new twitter");
@@ -95,7 +100,7 @@ public class TwitterMgr {
      * @return {AccountElement} - data about user
      */
     public synchronized AccountElement localAuth() {
-        final AccountElement account = DBMgr.getInstance()
+        account = DBMgr.getInstance()
                 .getAccount(PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID));
         this.twitter = new TwitterLogin(factory, account).twitter;
 
@@ -252,7 +257,8 @@ public class TwitterMgr {
     public void getRateLimits() throws TwitterException {
         final Map<String, RateLimitStatus> stats  = twitter.getRateLimitStatus();
         for (final Map.Entry<String, RateLimitStatus> stat: stats.entrySet()) {
-            Log.d("LIMITS", stat.getKey() + ": " + stat.getValue().getRemaining() + "/" + stat.getValue().getLimit());
+            if (stat.getValue().getRemaining() != stat.getValue().getLimit())
+                Log.d("LIMITS", stat.getKey() + ": " + stat.getValue().getRemaining() + "/" + stat.getValue().getLimit());
         }
     }
 
@@ -268,7 +274,18 @@ public class TwitterMgr {
     }
 
 
-    public ArrayList<TweetElement> getReplies(final long statusID, final String username, final long sinceID, final long maxID) throws TwitterException {
+    /**
+     * Search for replies to specified tweet
+     * @param statusID - id of target tweet
+     * @param username - username of author of targeted tweet
+     * @param sinceID - min id
+     * @param maxID - max id
+     * @return - replies to specified tweet
+     * @throws TwitterException
+     */
+    public ArrayList<TweetElement> getReplies(final long statusID, final String username,
+                                              final long sinceID, final long maxID) throws TwitterException {
+        if (twitter == null) localAuth();
         final Query query = new Query("to:" + username);
         query.setSinceId(sinceID != 0 ? sinceID : statusID);
         if (maxID != 0) {
@@ -280,5 +297,65 @@ public class TwitterMgr {
             if (status.getInReplyToStatusId() == statusID) result.add(TwitterUtils.statusToTweetElement(status));
         }
         return result;
+    }
+
+    /**
+     * Retweets target status
+     * @param statusID - id of target status
+     * @return - updated status
+     * @throws TwitterException
+     */
+    public Status retweet(final long statusID) throws TwitterException {
+        if (twitter == null) localAuth();
+        return twitter.retweetStatus(statusID);
+    }
+
+    /**
+     * Likes target status
+     * @param statusID - id of target status
+     * @return - updated status
+     * @throws TwitterException
+     */
+    public Status like(final long statusID, final boolean create) throws TwitterException {
+        if (twitter == null) localAuth();
+//        twitter.new
+        if (create) {
+            return twitter.createFavorite(statusID);
+        } else {
+            return twitter.destroyFavorite(statusID);
+        }
+    }
+
+    /**
+     * Creates status with given parameters
+     * @param text - text of status
+     * @param attachment - image attachment if null no attachment will be added
+     * @param location - location of tweet if null location will not be added
+     * @param inReplyTo - id of status of in reply to, ignored if 0
+     */
+    public Status createStatus(final String text, final String attachment, final Location location, final long inReplyTo) throws TwitterException {
+        final StatusUpdate statusUpdate = new StatusUpdate(text);
+        if (attachment != null) {
+            final File file = new File(attachment);
+            statusUpdate.setMedia(file);
+        }
+
+        if (location != null) {
+            statusUpdate.setLocation(new GeoLocation(location.getLatitude(), location.getLongitude()));
+        }
+
+        if (inReplyTo != 0) statusUpdate.setInReplyToStatusId(inReplyTo);
+        return twitter.updateStatus(statusUpdate);
+    }
+
+    /**
+     * Tries to destroy status with given id
+     * @param statusID - id of status to destroy
+     * @return - destroyed status
+     * @throws TwitterException
+     */
+    public Status destroyStatus(final long statusID) throws TwitterException {
+        if (twitter == null) localAuth();
+        return twitter.destroyStatus(statusID);
     }
 }

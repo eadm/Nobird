@@ -3,6 +3,7 @@ package ru.eadm.nobird.data;
 import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.graphics.Typeface;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public final class FontMgr {
@@ -36,6 +37,11 @@ public final class FontMgr {
 
     @BindingAdapter({"typeface"})
     public static void setTypeface(final TextView view, final Typeface typeface) {
+        view.setTypeface(typeface);
+    }
+
+    @BindingAdapter({"typeface"})
+    public static void setTypeface(final EditText view, final Typeface typeface) {
         view.setTypeface(typeface);
     }
 }

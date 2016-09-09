@@ -17,6 +17,12 @@ public class TweetElement implements Element {
 
     public Status status;
 
+    /**
+     * Displays if current tweet element participate in some data update task
+     *  You should avoid all network operation while lock == true
+     */
+    public boolean lock = false;
+
     public TweetElement(final long tweetID,
                         final long userID,
 

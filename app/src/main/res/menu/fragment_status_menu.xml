@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_show_likers"
+        android:title="@string/show_likers"
+        android:visible="false"/>
+    <item
+        android:id="@+id/action_show_retweeters"
+        android:title="@string/show_retweeters"
+        android:visible="false"/>
+    <item
+        android:id="@+id/action_destroy_status"
+        android:title="@string/action_destroy_status"
+        android:visible="false"/>
+</menu>

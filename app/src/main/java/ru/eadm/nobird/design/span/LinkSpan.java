@@ -32,8 +32,11 @@ public class LinkSpan extends AbsSpan {
     @Override
     public void onClick(final View widget) {
         final Matcher matcher = statusPattern.matcher(url);
-        if (matcher.find() && matcher.groupCount() > 0) {
+        if (matcher.find() && matcher.groupCount() > 0) try {
             StatusFragment.showStatus(Long.parseLong(matcher.group(1)));
+        } catch (final NumberFormatException nfe) {
+            FragmentMgr.getInstance().getContext()
+                    .startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
         } else {
             FragmentMgr.getInstance().getContext()
                     .startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));

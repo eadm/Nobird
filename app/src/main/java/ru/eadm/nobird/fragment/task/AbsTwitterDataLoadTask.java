@@ -1,7 +1,6 @@
 package ru.eadm.nobird.fragment.task;
 
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
 
 import java.lang.ref.WeakReference;
 
@@ -13,11 +12,11 @@ import twitter4j.TwitterException;
  * Abstract class to load simple data with TwitterMgr
  * @param <A> type of arguments
  * @param <D> type of data to return
- * @param <F> type of fragment
+ * @param <F> type of fragment or type of object to clojure
  */
-public abstract class AbsTwitterDataLoadTask <A, D, F extends Fragment> extends AsyncTask<A, Void, D> {
+public abstract class AbsTwitterDataLoadTask <A, D, F> extends AsyncTask<A, Void, D> {
     protected WeakReference<F> fragmentWeakReference;
-    private TaskState taskState;
+    protected TaskState taskState;
 
     protected AbsTwitterDataLoadTask(final F fragment) {
         taskState = TaskState.PROCESSING;
@@ -29,7 +28,7 @@ public abstract class AbsTwitterDataLoadTask <A, D, F extends Fragment> extends 
     }
 
     protected abstract D loadData(final A[] params) throws TwitterException;
-    protected abstract void obtainData(final D data);
+    protected abstract void obtainData(final F fragment, final D data);
 
     @SafeVarargs
     @Override
@@ -47,7 +46,7 @@ public abstract class AbsTwitterDataLoadTask <A, D, F extends Fragment> extends 
     protected void onPostExecute(final D data) {
         if (fragmentWeakReference.get() != null && data != null) {
             taskState = TaskState.COMPLETED;
-            obtainData(data);
+            obtainData(fragmentWeakReference.get(), data);
         } else {
             taskState = TaskState.ERROR;
         }

@@ -104,4 +104,6 @@ public abstract class AbsTweetRecycleViewFragmentNested extends AbsTweetRecycleV
             getState().setData(adapter.getData());
         }
     }
+
+
 }

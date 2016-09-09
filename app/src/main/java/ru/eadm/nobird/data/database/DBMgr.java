@@ -171,4 +171,27 @@ public final class DBMgr {
                         PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID) + ""
                 });
     }
+
+    public void saveDraft(final String text) {
+        final ContentValues cv = new ContentValues();
+        cv.put("name", text);
+        db.insert(DBHelper.TABLE_DRAFTS, null, cv);
+    }
+
+    public List<String> getDrafts() {
+        final Cursor cursor = db.query(DBHelper.TABLE_ACCOUNTS, null, null, null, null, null, "id DESC");
+        final ArrayList<String> drafts = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                drafts.add(cursor.getString(cursor.getColumnIndex("name")));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return drafts;
+    }
+
+    public void removeElementFromTableByID(final String table, final String fieldName, final long id){
+        Log.d(TAG, "removeElementFromTableByID: " + db.delete(table, fieldName + " = " + id, null));
+    }
 }

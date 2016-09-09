@@ -31,4 +31,20 @@
     <string name="success_spam_reported">Вы сообщили о спаме со стороны @%s</string>
     <string name="action_message">Сообщение</string>
     <string name="fragment_status">Твит</string>
+    <string name="in_reply_to">Ответ на…</string>
+    <string name="btn_reply">Ответить</string>
+    <string name="btn_like">Оценить</string>
+    <string name="btn_retweet">Ретвит</string>
+    <string name="btn_export">Экспортировать</string>
+    <string name="export_dialog_copy_tweet_text">Скопировать текст твита</string>
+    <string name="export_dialog_copy_tweet_link">Скопировать ссылку на твит</string>
+    <string name="show_retweeters">Список ретвитнувших</string>
+    <string name="show_likers">Список лайкнувших</string>
+    <string name="send">Отправить</string>
+    <string name="error_location">Ошибка при определении вашего местоположения</string>
+    <string name="draft_dialog_title">Черновик</string>
+    <string name="digit_placeholder" translatable="false"></string>
+    <string name="draft_dialog_message">Хотите ли вы сохранить этот твит в черновики?</string>
+    <string name="action_destroy_status">Удалить твит</string>
+    <string name="success_status_destroyed">Твит был удалён</string>
 </resources>

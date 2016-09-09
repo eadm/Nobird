@@ -5,10 +5,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * Created by ruslandavletshin on 06/12/15.
+ * Default class that contains table names constants and creates/updates DB
  */
 public final class DBHelper extends SQLiteOpenHelper {
     public final static String TABLE_ACCOUNTS = "accounts";
+    public static final String TABLE_DRAFTS = "drafts";
 
     public final static String TABLE_TWEETS = "tweets";
     public final static String TABLE_TWEETS_PATTERN = "insert into " + TABLE_TWEETS +
@@ -47,6 +48,10 @@ public final class DBHelper extends SQLiteOpenHelper {
                 "" +
                 "ownerID integer," +
                 "type integer);"); // 0 for feed, 1 for mentions
+
+        db.execSQL("create table "+TABLE_DRAFTS+" ("
+                + "id integer primary key autoincrement,"
+                + "name text" + ");");
     }
 
     @Override

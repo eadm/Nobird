@@ -50,6 +50,12 @@ public class TwitterUtils {
         return statusToTweetElement(status, false);
     }
 
+    /**
+     * Converts Status to TweetElement
+     * @param status - status object to build from
+     * @param keepStatus - if true keeps original status object
+     * @return converted tweet element
+     */
     public static TweetElement statusToTweetElement(final Status status, boolean keepStatus) {
         final TweetElement tweetElement = new TweetElement(
                 status.getId(),

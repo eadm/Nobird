@@ -24,6 +24,10 @@ public final class PreferenceMgr {
         }
     }
 
+    public long getCurrentAccountID() {
+        return getLong(CURRENT_ACCOUNT_ID);
+    }
+
     public synchronized static PreferenceMgr getInstance() {
         return instance;
     }

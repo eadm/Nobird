@@ -1,6 +1,7 @@
 package ru.eadm.nobird.fragment;
 
 import android.content.Context;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -57,6 +58,11 @@ public class FragmentMgr {
         transaction.commit();
     }
 
+    public void showDialog(final DialogFragment dialogFragment) {
+        if (app.get() == null) return;
+        dialogFragment.show(app.get().getSupportFragmentManager(), dialogFragment.getTag());
+    }
+
     public void back() {
         if (app.get() == null) return;
 
@@ -64,4 +70,11 @@ public class FragmentMgr {
     }
 
     public Context getContext() { return app.get(); }
+
+    public void copyToClipboard(final String text) {
+        android.content.ClipboardManager clipboardManager =
+                (android.content.ClipboardManager) app.get().getSystemService(AppCompatActivity.CLIPBOARD_SERVICE);
+        android.content.ClipData clip = android.content.ClipData.newPlainText("text", text);
+        clipboardManager.setPrimaryClip(clip);
+    }
 }
