@@ -37,6 +37,10 @@ public class TweetRecycleViewAdapter extends AbsRecycleViewAdapter<TweetElement,
         return -1;
     }
 
+    public TweetElement get(final int pos) {
+        return data.get(pos);
+    }
+
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int p) {
         if (data.get(p).image != null && data.get(p).image.length() > 0) {

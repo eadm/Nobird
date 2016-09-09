@@ -16,27 +16,20 @@ public abstract class AbsTweetRecycleViewRefreshTask extends AsyncTask<Long, Voi
         API
     }
 
-    private WeakReference<AbsTweetRecycleViewFragment> fragment;
-    private TaskState taskState;
+    protected WeakReference<AbsTweetRecycleViewFragment> fragmentWeakReference;
+    protected TaskState taskState;
 
-    private final int position;
+    protected final int position;
     protected final Source source;
 
     public AbsTweetRecycleViewRefreshTask(
             final AbsTweetRecycleViewFragment fragment,
             final int position,
             final Source source) {
-        this.fragment = new WeakReference<>(fragment);
+        this.fragmentWeakReference = new WeakReference<>(fragment);
         this.position = position;
         this.source = source;
         taskState = TaskState.PROCESSING;
-    }
-
-    public void attachFragment(final AbsTweetRecycleViewFragment fragment) {
-        this.fragment = new WeakReference<>(fragment);
-        if (getState() == TaskState.PROCESSING) {
-            fragment.setRefreshing(true);
-        }
     }
 
     public TaskState getState() {
@@ -46,35 +39,34 @@ public abstract class AbsTweetRecycleViewRefreshTask extends AsyncTask<Long, Voi
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        if (fragment.get() != null) {
-            fragment.get().setRefreshing(true);
+        if (fragmentWeakReference.get() != null) {
+            fragmentWeakReference.get().setRefreshing(true);
         }
     }
 
-    protected abstract ArrayList<TweetElement> doInBackground(Long... params);
-
     @Override
-    protected void onPostExecute(ArrayList<TweetElement> data) {
-        if (fragment.get() == null) return;
+    protected void onPostExecute(final ArrayList<TweetElement> data) {
+        final AbsTweetRecycleViewFragment fragment = fragmentWeakReference.get();
+        if (fragment == null) return;
         if (data == null) {
             taskState = TaskState.ERROR;
-            NotificationMgr.getInstance().showSnackbar(R.string.error_twitter_api, fragment.get().refreshLayout);
+            NotificationMgr.getInstance().showSnackbar(R.string.error_twitter_api, null);
         } else {
-            if (fragment.get().adapter != null) {
+            if (fragment.adapter != null) {
                 if (position == AbsTweetRecycleViewFragmentNested.POSITION_END) { // adding to end of list
-                    final int start = fragment.get().adapter.getItemCount();
-                    fragment.get().adapter.addAll(data);
-                    fragment.get().adapter.notifyItemRangeInserted(start, data.size());
+                    final int start = fragment.adapter.getItemCount();
+                    fragment.adapter.addAll(data);
+                    fragment.adapter.notifyItemRangeInserted(start, data.size());
                 } else if (position == AbsTweetRecycleViewFragmentNested.POSITION_START) { // adding to start
-                    fragment.get().adapter.addAll(0, data);
-                    fragment.get().adapter.notifyItemRangeInserted(0, data.size());
-                    fragment.get().showCounter(data.size());
+                    fragment.adapter.addAll(0, data);
+                    fragment.adapter.notifyItemRangeInserted(0, data.size());
+//                    fragment.showCounter(data.size());
                 }
             }
             taskState = TaskState.COMPLETED;
         }
-        if (fragment.get().adapter != null) {
-            fragment.get().setRefreshing(false);
+        if (fragment.adapter != null) {
+            fragment.setRefreshing(false);
         }
     }
 }

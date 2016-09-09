@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,23 +14,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import ru.eadm.nobird.R;
-import ru.eadm.nobird.data.ImageMgr;
-import ru.eadm.nobird.data.PageableArrayList;
 import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.database.DBHelper;
 import ru.eadm.nobird.data.database.DBMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.twitter.TwitterUtils;
+import ru.eadm.nobird.data.twitter.utils.TwitterExceptionResolver;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.databinding.FragmentStatusBinding;
-import ru.eadm.nobird.design.DividerItemDecoration;
-import ru.eadm.nobird.fragment.adapter.TweetRecycleViewAdapter;
 import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewFragment;
-import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewFragmentNested;
+import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewRefreshTask;
 import ru.eadm.nobird.fragment.task.AbsTwitterDataLoadTask;
 import ru.eadm.nobird.fragment.task.TaskState;
 import ru.eadm.nobird.notification.NotificationMgr;
@@ -42,9 +36,7 @@ import twitter4j.TwitterException;
 public class StatusFragment extends AbsTweetRecycleViewFragment implements SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = "StatusFragment";
 
-    private PageableArrayList<TweetElement> data;
     private StatusLoadTask statusLoadTask;
-    private RepliesLoadTask repliesLoadTask;
 
     private long statusID;
     private int conversationEnd = 0;
@@ -64,18 +56,13 @@ public class StatusFragment extends AbsTweetRecycleViewFragment implements Swipe
         activity.setSupportActionBar(binding.fragmentStatusToolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        refreshLayout = binding.fragmentStatusSwipeRefreshLayout;
-        refreshLayout.setOnRefreshListener(this);
+        setRefreshLayout(binding.fragmentStatusSwipeRefreshLayout);
+        setRecyclerView(binding.fragmentStatusTimeline);
 
-        if (data == null && statusLoadTask == null) {
+        if (statusLoadTask == null) {
             statusLoadTask = new StatusLoadTask(this);
             statusLoadTask.execute(statusID);
         }
-
-        adapter = new TweetRecycleViewAdapter(data);
-        data = adapter.getData();
-
-        initRecycleView(binding);
 
         return binding.getRoot();
     }
@@ -83,46 +70,11 @@ public class StatusFragment extends AbsTweetRecycleViewFragment implements Swipe
     public void onDestroyView() {
         super.onDestroyView();
         binding.unbind();
-        refreshLayout = null;
-    }
-
-    private void initRecycleView(final FragmentStatusBinding binding) {
-        final RecyclerView recyclerView = binding.fragmentStatusTimeline;
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        recyclerView.addItemDecoration(new DividerItemDecoration(
-                getContext(), R.drawable.list_divider, DividerItemDecoration.VERTICAL_LIST));
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            boolean scrolledToEnd = false;
-
-            @Override
-            public void onScrolled(final RecyclerView recyclerView, final int dx, final int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy <= 0) return; // ignore if you scrolls up
-                final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (layoutManager.getItemCount() - recyclerView.getChildCount()
-                        <= layoutManager.findFirstVisibleItemPosition()) {
-                    if (!scrolledToEnd) onScrolledToEnd();
-                    scrolledToEnd = true;
-                } else {
-                    scrolledToEnd = false;
-                }
-            }
-
-            @Override
-            public void onScrollStateChanged(final RecyclerView recyclerView, final int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                ImageMgr.getInstance().listener.onScrollStateChanged(null, newState);
-            }
-        });
-        recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
         setHasOptionsMenu(true);
         this.statusID = getArguments().getLong("statusID");
     }
@@ -138,10 +90,6 @@ public class StatusFragment extends AbsTweetRecycleViewFragment implements Swipe
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.action_show_likers:
-//                return true;
-//            case R.id.action_show_retweeters:
-//                return true;
             case R.id.action_destroy_status:
                 new DestroyStatusTask().execute(getArguments().getLong("statusID"));
                 return true;
@@ -151,21 +99,18 @@ public class StatusFragment extends AbsTweetRecycleViewFragment implements Swipe
     }
 
     @Override
+    protected AbsTweetRecycleViewRefreshTask createRefreshTask(int pos) {
+        return new RepliesLoadTask(this, username, statusID, pos);
+    }
+
+    @Override
     public void onRefresh() {
-        if (repliesLoadTask != null &&
-                repliesLoadTask.getState() == TaskState.COMPLETED) {
-            repliesLoadTask = new RepliesLoadTask(this, username, statusID, POSITION_START);
-            repliesLoadTask.execute((adapter.getItemCount() == conversationEnd) ? conversationEnd : adapter.getData().get(conversationEnd).tweetID, 0L);
+        if (refreshTask != null &&
+                refreshTask.getState() == TaskState.COMPLETED) {
+            refreshTask = createRefreshTask(POSITION_START);
+            refreshTask.execute((adapter.getItemCount() == conversationEnd) ? conversationEnd : adapter.getData().get(conversationEnd).tweetID, 0L);
         } else {
             refreshLayout.setRefreshing(false);
-        }
-    }
-    private void onScrolledToEnd() {
-        Log.d(TAG, "onScrolledToEnd");
-        if (repliesLoadTask != null &&
-                repliesLoadTask.getState() == TaskState.COMPLETED) {
-            repliesLoadTask = new RepliesLoadTask(this, username, statusID, POSITION_END);
-            repliesLoadTask.execute(0L, adapter.getData().get(adapter.getData().size() - 1).tweetID - 1);
         }
     }
 
@@ -206,10 +151,10 @@ public class StatusFragment extends AbsTweetRecycleViewFragment implements Swipe
                 }
 
                 fragment.username = tweetElement.user.username;
-                fragment.repliesLoadTask = new RepliesLoadTask(
+                fragment.refreshTask = new RepliesLoadTask(
                         fragment, tweetElement.user.username,
                         fragment.statusID, POSITION_END);
-                fragment.repliesLoadTask.execute(0L, 0L);
+                fragment.refreshTask.execute(0L, 0L);
             }
 
             fragment.adapter.add(0, tweetElement);
@@ -221,21 +166,25 @@ public class StatusFragment extends AbsTweetRecycleViewFragment implements Swipe
             }
         }
     }
-    private final class RepliesLoadTask extends AbsTwitterDataLoadTask<Long, ArrayList<TweetElement>, StatusFragment> {
+    private final class RepliesLoadTask extends AbsTweetRecycleViewRefreshTask {
         final long statusID;
         final String username;
-        final int pos;
         private RepliesLoadTask(final StatusFragment fragment, final String username, final long statusID, final int pos) {
-            super(fragment);
+            super(fragment, pos, Source.API);
             this.username = username;
             this.statusID = statusID;
-            this.pos = pos;
             fragment.setRefreshing(true);
         }
 
         @Override
-        protected ArrayList<TweetElement> loadData(final Long[] params) throws TwitterException {
-            return TwitterMgr.getInstance().getReplies(statusID, username, params[0], params[1]);
+        protected ArrayList<TweetElement> doInBackground(Long... params) {
+            try {
+                return TwitterMgr.getInstance().getReplies(statusID, username, params[0], params[1]);
+            } catch (final TwitterException e) {
+                NotificationMgr.getInstance().showSnackbar(TwitterExceptionResolver.resolve(e), null);
+                e.printStackTrace();
+                return null;
+            }
         }
 
         @Override
@@ -250,16 +199,15 @@ public class StatusFragment extends AbsTweetRecycleViewFragment implements Swipe
             if (taskState != TaskState.COMPLETED) taskState = TaskState.ERROR;
         }
 
-        @Override
-        protected void obtainData(final StatusFragment fragment, final ArrayList<TweetElement> data) {
+        protected void obtainData(final AbsTweetRecycleViewFragment fragment, final ArrayList<TweetElement> data) {
             if (!fragment.isAdded()) return; // if fragment removed
-            if (pos == AbsTweetRecycleViewFragmentNested.POSITION_START) {
-                fragment.adapter.addAll(conversationEnd, data);
-                fragment.adapter.notifyItemRangeInserted(conversationEnd, data.size());
+            if (position == POSITION_START) {
+                fragment.getAdapter().addAll(conversationEnd, data);
+                fragment.getAdapter().notifyItemRangeInserted(conversationEnd, data.size());
             } else {
-                final int start = fragment.adapter.getItemCount();
-                fragment.adapter.addAll(data);
-                fragment.adapter.notifyItemRangeInserted(start, data.size());
+                final int start = fragment.getAdapter().getItemCount();
+                fragment.getAdapter().addAll(data);
+                fragment.getAdapter().notifyItemRangeInserted(start, data.size());
             }
         }
     }

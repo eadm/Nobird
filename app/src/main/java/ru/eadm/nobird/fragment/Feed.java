@@ -1,8 +1,5 @@
 package ru.eadm.nobird.fragment;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.text.LoginFilter;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -10,7 +7,6 @@ import java.util.ArrayList;
 import ru.eadm.nobird.data.database.DBMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.TweetElement;
-import ru.eadm.nobird.fragment.state.AbsTweetRecycleViewState;
 import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewFragmentNested;
 import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewRefreshTask;
 import twitter4j.TwitterException;
@@ -21,11 +17,6 @@ public final class Feed extends AbsTweetRecycleViewFragmentNested {
     @Override
     protected AbsTweetRecycleViewRefreshTask createTask(final int position, final AbsTweetRecycleViewRefreshTask.Source source) {
         return new FeedDataGetTask(this, position, source);
-    }
-
-    @Override
-    protected AbsTweetRecycleViewState getState() {
-        return FeedFragmentState.getInstance();
     }
 
     private final class FeedDataGetTask extends AbsTweetRecycleViewRefreshTask {
@@ -46,15 +37,6 @@ public final class Feed extends AbsTweetRecycleViewFragmentNested {
                 }
             }
             return null;
-        }
-    }
-
-    private final static class FeedFragmentState extends AbsTweetRecycleViewState {
-        private static FeedFragmentState instance;
-
-        private static FeedFragmentState getInstance() {
-            if (instance == null) instance = new FeedFragmentState();
-            return instance;
         }
     }
 }

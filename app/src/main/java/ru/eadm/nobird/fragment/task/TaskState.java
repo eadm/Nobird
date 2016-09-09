@@ -1,7 +1,7 @@
 package ru.eadm.nobird.fragment.task;
 
 /**
- * Created by ruslandavletshin on 21/08/16.
+ * Enum that display states of async tasks
  */
 public enum  TaskState {
     IDLE, // task created but not started

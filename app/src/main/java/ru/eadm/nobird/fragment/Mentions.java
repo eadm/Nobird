@@ -1,15 +1,14 @@
 package ru.eadm.nobird.fragment;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 
+import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.database.DBMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.TweetElement;
-import ru.eadm.nobird.fragment.state.AbsTweetRecycleViewState;
 import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewFragmentNested;
 import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewRefreshTask;
+import ru.eadm.nobird.notification.NotificationMgr;
 import twitter4j.TwitterException;
 
 public final class Mentions extends AbsTweetRecycleViewFragmentNested {
@@ -18,11 +17,6 @@ public final class Mentions extends AbsTweetRecycleViewFragmentNested {
     @Override
     protected AbsTweetRecycleViewRefreshTask createTask(final int position, final AbsTweetRecycleViewRefreshTask.Source source) {
         return new MentionsDataGetTask(this, position, source);
-    }
-
-    @Override
-    protected AbsTweetRecycleViewState getState() {
-        return MentionFragmentState.getInstance();
     }
 
     private final class MentionsDataGetTask extends AbsTweetRecycleViewRefreshTask {
@@ -38,20 +32,12 @@ public final class Mentions extends AbsTweetRecycleViewFragmentNested {
             } else {
                 try {
                     return TwitterMgr.getInstance().getMentionsTimeline(params[0], params[1]);
-                } catch (TwitterException e) {
-                    Log.e(Feed.TAG, "Error: " + e.getMessage());
+                } catch (final TwitterException e) {
+                    e.printStackTrace();
+                    NotificationMgr.getInstance().showSnackbar(R.string.error_twitter_api, null);
                 }
             }
             return null;
-        }
-    }
-
-    private final static class MentionFragmentState extends AbsTweetRecycleViewState {
-        private static MentionFragmentState instance;
-
-        private static MentionFragmentState getInstance() {
-            if (instance == null) instance = new MentionFragmentState();
-            return instance;
         }
     }
 }

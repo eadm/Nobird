@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -26,18 +25,14 @@ import java.util.ArrayList;
 
 import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.ImageMgr;
-import ru.eadm.nobird.data.PageableArrayList;
 import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.twitter.utils.TwitterStatusParser;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.data.types.UserElement;
-import ru.eadm.nobird.design.DividerItemDecoration;
-import ru.eadm.nobird.fragment.adapter.TweetRecycleViewAdapter;
 import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewFragment;
 import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewRefreshTask;
 import ru.eadm.nobird.fragment.task.AbsTwitterDataLoadTask;
-import ru.eadm.nobird.fragment.task.TaskState;
 import ru.eadm.nobird.notification.NotificationMgr;
 import twitter4j.Relationship;
 import twitter4j.TwitterException;
@@ -67,10 +62,6 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
     private Relationship relationship;
     private User user;
     private AbsTwitterDataLoadTask<Long, ?, UserFragment> userTask;
-    private PageableArrayList<TweetElement> data;
-
-    private UserTimelineTask timelineTask;
-
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -78,8 +69,8 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
         super.onCreateView(inflater, container, savedInstanceState);
         final View page = inflater.inflate(R.layout.fragment_user, container, false);
 
-        refreshLayout = (SwipeRefreshLayout) page.findViewById(R.id.fragment_user_swipe_refresh_layout);
-        refreshLayout.setOnRefreshListener(this);
+        setRefreshLayout((SwipeRefreshLayout) page.findViewById(R.id.fragment_user_swipe_refresh_layout));
+        setRecyclerView((RecyclerView)page.findViewById(R.id.fragment_user_timeline));
 
         final Toolbar toolbar = (Toolbar) page.findViewById(R.id.fragment_user_toolbar);
         toolbar.setTitle("");
@@ -88,14 +79,11 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        if (data == null) {
-            timelineTask = new UserTimelineTask(this, userID, POSITION_END);
-            timelineTask.execute(0L, 0L);
+        if (refreshTask == null) {
+            refreshTask = createRefreshTask(POSITION_END);
+            refreshTask.execute(0L, 0L);
         }
-        adapter = new TweetRecycleViewAdapter(data);
-        data = adapter.getData();
 
-        initRecycleView(page);
         initUserFields(page);
 
         if (user != null) {
@@ -115,14 +103,17 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
     }
 
     @Override
+    protected AbsTweetRecycleViewRefreshTask createRefreshTask(int pos) {
+        return new UserTimelineTask(this, userID, pos);
+    }
+
+    @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
         userID = getArguments().getLong("userID");
         if (userID != PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID)) {
             setHasOptionsMenu(true);
         }
-        adapter = new TweetRecycleViewAdapter();
     }
 
     @Override
@@ -210,22 +201,6 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
     }
 
     @Override
-    public void onRefresh() {
-        if (timelineTask != null &&
-                timelineTask.getState() == TaskState.COMPLETED) {
-            timelineTask = new UserTimelineTask(this, userID, POSITION_START);
-            timelineTask.execute((adapter.getItemCount() == 0) ? 0 : adapter.getData().get(0).tweetID, 0L);
-        }
-    }
-    private void onScrolledToEnd() {
-        if (timelineTask != null &&
-            timelineTask.getState() == TaskState.COMPLETED) {
-            timelineTask = new UserTimelineTask(this, userID, POSITION_END);
-            timelineTask.execute(0L, adapter.getData().get(adapter.getData().size() - 1).tweetID - 1);
-        }
-    }
-
-    @Override
     public void onDestroyView() { // to avoid leaks
         super.onDestroyView();
         name = null;
@@ -254,10 +229,6 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
     @Override
     public void onDestroy() { // to avoid leaks it's calls when fragment completely destroyed
         super.onDestroy();
-        data = null;
-        timelineTask.cancel(false);
-        timelineTask = null;
-
         user = null;
         userTask.cancel(false);
         userTask = null;
@@ -345,39 +316,6 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
         page.findViewById(R.id.fragment_user_following_container).setOnClickListener(this);
     }
 
-    /**
-     * Initializes the recycle view on given page, sets adapter and scroll listener
-     * @param page {View} - view to find a recycle view
-     */
-    private void initRecycleView(final View page) {
-        final RecyclerView recyclerView = (RecyclerView)page.findViewById(R.id.fragment_user_timeline);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        recyclerView.addItemDecoration(new DividerItemDecoration(
-                getContext(), R.drawable.list_divider, DividerItemDecoration.VERTICAL_LIST));
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(final RecyclerView recyclerView, final int dx, final int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (layoutManager.getItemCount() - recyclerView.getChildCount()
-                        <= layoutManager.findFirstVisibleItemPosition()) {
-                    onScrolledToEnd();
-                }
-            }
-
-            @Override
-            public void onScrollStateChanged(final RecyclerView recyclerView, final int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                ImageMgr.getInstance().listener.onScrollStateChanged(null, newState);
-
-//                hideCounter();
-            }
-        });
-        recyclerView.setAdapter(adapter);
-    }
-
     private static final String TAG = "UserFragment";
 
     public static void showUser(final long userID) {
@@ -419,7 +357,6 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
             break;
         }
     }
-
 
     private class ChangeBlockStatusTask extends AbsUserLoadTask {
         private ChangeBlockStatusTask(final UserFragment fragment, final boolean create) {
@@ -546,8 +483,8 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
         protected ArrayList<TweetElement> doInBackground(final Long... params) {
             try {
                 return TwitterMgr.getInstance().getUserTimeline(userID, params[0], params[1]);
-            } catch (TwitterException e) {
-                Log.e(Feed.TAG, "Error: " + e.getMessage());
+            } catch (final TwitterException e) {
+                e.printStackTrace();
                 return null;
             }
         }
