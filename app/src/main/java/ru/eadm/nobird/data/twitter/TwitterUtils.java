@@ -1,6 +1,6 @@
 package ru.eadm.nobird.data.twitter;
 
-import android.util.Log;
+//import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import ru.eadm.nobird.data.twitter.utils.TwitterStatusParser;
 import ru.eadm.nobird.data.types.TweetElement;
+import twitter4j.MediaEntity;
 import twitter4j.Status;
 import twitter4j.URLEntity;
 
@@ -20,24 +21,27 @@ public class TwitterUtils {
             Pattern.compile("/(?:(?:http|https)://)?(?:www.)?(?:youtube.com/watch\\?v=|youtu.be/)([^&]+)")
     };
 
-    public static String getAttachment(final Status status) {
-        if (status.getMediaEntities().length > 0) {
-            return status.getMediaEntities()[0].getMediaURLHttps();
+    public static List<String> getAttachments(final Status status) {
+        final ArrayList<String> attachments = new ArrayList<>();
+
+        for (final MediaEntity entity : status.getExtendedMediaEntities()) {
+            attachments.add(entity.getMediaURLHttps());
+//            Log.d(TAG + "-" + status.getId(), entity.getMediaURLHttps());
         }
 
         for (final URLEntity urlEntity : status.getURLEntities()) {
-            Log.d(TAG + "-" + status.getId(), urlEntity.getExpandedURL());
+//            Log.d(TAG + "-" + status.getId(), urlEntity.getExpandedURL());
             Matcher matcher = patterns[0].matcher(urlEntity.getExpandedURL());
             if (matcher.find()) {
-                return urlEntity.getExpandedURL() + "media/?size=l";
+                attachments.add(urlEntity.getExpandedURL() + "media/?size=l");
             }
 
             matcher = patterns[1].matcher(urlEntity.getExpandedURL());
             if (matcher.find()) {
-                return "http://img.youtube.com/vi/" + matcher.group(1) + "/hqdefault.jpg";
+                attachments.add("http://img.youtube.com/vi/" + matcher.group(1) + "/hqdefault.jpg");
             }
         }
-        return "";
+        return attachments;
     }
 
     public static ArrayList<TweetElement> statusToTweetElement(final List<Status> statuses) {
@@ -67,7 +71,7 @@ public class TwitterUtils {
 
                 TwitterStatusParser.getTweetText(status),
                 status.getCreatedAt(),
-                getAttachment(status));
+                getAttachments(status));
         if (keepStatus) tweetElement.status = status;
         return tweetElement;
     }

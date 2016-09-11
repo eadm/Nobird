@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by ruslandavletshin on 08/12/15.
+ * Base view pager adapter
  */
 public class HomeViewPagerAdapter extends FragmentPagerAdapter{
     private final List<Fragment> fragments;

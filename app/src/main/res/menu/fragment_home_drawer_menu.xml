@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="@string/drafts"
+        android:id="@+id/drawer_drafts"
+        android:icon="@drawable/drawer_drafts"
+        android:visible="true"/>
+
+    <item
+        android:title="@string/lists"
+        android:id="@+id/drawer_lists"
+        android:icon="@drawable/drawer_lists"
+        android:visible="true"/>
+</menu>

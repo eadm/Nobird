@@ -50,4 +50,7 @@ public abstract class AbsRecycleViewAdapter<E extends Element, V extends Recycle
         data.set(index, e);
     }
 
+    public E get(final int pos) {
+        return data.get(pos);
+    }
 }

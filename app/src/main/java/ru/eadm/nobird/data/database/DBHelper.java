@@ -49,13 +49,11 @@ public final class DBHelper extends SQLiteOpenHelper {
                 "ownerID integer," +
                 "type integer);"); // 0 for feed, 1 for mentions
 
-        db.execSQL("create table "+TABLE_DRAFTS+" ("
+        db.execSQL("create table "+ TABLE_DRAFTS +" ("
                 + "id integer primary key autoincrement,"
                 + "name text" + ");");
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-    }
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
 }

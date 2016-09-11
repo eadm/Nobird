@@ -54,18 +54,21 @@ public final class ImageMgr {
         options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
                 .showStubImage(R.drawable.image_placeholder_light)
                 .build();
 
         options_dark = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
                 .showStubImage(R.drawable.image_placeholder_dark)
                 .build();
 
         options_round = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
                 .showStubImage(R.drawable.image_placeholder_light)
                 .displayer(new RoundedBitmapDisplayer(999999)) // ~ infinite to get round
                 .build();

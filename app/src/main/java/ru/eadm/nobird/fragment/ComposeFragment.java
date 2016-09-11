@@ -11,6 +11,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
@@ -18,7 +19,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,9 +44,13 @@ import ru.eadm.nobird.design.animation.OnEndAnimationListener;
 import ru.eadm.nobird.design.animation.OnStartAnimationListener;
 import ru.eadm.nobird.dialog.DraftDialogFragment;
 import ru.eadm.nobird.notification.NotificationMgr;
+import twitter4j.Status;
+import twitter4j.TwitterException;
 
 public final class ComposeFragment extends Fragment implements View.OnClickListener, LocationListener {
     private final static String TAG = "ComposeFragment";
+
+    private final static int ATTACHMENT_SIZE = 23;
 
     private int count = 140;
     private FragmentComposeBinding binding;
@@ -59,6 +63,11 @@ public final class ComposeFragment extends Fragment implements View.OnClickListe
     private MenuItem action_send;
 
     private String text;
+
+    /**
+     * If true draft dialog won't appear. Used to close fragment on status publish.
+     */
+    private boolean ignoreDraft = false;
 
     private final static String ARG_TEXT_FIELD = "text", ARG_IN_REPLY_TO = "inReplyTo";
 
@@ -111,7 +120,7 @@ public final class ComposeFragment extends Fragment implements View.OnClickListe
      * @param s - text of editText field
      */
     private void handleTextChange(final Editable s) {
-        count = (attachmentName != null ? 120 : 140) - s.length();
+        count = (attachmentName != null ? 140 - ATTACHMENT_SIZE : 140) - s.length();
 
         if (action_send != null) {
             action_send.setVisible(count < 140);
@@ -137,6 +146,7 @@ public final class ComposeFragment extends Fragment implements View.OnClickListe
 
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         locationProvider = locationManager.getBestProvider(new Criteria(), false);
+        ignoreDraft = false;
     }
 
     @Override
@@ -147,7 +157,7 @@ public final class ComposeFragment extends Fragment implements View.OnClickListe
         locationManager = null;
         locationProvider = null;
 
-        if (text != null && (text.length() > 0 && !text.equals(getArguments().getString(ARG_TEXT_FIELD))) ) {
+        if (!ignoreDraft && text != null && (text.length() > 0 && !text.equals(getArguments().getString(ARG_TEXT_FIELD))) ) {
                 // if text not null and it was changed then asks to save it
             final DialogFragment dialogFragment = new DraftDialogFragment();
             final Bundle bundle = new Bundle();
@@ -168,7 +178,10 @@ public final class ComposeFragment extends Fragment implements View.OnClickListe
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == R.id.action_send) {
-//            new ComposeTask().execute();
+            new CreateStatusTask(binding.fragmentComposeText.getText().toString(), attachmentPath,
+                    location, getArguments().getLong(ARG_IN_REPLY_TO)).execute();
+            ignoreDraft = true;
+            FragmentMgr.getInstance().back();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -335,4 +348,42 @@ public final class ComposeFragment extends Fragment implements View.OnClickListe
     public void onProviderEnabled(String provider) {}
     @Override
     public void onProviderDisabled(String provider) {}
+
+    private final class CreateStatusTask extends AsyncTask<Void, Void, Status> {
+        private final String text, attachmentPath;
+        private final Location location;
+        private final long inReplyTo;
+
+        private CreateStatusTask(final String text, final String attachmentPath, final Location location, final long inReplyTo) {
+            this.text = text;
+            this.attachmentPath = attachmentPath;
+            this.location = location;
+            this.inReplyTo = inReplyTo;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            NotificationMgr.getInstance().showInfiniteSnackbar(R.string.process_status_publish, null);
+        }
+
+        @Override
+        protected twitter4j.Status doInBackground(final Void... params) {
+            try {
+                return TwitterMgr.getInstance().createStatus(text, attachmentPath, location, inReplyTo);
+            } catch (final TwitterException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(final twitter4j.Status status) {
+            if (status == null) {
+                NotificationMgr.getInstance().showSnackbar(R.string.error_status_publish, null);
+                open(inReplyTo, text);
+            } else {
+                NotificationMgr.getInstance().showSnackbar(R.string.success_status_publish, null);
+            }
+        }
+    }
 }

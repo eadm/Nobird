@@ -44,9 +44,10 @@ public abstract class AbsTwitterDataLoadTask <A, D, F> extends AsyncTask<A, Void
 
     @Override
     protected void onPostExecute(final D data) {
-        if (fragmentWeakReference.get() != null && data != null) {
+        final F fragment = fragmentWeakReference.get();
+        if (fragment != null && data != null) {
             taskState = TaskState.COMPLETED;
-            obtainData(fragmentWeakReference.get(), data);
+            obtainData(fragment, data);
         } else {
             taskState = TaskState.ERROR;
         }

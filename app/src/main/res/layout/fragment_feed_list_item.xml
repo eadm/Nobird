@@ -16,7 +16,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_list_item">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -131,7 +132,9 @@
 
                     android:layout_marginTop="8dp"
 
-                    android:textColor="#111"
+                    android:duplicateParentState="true"
+
+                    android:textColor="@color/mediumGray"
                     android:textSize="14sp"
                     android:lineSpacingExtra="4sp"
 
@@ -139,19 +142,12 @@
                     app:typeface="@{FontMgr.getInstance().RobotoSlabLight}"
                     app:movementMethod="@{LinkMovementMethod.getInstance()}"/>
 
-                <ImageView
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
-
-                    android:contentDescription="@string/processing"
-                    android:cropToPadding="true"
-                    android:scaleType="centerCrop"
-                    android:adjustViewBounds="true"
-                    android:layout_marginTop="8dp"
-
-                    android:id="@+id/tweet_element_attachment"
-
-                    android:onClick="@{() -> ImagePreview.openImagePreview(tweet.image)}" />
+                    android:id="@+id/tweet_element_attachments"
+                    android:layout_marginTop="8dp"/>
             </LinearLayout>
         </RelativeLayout>
 

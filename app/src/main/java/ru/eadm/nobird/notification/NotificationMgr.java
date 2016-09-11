@@ -41,9 +41,15 @@ public final class NotificationMgr {
                 .setAction("Action", null).show();
     }
 
-    public void showSnackbar(final int messageID, final View container) {
+    public void showSnackbar(final int stringID, final View container) {
         if (context.get() == null || root == null) return;
-        Snackbar.make((container == null ? root : container), context.get().getText(messageID), Snackbar.LENGTH_LONG)
+        Snackbar.make((container == null ? root : container), context.get().getText(stringID), Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+    }
+
+    public void showInfiniteSnackbar(final int stringID, final View container) {
+        if (context.get() == null || root == null) return;
+        Snackbar.make((container == null ? root : container), context.get().getText(stringID), Snackbar.LENGTH_INDEFINITE)
                 .setAction("Action", null).show();
     }
 }

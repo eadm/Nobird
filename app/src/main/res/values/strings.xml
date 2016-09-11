@@ -47,4 +47,10 @@
     <string name="draft_dialog_message">Do you want to save this tweet to drafts?</string>
     <string name="action_destroy_status">Delete tweet</string>
     <string name="success_status_destroyed">Tweet was deleted</string>
+    <string name="error_status_publish">An error has been occurred while trying to publish your status</string>
+    <string name="success_status_publish">Status has been succefully published</string>
+    <string name="process_status_publish">Publishing your status…</string>
+    <string name="drafts">Drafts</string>
+    <string name="manage_accounts">Manage accounts</string>
+    <string name="lists">Lists</string>
 </resources>

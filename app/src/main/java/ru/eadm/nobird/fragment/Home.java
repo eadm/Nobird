@@ -3,6 +3,7 @@ package ru.eadm.nobird.fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -10,10 +11,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+
+import java.lang.ref.WeakReference;
 
 import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.ImageMgr;
@@ -22,15 +27,16 @@ import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.AccountElement;
 import ru.eadm.nobird.fragment.adapter.HomeViewPagerAdapter;
 import ru.eadm.nobird.notification.NotificationMgr;
-import twitter4j.TwitterException;
 
 
-public class Home extends Fragment implements View.OnClickListener{
+public class Home extends Fragment implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     public static final String TAG = "home_fragment";
     private TextView nameTextView, usernameTextView;
     private AccountElement account;
     private DrawerLayout page;
     private ImageView userImageView;
+
+    private AccountInitTask accountInitTask;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -38,23 +44,15 @@ public class Home extends Fragment implements View.OnClickListener{
         super.onCreateView(inflater, container, savedInstanceState);
         page = (DrawerLayout) inflater.inflate(R.layout.fragment_home, container, false);
 
-        nameTextView = (TextView) page.findViewById(R.id.drawer_info_name);
-        usernameTextView = (TextView) page.findViewById(R.id.drawer_info_username);
+        final NavigationView navigationView = (NavigationView) page.findViewById(R.id.fragment_home_navigation);
+        navigationView.setNavigationItemSelectedListener(this);
+        createDrawerHeader(navigationView.getHeaderView(0));
 
-        userImageView = (ImageView) page.findViewById(R.id.drawer_info_image);
-
-        page.findViewById(R.id.drawer_info_container).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UserFragment.showUser(PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID));
-            }
-        });
-
-        if (savedInstanceState != null) {
-            account = savedInstanceState.getParcelable("account");
-            updateAccountInfo();
+        if (accountInitTask == null) {
+            accountInitTask = new AccountInitTask(this);
+            accountInitTask.execute();
         } else {
-            new AccountInitTask().execute();
+            setAccount(account);
         }
 
         final ViewPager viewPager = (ViewPager) page.findViewById(R.id.fragment_home_view_pager);
@@ -76,6 +74,21 @@ public class Home extends Fragment implements View.OnClickListener{
         return page;
     }
 
+    private void createDrawerHeader(final View header) {
+        nameTextView = (TextView) header.findViewById(R.id.drawer_info_name);
+        usernameTextView = (TextView) header.findViewById(R.id.drawer_info_username);
+        userImageView = (ImageView) header.findViewById(R.id.drawer_info_image);
+
+        header.findViewById(R.id.drawer_info_container).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserFragment.showUser(PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID));
+            }
+        });
+
+        // TODO: account picker
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -91,8 +104,9 @@ public class Home extends Fragment implements View.OnClickListener{
         account = null;
     }
 
-    private void updateAccountInfo() {
+    private void setAccount(final AccountElement account) {
         if (isAdded() && account != null) {
+            this.account = account;
             nameTextView.setText(account.name);
             usernameTextView.setText(String.format(getString(R.string.username_placeholder), account.username));
             ImageMgr.getInstance().displayImage(account.image, userImageView);
@@ -102,27 +116,41 @@ public class Home extends Fragment implements View.OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Override
-    public void onSaveInstanceState(final Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable("account", account);
+    public boolean onNavigationItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.drawer_drafts:
+                DraftListFragment.show();
+                return true;
+        }
+        Log.d(TAG, "item clicked: " + item.getItemId());
+        return false;
     }
 
     private final class AccountInitTask extends AsyncTask<Void, Void, AccountElement> {
+        private final WeakReference<Home> fragmentWeakReference;
+
+        public AccountInitTask(final Home fragment) {
+            this.fragmentWeakReference = new WeakReference<>(fragment);
+        }
+
         @Override
-        protected AccountElement doInBackground(Void... params) {
+        protected AccountElement doInBackground(final Void... params) {
             return TwitterMgr.getInstance().localAuth();
         }
 
         @Override
         protected void onPostExecute(final AccountElement accountElement) {
-            if (accountElement != null) {
-                account = accountElement;
-                updateAccountInfo();
-            } else {
-                NotificationMgr.getInstance().showSnackbar(R.string.error_account_init, page);
+            final Home fragment = fragmentWeakReference.get();
+            if (fragment != null) {
+                if (accountElement != null) {
+                    fragment.setAccount(accountElement);
+                } else {
+                    NotificationMgr.getInstance().showSnackbar(R.string.error_account_init, page);
+                }
             }
         }
     }
@@ -134,19 +162,7 @@ public class Home extends Fragment implements View.OnClickListener{
                 page.openDrawer(GravityCompat.START); // only open cause we can't press it when drawer opened
             break;
             case R.id.fragment_home_search:
-                Log.d("fragment_home_search", "hello");
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            TwitterMgr.getInstance().getRateLimits();
-                        } catch (TwitterException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
-
-                // open search fragment
+                SearchFragment.show();
             break;
             case R.id.fragment_home_tweet_button:
                 ComposeFragment.open();

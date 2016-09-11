@@ -1,6 +1,7 @@
 package ru.eadm.nobird.data.types;
 
 import java.util.Date;
+import java.util.List;
 
 import ru.eadm.nobird.data.twitter.utils.TwitterStatusText;
 import ru.eadm.nobird.fragment.StatusFragment;
@@ -8,7 +9,7 @@ import twitter4j.Status;
 
 public class TweetElement implements Element {
     public final long tweetID;
-    public final String image;
+    public final List<String> images;
     public final Date date;
 
     public final UserElement user;
@@ -32,7 +33,7 @@ public class TweetElement implements Element {
 
                         final TwitterStatusText text,
                         final Date date,
-                        final String image) {
+                        final List<String> images) {
         this.tweetID = tweetID;
 
         this.user = new UserElement(
@@ -42,7 +43,7 @@ public class TweetElement implements Element {
                 user_image
         );
 
-        this.image = image;
+        this.images = images;
         this.text = text;
         this.date = date;
     }

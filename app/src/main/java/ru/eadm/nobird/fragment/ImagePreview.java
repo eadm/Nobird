@@ -2,7 +2,6 @@ package ru.eadm.nobird.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,7 +13,7 @@ import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.ImageMgr;
 
 public class ImagePreview extends Fragment {
-    private final static String TAG = "ImagePreview";
+//    private final static String TAG = "ImagePreview";
     private ImageView image;
 
     @Override
@@ -46,12 +45,16 @@ public class ImagePreview extends Fragment {
         return page;
     }
 
-    public static void openImagePreview(final String url) {
+    public static Fragment createImagePreview(final String url) {
         final Fragment fragment = new ImagePreview();
         final Bundle bundle = new Bundle();
         bundle.putString("url", url);
         fragment.setArguments(bundle);
-        FragmentMgr.getInstance().replaceFragment(0, fragment, true);
+        return fragment;
+    }
+
+    public static void openImagePreview(final String url) {
+        FragmentMgr.getInstance().replaceFragment(0, createImagePreview(url), true);
     }
 
     private class ImageGestureListener extends GestureDetector.SimpleOnGestureListener {

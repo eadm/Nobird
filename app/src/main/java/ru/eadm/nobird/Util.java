@@ -3,9 +3,13 @@ package ru.eadm.nobird;
 import android.content.Context;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import ru.eadm.nobird.data.FontMgr;
 import ru.eadm.nobird.data.ImageMgr;
@@ -62,5 +66,20 @@ public final class Util {
     public static void closeKeyboard(final Context c, final IBinder windowToken) {
         final InputMethodManager mgr = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
         mgr.hideSoftInputFromWindow(windowToken, 0);
+    }
+
+    public static String join(final List<String> strings, final String delimiter) {
+        if (strings.isEmpty()) return "";
+        final StringBuilder builder = new StringBuilder(strings.get(0));
+        for (int i = 1; i < strings.size(); ++i) {
+            builder.append(delimiter);
+            builder.append(strings.get(i));
+        }
+        return builder.toString();
+    }
+
+    public static List<String> split(final String string, final String delimiter) {
+        if (string.isEmpty()) return Collections.emptyList();
+        return Arrays.asList(string.split("\\|"));
     }
 }

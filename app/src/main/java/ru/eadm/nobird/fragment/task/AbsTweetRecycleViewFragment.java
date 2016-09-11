@@ -117,8 +117,10 @@ public abstract class AbsTweetRecycleViewFragment extends Fragment implements Sw
         super.onDestroy();
         adapter = null;
 
-        refreshTask.cancel(true);
-        refreshTask = null;
+        if (refreshTask != null)  {
+            refreshTask.cancel(true);
+            refreshTask = null;
+        }
     }
 
     @Override

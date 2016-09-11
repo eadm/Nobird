@@ -1,24 +1,26 @@
 package ru.eadm.nobird.fragment.adapter;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.ImageMgr;
-import ru.eadm.nobird.data.PageableArrayList;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.databinding.FragmentFeedListItemBinding;
 
 public class TweetRecycleViewAdapter extends AbsRecycleViewAdapter<TweetElement, TweetRecycleViewAdapter.ViewHolder> {
+    private final LinearLayout.LayoutParams imageLayoutParams;
+
     public TweetRecycleViewAdapter() {
         super();
-    }
-
-    public TweetRecycleViewAdapter(final PageableArrayList<TweetElement> data) {
-        super(data);
+        this.imageLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
+        this.imageLayoutParams.setMargins(1, 0, 1, 0);
     }
 
     @Override
@@ -37,17 +39,30 @@ public class TweetRecycleViewAdapter extends AbsRecycleViewAdapter<TweetElement,
         return -1;
     }
 
-    public TweetElement get(final int pos) {
-        return data.get(pos);
+    public ImageView createImageView(final String image, final Context context) {
+        final ImageView view = new ImageView(context);
+        view.setLayoutParams(imageLayoutParams);
+        view.setAdjustViewBounds(true);
+        view.setCropToPadding(true);
+        view.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        ImageMgr.displayImage(view, image, false);
+        return view;
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int p) {
-        if (data.get(p).image != null && data.get(p).image.length() > 0) {
-            ImageMgr.getInstance().displayImage(data.get(p).image, holder.binding.tweetElementAttachment);
-            holder.binding.tweetElementAttachment.setVisibility(View.VISIBLE);
+        if (!data.get(p).images.isEmpty()) {
+            holder.binding.tweetElementAttachments.removeAllViews();
+            for (int i = 0; i < data.get(p).images.size(); ++i) { // adding new image to list of attachments and set click listener
+                final String image = data.get(p).images.get(i);
+                final View view = createImageView(image, holder.binding.getRoot().getContext());
+                view.setOnClickListener(new ImageOnClickListener(data.get(p).images, i));
+                view.setClickable(true);
+                holder.binding.tweetElementAttachments.addView(view);
+            }
+            holder.binding.tweetElementAttachments.setVisibility(View.VISIBLE);
         } else {
-            holder.binding.tweetElementAttachment.setVisibility(View.GONE);
+            holder.binding.tweetElementAttachments.setVisibility(View.GONE);
         }
 
         holder.binding.setTweet(data.get(p));
@@ -55,7 +70,7 @@ public class TweetRecycleViewAdapter extends AbsRecycleViewAdapter<TweetElement,
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public FragmentFeedListItemBinding binding;
+        public final FragmentFeedListItemBinding binding;
 
         public ViewHolder(final View v) {
             super(v);

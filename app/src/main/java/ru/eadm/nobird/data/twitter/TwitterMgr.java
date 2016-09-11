@@ -101,7 +101,7 @@ public class TwitterMgr {
      */
     public synchronized AccountElement localAuth() {
         account = DBMgr.getInstance()
-                .getAccount(PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID));
+                .getAccount(PreferenceMgr.getInstance().getCurrentAccountID());
         this.twitter = new TwitterLogin(factory, account).twitter;
 
         return account;

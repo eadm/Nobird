@@ -17,6 +17,16 @@ import twitter4j.User;
 import twitter4j.UserMentionEntity;
 
 public class TwitterStatusParser {
+
+    /**
+     * Sets given span with given part of string
+     * @param string - targeted part of string
+     * @param click - span
+     * @param start - start pos
+     * @param end - end pos
+     * @param offset - offset in base string
+     * @return twitter status parser text
+     */
     private static TwitterStatusText getSpannableString(final String string, final AbsSpan click,
                                                       final int start, final int end, final int offset) {
         final SpannableString span = new SpannableString(string);
@@ -25,6 +35,16 @@ public class TwitterStatusParser {
         return new TwitterStatusText(span, click.getData() + "|" + (offset + start) + "|" + (offset + end));
     }
 
+    /**
+     * Matching given part of string with entities
+     * @param string - part of string
+     * @param urlEntities - url entities
+     * @param mediaEntities - media entities
+     * @param userMentionEntities - user entities
+     * @param hashtagEntities - tags entities
+     * @param offset - offset in base string
+     * @return - twitter status parser text
+     */
     private static TwitterStatusText getSpan(final String string,
                                              final URLEntity[] urlEntities, final MediaEntity[] mediaEntities,
                                              final UserMentionEntity[] userMentionEntities, final HashtagEntity[] hashtagEntities,
@@ -89,13 +109,22 @@ public class TwitterStatusParser {
         return new TwitterStatusText(string);
     }
 
+    /**
+     * Parsing status text
+     * @param status - status
+     * @return twitter status parser text
+     */
     public static TwitterStatusText getTweetText(final Status status) {
         return getParsedText(status.getText(),
                 status.getURLEntities(), status.getMediaEntities(),
                 status.getUserMentionEntities(), status.getHashtagEntities());
     }
 
-
+    /**
+     * Parsing user description
+     * @param user - user
+     * @return twitter status parser text
+     */
     public static TwitterStatusText getUserDescription(final User user) {
         return getParsedText(user.getDescription(), user.getDescriptionURLEntities(), null, null, null);
     }

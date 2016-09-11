@@ -111,7 +111,7 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userID = getArguments().getLong("userID");
-        if (userID != PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID)) {
+        if (userID != PreferenceMgr.getInstance().getCurrentAccountID()) {
             setHasOptionsMenu(true);
         }
     }
@@ -136,26 +136,6 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
         }
 
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    /**
-     * Sets up visibility of follow/unfollow button based on given relationship object
-     * @param relationship {Relationship} - info about friendship between current and target user
-     */
-    private void setRelationship(final Relationship relationship) {
-        if (relationship == null || !isAdded()) return;
-        this.relationship = relationship;
-
-        if (action_follow != null)      action_follow.setVisible( !relationship.isSourceFollowingTarget());
-        if (action_unfollow != null)    action_unfollow.setVisible(relationship.isSourceFollowingTarget());
-
-        if (action_mute != null)   action_mute.setVisible( !relationship.isSourceMutingTarget());
-        if (action_unmute != null) action_unmute.setVisible(relationship.isSourceMutingTarget());
-
-        if (action_block != null)   action_block.setVisible( !relationship.isSourceBlockingTarget());
-        if (action_unblock != null) action_unblock.setVisible(relationship.isSourceBlockingTarget());
-
-        if (action_message != null) action_message.setVisible(relationship.canSourceDm());
     }
 
     @Override
@@ -201,6 +181,19 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
     }
 
     @Override
+    public void onDestroyOptionsMenu() {
+        super.onDestroyOptionsMenu();
+
+        action_follow = null;
+        action_unfollow = null;
+        action_mute = null;
+        action_unmute = null;
+        action_block = null;
+        action_unblock = null;
+        action_message = null;
+    }
+
+    @Override
     public void onDestroyView() { // to avoid leaks
         super.onDestroyView();
         name = null;
@@ -216,14 +209,6 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
         user_info_small = null;
         location = null;
         link = null;
-
-        action_follow = null;
-        action_unfollow = null;
-        action_mute = null;
-        action_unmute = null;
-        action_block = null;
-        action_unblock = null;
-        action_message = null;
     }
 
     @Override
@@ -234,6 +219,26 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
         userTask = null;
 
         relationship = null;
+    }
+
+    /**
+     * Sets up visibility of follow/unfollow button based on given relationship object
+     * @param relationship {Relationship} - info about friendship between current and target user
+     */
+    private void setRelationship(final Relationship relationship) {
+        if (relationship == null || !isAdded()) return;
+        this.relationship = relationship;
+
+        if (action_follow != null)      action_follow.setVisible( !relationship.isSourceFollowingTarget());
+        if (action_unfollow != null)    action_unfollow.setVisible(relationship.isSourceFollowingTarget());
+
+        if (action_mute != null)   action_mute.setVisible( !relationship.isSourceMutingTarget());
+        if (action_unmute != null) action_unmute.setVisible(relationship.isSourceMutingTarget());
+
+        if (action_block != null)   action_block.setVisible( !relationship.isSourceBlockingTarget());
+        if (action_unblock != null) action_unblock.setVisible(relationship.isSourceBlockingTarget());
+
+        if (action_message != null) action_message.setVisible(relationship.canSourceDm());
     }
 
     /**
@@ -282,7 +287,6 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
         user_image.setOnClickListener(this);
 
         user_image_small = (ImageView) page.findViewById(R.id.fragment_user_image_small);
-//        user_image_small = (ImageView) page.findViewById(R.id.fragment_user_image_small);
 
         name = (TextView) page.findViewById(R.id.fragment_user_name);
         name_small = (TextView) page.findViewById(R.id.fragment_user_name_small);

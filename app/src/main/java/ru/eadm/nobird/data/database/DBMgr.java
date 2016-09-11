@@ -12,11 +12,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import ru.eadm.nobird.Util;
 import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.twitter.TwitterUtils;
 import ru.eadm.nobird.data.twitter.utils.TwitterStatusText;
 import ru.eadm.nobird.data.types.AccountElement;
+import ru.eadm.nobird.data.types.DraftElement;
 import ru.eadm.nobird.data.types.TweetElement;
 import twitter4j.Status;
 import twitter4j.User;
@@ -105,7 +107,7 @@ public final class DBMgr {
                                 cursor.getString(cursor.getColumnIndex("tweet_text_parse_key"))
                         ),
                         new Date(cursor.getLong(cursor.getColumnIndex("pubDate"))),
-                        cursor.getString(cursor.getColumnIndex("attachment_url"))
+                        Util.split(cursor.getString(cursor.getColumnIndex("attachment_url")), "\\|")
                 ));
             } while (cursor.moveToNext());
         }
@@ -130,7 +132,7 @@ public final class DBMgr {
             st.bindString(5, tweet.user.image);
             st.bindString(6, tweet.text.getText().toString());
             st.bindString(7, tweet.text.getParseKey());
-            st.bindString(8, tweet.image);
+            st.bindString(8, Util.join(tweet.images, "|"));
             st.bindLong(9, tweet.date.getTime());
 
             st.bindLong(10, PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID));
@@ -178,12 +180,15 @@ public final class DBMgr {
         db.insert(DBHelper.TABLE_DRAFTS, null, cv);
     }
 
-    public List<String> getDrafts() {
-        final Cursor cursor = db.query(DBHelper.TABLE_ACCOUNTS, null, null, null, null, null, "id DESC");
-        final ArrayList<String> drafts = new ArrayList<>();
+    public List<DraftElement> getDrafts() {
+        final Cursor cursor = db.query(DBHelper.TABLE_DRAFTS, null, null, null, null, null, "id DESC");
+        final ArrayList<DraftElement> drafts = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
-                drafts.add(cursor.getString(cursor.getColumnIndex("name")));
+                drafts.add(new DraftElement(
+                        cursor.getLong(cursor.getColumnIndex("id")),
+                        cursor.getString(cursor.getColumnIndex("name"))
+                ));
             } while (cursor.moveToNext());
         }
 
