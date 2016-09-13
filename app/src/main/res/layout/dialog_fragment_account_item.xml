@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="ru.eadm.nobird.data.FontMgr"/>
+
+        <variable name="account" type="ru.eadm.nobird.data.types.AccountElement" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:id="@+id/account_element_user_image"
+
+            android:contentDescription="@string/processing"
+            android:cropToPadding="true"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+
+            app:imageUrl="@{ account.image }"
+            app:roundImage="@{true}"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+
+            android:textAllCaps="true"
+            android:text="@string/active"
+            android:textColor="@color/goodGreen"
+            android:visibility="gone"
+            android:id="@+id/account_element_active"
+
+            android:textSize="12sp"
+            android:layout_centerVertical="true"
+            />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+
+            android:layout_toRightOf="@id/account_element_user_image"
+            android:layout_toEndOf="@id/account_element_user_image"
+
+            android:layout_toLeftOf="@id/account_element_active"
+            android:layout_toStartOf="@id/account_element_active"
+
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_centerVertical="true">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/account_element_name"
+
+                android:textColor="@color/dark"
+                android:textSize="14sp"
+
+                android:scrollHorizontally="true"
+                android:ellipsize="end"
+                android:maxLines="1"
+
+                android:text="@{ account.name }"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_below="@id/account_element_name"
+
+                android:layout_marginTop="4dp"
+
+                android:textColor="@color/medium"
+                android:textSize="14sp"
+
+                android:scrollHorizontally="true"
+                android:ellipsize="end"
+                android:maxLines="1"
+
+                android:text='@{"@" + account.username}'
+                app:typeface="@{FontMgr.getInstance().RobotoLight}" />
+        </RelativeLayout>
+    </RelativeLayout>
+</layout>

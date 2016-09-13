@@ -44,7 +44,7 @@ public class TweetActionsDialogFragment extends DialogFragment {
 
     @Override
     public void onDestroyView() { // work around to keep dialog with retain instance state = true
-        Dialog dialog = getDialog();
+        final Dialog dialog = getDialog();
         // handles https://code.google.com/p/android/issues/detail?id=17423
         if (dialog != null && getRetainInstance()) {
             dialog.setDismissMessage(null);

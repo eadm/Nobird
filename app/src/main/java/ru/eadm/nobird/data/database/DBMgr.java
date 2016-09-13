@@ -83,6 +83,24 @@ public final class DBMgr {
         return account;
     }
 
+    public List<AccountElement> getAccounts() {
+        final Cursor cursor = db.query(DBHelper.TABLE_ACCOUNTS, null, null, null, null, null, "id DESC");
+        final List<AccountElement> accounts = new ArrayList<>(cursor.getCount());
+        if (cursor.moveToFirst()) {
+            do {
+                final long userID = cursor.getLong(cursor.getColumnIndex("id"));
+                final String name = cursor.getString(cursor.getColumnIndex("name"));
+                final String username = cursor.getString(cursor.getColumnIndex("username"));
+                final String image_url = cursor.getString(cursor.getColumnIndex("image_url"));
+                final String token = cursor.getString(cursor.getColumnIndex("token"));
+                final String token_secret = cursor.getString(cursor.getColumnIndex("token_secret"));
+                accounts.add(new AccountElement(userID, name, username, image_url, token, token_secret));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return accounts;
+    }
+
     public ArrayList<TweetElement> getCachedStatuses(final int type) {
         return getCachedStatuses(PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID), type);
     }

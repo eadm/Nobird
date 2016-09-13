@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
@@ -42,6 +43,10 @@ public final class Account extends Fragment implements View.OnClickListener {
 
         webView = (WebView) page.findViewById(R.id.account_fragment_web);
         webView.setWebViewClient(new WebClient());
+
+        if (savedInstanceState == null) {
+            CookieManager.getInstance().removeAllCookie();
+        }
 
         Log.d(Account.TAG, "onCreate");
         return page;

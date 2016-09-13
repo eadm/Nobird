@@ -18,7 +18,7 @@ public abstract class AbsConfirmDialogFragment extends DialogFragment implements
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder.setTitle(getTitle());
         alertDialogBuilder.setMessage(getMessage());

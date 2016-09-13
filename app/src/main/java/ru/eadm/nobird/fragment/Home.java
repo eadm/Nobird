@@ -25,6 +25,7 @@ import ru.eadm.nobird.data.ImageMgr;
 import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.AccountElement;
+import ru.eadm.nobird.dialog.AccountPickerDialogFragment;
 import ru.eadm.nobird.fragment.adapter.HomeViewPagerAdapter;
 import ru.eadm.nobird.notification.NotificationMgr;
 
@@ -79,10 +80,17 @@ public class Home extends Fragment implements View.OnClickListener, NavigationVi
         usernameTextView = (TextView) header.findViewById(R.id.drawer_info_username);
         userImageView = (ImageView) header.findViewById(R.id.drawer_info_image);
 
-        header.findViewById(R.id.drawer_info_container).setOnClickListener(new View.OnClickListener() {
+//        header.findViewById(R.id.drawer_info_container).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                UserFragment.showUser(PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID));
+//            }
+//        });
+
+        header.findViewById(R.id.manage_accounts).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                UserFragment.showUser(PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID));
+            public void onClick(final View v) {
+                AccountPickerDialogFragment.show();
             }
         });
 

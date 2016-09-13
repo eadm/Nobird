@@ -54,4 +54,6 @@
     <string name="manage_accounts">Manage accounts</string>
     <string name="lists">Lists</string>
     <string name="feed_counter_text">%d new tweets</string>
+    <string name="active">active</string>
+    <string name="dialog_fragment_account_add">Add account</string>
 </resources>

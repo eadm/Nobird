@@ -54,4 +54,6 @@
     <string name="manage_accounts">Управление аккаунтами</string>
     <string name="lists">Списки</string>
     <string name="feed_counter_text">%d новых твитов</string>
+    <string name="active">активн.</string>
+    <string name="dialog_fragment_account_add">Добавить аккаунт</string>
 </resources>

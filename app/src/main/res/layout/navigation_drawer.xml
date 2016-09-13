@@ -1,55 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="start"
-    android:background="@drawable/bg_border_bottom"
-    android:id="@+id/drawer_info_container"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="ru.eadm.nobird.dialog.AccountPickerDialogFragment"/>
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@drawable/bg_border_bottom"
+        android:id="@+id/drawer_info_container"
 
-    android:paddingTop="24dp"
-    android:paddingBottom="24dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp"
 
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
 
-    android:orientation="vertical">
+        android:orientation="vertical">
 
-    <ru.eadm.nobird.design.RoundImageView
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_marginBottom="32dp"
-        android:cropToPadding="true"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        app:corner_radius="32dp"
+        <ru.eadm.nobird.design.RoundImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginBottom="32dp"
+            android:cropToPadding="true"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            app:corner_radius="32dp"
 
-        android:id="@+id/drawer_info_image"/>
+            android:id="@+id/drawer_info_image"/>
 
-    <ru.eadm.nobird.design.RobotoLightTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/mediumGray"
-        android:textSize="18sp"
-        android:id="@+id/drawer_info_name"/>
+        <ru.eadm.nobird.design.RobotoLightTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mediumGray"
+            android:textSize="18sp"
+            android:id="@+id/drawer_info_name"/>
 
-    <ru.eadm.nobird.design.RobotoLightTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/medium"
-        android:textSize="14sp"
-        android:id="@+id/drawer_info_username"/>
+        <ru.eadm.nobird.design.RobotoLightTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/medium"
+            android:textSize="14sp"
+            android:id="@+id/drawer_info_username"/>
 
-    <ru.eadm.nobird.design.RobotoLightTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/manage_accounts"
-        android:textSize="14sp"
-        android:layout_marginTop="16dp"
-        />
-    <!--<Spinner-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/drawer_info_account_selector"/>-->
-</LinearLayout>
+        <ru.eadm.nobird.design.RobotoLightTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/manage_accounts"
+            android:text="@string/manage_accounts"
+            android:textSize="14sp"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
+</layout>
