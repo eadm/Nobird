@@ -24,14 +24,14 @@
         android:layout_height="wrap_content"
 
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
 
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
 
         android:id="@+id/fragment_feed_counter"
         android:visibility="gone"
+
+        android:textColor="@color/white"
 
         android:background="@drawable/bg_fragment_feed_counter"/>
 </RelativeLayout>

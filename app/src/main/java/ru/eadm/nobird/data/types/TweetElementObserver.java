@@ -3,7 +3,7 @@ package ru.eadm.nobird.data.types;
 
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.twitter.TwitterUtils;
-import ru.eadm.nobird.dialog.ListDialogFragment;
+import ru.eadm.nobird.dialog.TweetActionsDialogFragment;
 import ru.eadm.nobird.fragment.ComposeFragment;
 import ru.eadm.nobird.fragment.adapter.TweetRecycleViewAdapter;
 import ru.eadm.nobird.fragment.task.AbsTwitterDataLoadTask;
@@ -16,7 +16,7 @@ public class TweetElementObserver {
     private static final String TAG = "TweetElementObserver";
 
     public static void export(final TweetElement element) {
-        ListDialogFragment.showExportDialog(element);
+        TweetActionsDialogFragment.showExportDialog(element);
     }
 
     public static void like(final TweetRecycleViewAdapter adapter, final TweetElement element) {

@@ -20,32 +20,31 @@ import ru.eadm.nobird.fragment.adapter.HomeViewPagerAdapter;
 public class ImageGallery extends Fragment {
     public final static String ARG_IMAGES = "arg_images";
     public final static String ARG_POSITION = "arg_pos";
-    private HomeViewPagerAdapter adapter;
+
+    private ViewPager viewPager;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        final ViewPager viewPager = (ViewPager) inflater.inflate(R.layout.base_view_pager, container, false);
+        viewPager = (ViewPager) inflater.inflate(R.layout.base_view_pager, container, false);
+        final HomeViewPagerAdapter adapter = new HomeViewPagerAdapter(getChildFragmentManager());
+
+        for (final String image : getArguments().getStringArrayList(ARG_IMAGES)) {
+            adapter.add(ImagePreview.createImagePreview(image), null);
+        }
+
         viewPager.setAdapter(adapter);
         if (savedInstanceState == null) {
             viewPager.setCurrentItem(getArguments().getInt(ARG_POSITION));
+        } else {
+            viewPager.setCurrentItem(savedInstanceState.getInt(ARG_POSITION));
         }
         return viewPager;
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-        adapter = new HomeViewPagerAdapter(getChildFragmentManager());
-        for (final String image : getArguments().getStringArrayList(ARG_IMAGES)) {
-            adapter.add(ImagePreview.createImagePreview(image), null);
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        adapter = null;
+    public void onSaveInstanceState(final Bundle outState) {
+        outState.putInt(ARG_POSITION, viewPager.getCurrentItem());
+        super.onSaveInstanceState(outState);
     }
 
     public static void show(final ArrayList<String> images, final int pos) {

@@ -1,7 +1,5 @@
 package ru.eadm.nobird.dialog;
 
-import android.util.Log;
-
 import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.database.DBMgr;
 

@@ -1,12 +1,18 @@
 package ru.eadm.nobird.fragment;
 
 import android.util.Log;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import java.util.ArrayList;
 
+import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.database.DBMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.TweetElement;
+import ru.eadm.nobird.design.animation.OnEndAnimationListener;
+import ru.eadm.nobird.design.animation.OnStartAnimationListener;
 import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewFragmentNested;
 import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewRefreshTask;
 import twitter4j.TwitterException;
@@ -37,6 +43,15 @@ public final class Feed extends AbsTweetRecycleViewFragmentNested {
                 }
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(final ArrayList<TweetElement> data) {
+            super.onPostExecute(data);
+            final AbsTweetRecycleViewFragmentNested feed = ((Feed)fragmentWeakReference.get());
+            if (source == Source.API && feed != null && data != null && !data.isEmpty()) {
+                feed.showCounter(data.size());
+            }
         }
     }
 }

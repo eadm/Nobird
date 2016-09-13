@@ -23,7 +23,8 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:background="@drawable/bg_border_bottom"
-            android:visibility="@{ (tweet.status != null &amp;&amp; tweet.status.getInReplyToStatusId() != -1) ? View.VISIBLE : View.GONE }">
+            android:id="@+id/tweet_element_in_reply_to"
+            android:visibility="gone">
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -157,7 +158,8 @@
             android:orientation="horizontal"
             android:baselineAligned="false"
             android:background="@drawable/bg_border_top"
-            android:visibility="@{ tweet.status != null ? View.VISIBLE : View.GONE }">
+            android:id="@+id/tweet_element_actions"
+            android:visibility="gone">
             <LinearLayout
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="match_parent"

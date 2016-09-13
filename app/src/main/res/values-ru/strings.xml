@@ -53,4 +53,5 @@
     <string name="drafts">Черновики</string>
     <string name="manage_accounts">Управление аккаунтами</string>
     <string name="lists">Списки</string>
+    <string name="feed_counter_text">%d новых твитов</string>
 </resources>

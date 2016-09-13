@@ -1,64 +1,55 @@
 package ru.eadm.nobird.dialog;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.AdapterView;
+import android.support.v7.app.AlertDialog;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.fragment.FragmentMgr;
 
-public class ListDialogFragment extends DialogFragment {
-    private ListView listView;
-    private ArrayAdapter<String> adapter;
-    private AdapterView.OnItemClickListener listener;
-
-    @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                             final Bundle savedInstanceState) {
-        final View page = inflater.inflate(R.layout.dialog_fragment_list, container, false);
-        listView = (ListView) page.findViewById(R.id.dialog_fragment_list);
-        if (adapter != null) {
-            listView.setAdapter(adapter);
-        }
-
-        if (listener != null) {
-            listView.setOnItemClickListener(listener);
-        }
-        return page;
-    }
+public class TweetActionsDialogFragment extends DialogFragment {
+    private DialogInterface.OnClickListener listener;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        ArrayAdapter<String> adapter;
         final String[] data = getArguments().getStringArray("data");
         if (data != null) {
             adapter = new ArrayAdapter<>(getActivity(), R.layout.dialog_fragment_list_item, data);
         } else {
             adapter = new ArrayAdapter<>(getContext(), R.layout.dialog_fragment_list_item);
         }
+        builder.setAdapter(adapter, listener);
+
+        return builder.create();
     }
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        final Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        return dialog;
-    }
-
-    public void setListener(final AdapterView.OnItemClickListener listener) {
+    public void setListener(final DialogInterface.OnClickListener listener) {
         this.listener = listener;
-        if (listView != null) listView.setOnItemClickListener(listener);
+    }
+
+    @Override
+    public void onDestroyView() { // work around to keep dialog with retain instance state = true
+        Dialog dialog = getDialog();
+        // handles https://code.google.com/p/android/issues/detail?id=17423
+        if (dialog != null && getRetainInstance()) {
+            dialog.setDismissMessage(null);
+        }
+        super.onDestroyView();
     }
 
     /**
@@ -66,15 +57,15 @@ public class ListDialogFragment extends DialogFragment {
      * @param element - target TweetElement object
      */
     public static void showExportDialog(final TweetElement element) {
-        final ListDialogFragment dialogFragment = new ListDialogFragment();
+        final TweetActionsDialogFragment dialogFragment = new TweetActionsDialogFragment();
         final Bundle arguments = new Bundle();
         arguments.putStringArray("data", FragmentMgr.getInstance().getContext().getResources().getStringArray(R.array.export_list_dialog_fragment_values));
         dialogFragment.setArguments(arguments);
-        dialogFragment.setListener(new AdapterView.OnItemClickListener() {
+        dialogFragment.setListener(new DialogInterface.OnClickListener() {
             @Override
-            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
+            public void onClick(final DialogInterface dialog, final int which) {
                 String text = "";
-                switch (position) {
+                switch (which) {
                     case 0:
                         text = element.text.getText().toString();
                         break;

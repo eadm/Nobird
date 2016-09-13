@@ -65,6 +65,10 @@ public class TweetRecycleViewAdapter extends AbsRecycleViewAdapter<TweetElement,
             holder.binding.tweetElementAttachments.setVisibility(View.GONE);
         }
 
+        holder.binding.tweetElementActions.setVisibility(data.get(p).status == null ? View.GONE : View.VISIBLE);
+        holder.binding.tweetElementInReplyTo.setVisibility(
+                (data.get(p).status == null || data.get(p).status.getInReplyToStatusId() == -1) ? View.GONE : View.VISIBLE);
+
         holder.binding.setTweet(data.get(p));
         holder.binding.setAdapter(this);
     }
