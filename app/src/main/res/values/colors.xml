@@ -8,6 +8,8 @@
     <color name="medium">#659dd6</color>
     <color name="gray">#D7DADB</color>
     <color name="mediumGray">#111</color>
+    <color name="secondaryText">#777</color>
+    <color name="secondaryTextPressed">#999</color>
     <color name="veryLightGray">#e2f2f8</color>
     <color name="lightGray">#e8e8e8</color>
     <color name="lightBlue">#8ac9e2</color>

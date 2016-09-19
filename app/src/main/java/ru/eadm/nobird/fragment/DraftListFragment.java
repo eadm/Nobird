@@ -63,18 +63,17 @@ public class DraftListFragment extends Fragment {
                 adapter.remove(pos);
             }
 
-            final Paint p = new Paint();
             @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) { // TODO: more obvious remove animation
-                    final View itemView = viewHolder.itemView;
-                    if (dX <= 0) {
-                        p.setARGB(0xFF, 0xFC, 0x43, 0x49);
-                        c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
-                                (float) itemView.getRight(), (float) itemView.getBottom(), p);
-                    }
-
-                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            public void onChildDraw(final Canvas c, final RecyclerView recyclerView, final RecyclerView.ViewHolder viewHolder,
+                                    final float dX, final float dY, final int actionState, final boolean isCurrentlyActive) {
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    final float width = (float) viewHolder.itemView.getWidth();
+                    final float alpha = 1.0f - Math.abs(dX) / width;
+                    viewHolder.itemView.setAlpha(alpha);
+                    viewHolder.itemView.setTranslationX(dX);
+                } else {
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY,
+                            actionState, isCurrentlyActive);
                 }
             }
         };

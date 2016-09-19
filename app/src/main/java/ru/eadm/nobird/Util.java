@@ -3,14 +3,15 @@ package ru.eadm.nobird;
 import android.content.Context;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import ru.eadm.nobird.broadcast.BroadcastMgr;
 import ru.eadm.nobird.data.FontMgr;
 import ru.eadm.nobird.data.ImageMgr;
 import ru.eadm.nobird.data.PreferenceMgr;
@@ -22,6 +23,7 @@ import ru.eadm.nobird.notification.NotificationMgr;
 public final class Util {
 
     public static void initMgr(final AppCompatActivity context) {
+        BroadcastMgr.init();
         DBMgr.init(context);
         FontMgr.init(context);
         ImageMgr.init(context);
@@ -66,6 +68,11 @@ public final class Util {
     public static void closeKeyboard(final Context c, final IBinder windowToken) {
         final InputMethodManager mgr = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
         mgr.hideSoftInputFromWindow(windowToken, 0);
+    }
+
+    public static void openKeyboard(final Context c, final EditText editText) {
+        final InputMethodManager mgr = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
+        mgr.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
     }
 
     public static String join(final List<String> strings, final String delimiter) {

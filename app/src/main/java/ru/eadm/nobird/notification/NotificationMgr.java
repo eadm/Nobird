@@ -2,8 +2,6 @@ package ru.eadm.nobird.notification;
 
 import android.content.Context;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import java.lang.ref.WeakReference;

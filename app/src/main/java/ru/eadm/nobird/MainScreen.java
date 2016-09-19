@@ -15,11 +15,12 @@ public class MainScreen extends AppCompatActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        Util.initMgr(this);
+        FragmentMgr.getInstance().attach(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
 
-        Util.initMgr(this);
-        FragmentMgr.getInstance().attach(this);
         NotificationMgr.getInstance().attach(this, findViewById(R.id.fragment_container));
 
         if (savedInstanceState == null) {

@@ -8,22 +8,19 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import ru.eadm.nobird.R;
-import ru.eadm.nobird.data.ImageMgr;
-import ru.eadm.nobird.data.PageableArrayList;
 import ru.eadm.nobird.data.types.Element;
 import ru.eadm.nobird.design.DividerItemDecoration;
 import ru.eadm.nobird.fragment.adapter.AbsRecycleViewAdapter;
+import ru.eadm.nobird.fragment.listener.RecycleViewOnScrollListener;
+import ru.eadm.nobird.fragment.listener.Scrollable;
 import twitter4j.CursorSupport;
 
-public abstract class AbsRecycleViewFragment<E extends Element> extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public abstract class AbsRecycleViewFragment<E extends Element> extends Fragment implements SwipeRefreshLayout.OnRefreshListener, Scrollable {
     protected AbsRecycleViewAdapter<E, ?> adapter;
-    protected PageableArrayList<E> data;
     protected AbsRecycleViewRefreshTask<E> task;
 
     private SwipeRefreshLayout refreshLayout;
@@ -37,38 +34,19 @@ public abstract class AbsRecycleViewFragment<E extends Element> extends Fragment
 
         final RecyclerView recyclerView = (RecyclerView) page.findViewById(R.id.fragment_list_recycle_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
         recyclerView.addItemDecoration(new DividerItemDecoration(
                 getContext(), R.drawable.list_divider, DividerItemDecoration.VERTICAL_LIST));
+        recyclerView.addOnScrollListener(new RecycleViewOnScrollListener(this));
+        recyclerView.setAdapter(adapter);
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(final RecyclerView recyclerView, final int dx, final int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (layoutManager.getItemCount() - recyclerView.getChildCount()
-                        <= layoutManager.findFirstVisibleItemPosition()) {
-                    onScrolledToEnd();
-                }
-            }
-
-            @Override
-            public void onScrollStateChanged(final RecyclerView recyclerView, final int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                ImageMgr.getInstance().listener.onScrollStateChanged(null, newState);
-            }
-        });
-
-        if (data == null) {
+        if (task == null) {
             task = createTask(AbsRecycleViewRefreshTask.Position.END);
             task.execute(CursorSupport.START, 0L);
         }
-        adapter = createAdapter(data);
-        data = adapter.getData();
-        recyclerView.setAdapter(adapter);
 
         final Toolbar toolbar = (Toolbar) page.findViewById(R.id.fragment_list_toolbar);
-        toolbar.setTitle(getToolbarTitleID());
+        toolbar.setTitle(getToolbarTitle());
+
         final AppCompatActivity activity = ((AppCompatActivity) getActivity());
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -81,7 +59,7 @@ public abstract class AbsRecycleViewFragment<E extends Element> extends Fragment
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {
-                refreshLayout.setRefreshing(state);
+                if (refreshLayout != null) refreshLayout.setRefreshing(state);
             }
         });
     }
@@ -90,51 +68,47 @@ public abstract class AbsRecycleViewFragment<E extends Element> extends Fragment
     public void onRefresh() {
         if (task != null &&
                 task.getState() == TaskState.COMPLETED &&
-                data.hasPrevious()) {
+                adapter.getData().hasPrevious()) {
             task = createTask(AbsRecycleViewRefreshTask.Position.START);
-            task.execute(data.getPreviousCursor(), 0L);
+            task.execute(adapter.getData().getPreviousCursor(), 0L);
         } else {
             setRefreshing(false);
         }
     }
 
-    private void onScrolledToEnd() {
+    @Override
+    public void onScrolledToEnd() {
         if (task != null &&
                 task.getState() == TaskState.COMPLETED &&
-                data.hasNext()) {
+                adapter.getData().hasNext()) {
             task = createTask(AbsRecycleViewRefreshTask.Position.END);
-            task.execute(0L, data.getNextCursor());
+            task.execute(0L, adapter.getData().getNextCursor());
         }
     }
 
     protected abstract AbsRecycleViewRefreshTask<E> createTask(final AbsRecycleViewRefreshTask.Position position);
-    protected abstract AbsRecycleViewAdapter<E, ?> createAdapter(final PageableArrayList<E> data);
+    protected abstract AbsRecycleViewAdapter<E, ?> createAdapter();
 
-    protected abstract int getToolbarTitleID();
+    protected abstract String getToolbarTitle();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        setHasOptionsMenu(true);
+        adapter = createAdapter();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         refreshLayout = null;
-        adapter = null;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        data = null;
         task.cancel(false);
         task = null;
+        adapter = null;
     }
-
-    @Override
-    public abstract void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater);
-
 }

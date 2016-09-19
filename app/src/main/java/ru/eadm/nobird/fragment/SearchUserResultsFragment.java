@@ -1,8 +1,8 @@
 package ru.eadm.nobird.fragment;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
-import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.PageableArrayList;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.UserElement;
@@ -12,10 +12,22 @@ import ru.eadm.nobird.fragment.task.AbsRecycleViewFragment;
 import ru.eadm.nobird.fragment.task.AbsRecycleViewRefreshTask;
 import twitter4j.TwitterException;
 
-public class FriendsFragment extends AbsRecycleViewFragment<UserElement> {
+/**
+ * Fragment to display users search queries
+ */
+public class SearchUserResultsFragment extends AbsRecycleViewFragment<UserElement> {
+    public static final String ARG_QUERY = "query";
+    private String query;
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        query = getArguments().getString(ARG_QUERY);
+    }
+
     @Override
     protected AbsRecycleViewRefreshTask<UserElement> createTask(final AbsRecycleViewRefreshTask.Position position) {
-        return new FriendsRefreshTask(this, getArguments().getLong("userID"), position);
+        return new SearchUserResultTask(this, query, position);
     }
 
     @Override
@@ -24,27 +36,29 @@ public class FriendsFragment extends AbsRecycleViewFragment<UserElement> {
     }
 
     @Override
-    protected String getToolbarTitle() { return getString(R.string.following); }
+    protected String getToolbarTitle() {
+        return query;
+    }
 
-    public static void showUserFriends(final long userID) {
-        final FriendsFragment fragment = new FriendsFragment();
+    public static void show(final String query) {
+        final Fragment fragment = new SearchUserResultsFragment();
         final Bundle bundle = new Bundle();
-        bundle.putLong("userID", userID);
+        bundle.putString(ARG_QUERY, query);
         fragment.setArguments(bundle);
         FragmentMgr.getInstance().replaceFragment(0, fragment, true);
     }
 
-    private final class FriendsRefreshTask extends AbsRecycleViewRefreshTask<UserElement> {
-        private final long userID;
-        private FriendsRefreshTask(final FriendsFragment fragment, final long userID, final Position position) {
+    private final class SearchUserResultTask extends AbsRecycleViewRefreshTask<UserElement> {
+        private final String query;
+        private SearchUserResultTask(final SearchUserResultsFragment fragment, final String query, final Position position) {
             super(fragment, position);
-            this.userID = userID;
+            this.query = query;
         }
 
         @Override
         protected PageableArrayList<UserElement> doInBackground(final Long... params) {
             try {
-                return TwitterMgr.getInstance().getUserFriends(userID, (params[0] != 0 ? params[0] : params[1]));
+                return TwitterMgr.getInstance().getSearchUsersResults(query, params[1]);
             } catch (final TwitterException e) {
                 return null;
             }

@@ -13,6 +13,7 @@ import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.ImageMgr;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.databinding.FragmentFeedListItemBinding;
+import ru.eadm.nobird.fragment.listener.ImageOnClickListener;
 
 public class TweetRecycleViewAdapter extends AbsRecycleViewAdapter<TweetElement, TweetRecycleViewAdapter.ViewHolder> {
     private final LinearLayout.LayoutParams imageLayoutParams;

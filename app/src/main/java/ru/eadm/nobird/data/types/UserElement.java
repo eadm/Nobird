@@ -6,6 +6,7 @@ import twitter4j.User;
 public class UserElement implements Element {
     public final long userID;
     public final String name, username, image;
+    public final User user;
 
     public UserElement(final long userID,
                        final String name,
@@ -15,6 +16,8 @@ public class UserElement implements Element {
         this.name = name;
         this.username = username;
         this.image = image;
+
+        this.user = null;
     }
 
     public UserElement(final User user) {
@@ -22,6 +25,8 @@ public class UserElement implements Element {
         this.name = user.getName();
         this.username = user.getScreenName();
         this.image = user.getOriginalProfileImageURLHttps();
+
+        this.user = user;
     }
 
     @Override

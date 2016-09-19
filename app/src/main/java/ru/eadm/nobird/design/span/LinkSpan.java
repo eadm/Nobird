@@ -3,7 +3,6 @@ package ru.eadm.nobird.design.span;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextPaint;
-import android.util.Log;
 import android.view.View;
 
 import java.util.regex.Matcher;

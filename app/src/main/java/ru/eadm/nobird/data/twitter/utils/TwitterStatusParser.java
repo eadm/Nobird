@@ -51,7 +51,7 @@ public class TwitterStatusParser {
                                              final int offset) {
         if (urlEntities != null)
         for (final URLEntity entity : urlEntities) {
-            final int start = string.indexOf(entity.getText());
+            final int start = string.toLowerCase().indexOf(entity.getText().toLowerCase());
             if (start != -1) {
                 return getSpannableString(
                         string.substring(0, start) + entity.getDisplayURL() + string.substring(start + entity.getText().length()),
@@ -65,7 +65,7 @@ public class TwitterStatusParser {
 
         if (mediaEntities != null)
         for (final MediaEntity entity : mediaEntities) {
-            final int start = string.indexOf(entity.getText());
+            final int start = string.toLowerCase().indexOf(entity.getText().toLowerCase());
             if (start != -1) {
                 return getSpannableString(
                         string.substring(0, start) + entity.getDisplayURL() + string.substring(start + entity.getText().length()),
@@ -79,7 +79,7 @@ public class TwitterStatusParser {
 
         if (userMentionEntities != null)
         for (final UserMentionEntity entity : userMentionEntities) {
-            final int start = string.indexOf('@' + entity.getText());
+            final int start = string.toLowerCase().indexOf('@' + entity.getText().toLowerCase());
 
             if (start != -1) {
                 return getSpannableString(
@@ -94,7 +94,7 @@ public class TwitterStatusParser {
 
         if (hashtagEntities != null)
         for (final HashtagEntity entity : hashtagEntities) {
-            final int start = string.indexOf('#' + entity.getText());
+            final int start = string.toLowerCase().indexOf('#' + entity.getText().toLowerCase());
             if (start != -1) {
                 return getSpannableString(
                         string,
@@ -126,7 +126,10 @@ public class TwitterStatusParser {
      * @return twitter status parser text
      */
     public static TwitterStatusText getUserDescription(final User user) {
-        return getParsedText(user.getDescription(), user.getDescriptionURLEntities(), null, null, null);
+        if (user == null)
+            return new TwitterStatusText();
+        else
+            return getParsedText(user.getDescription(), user.getDescriptionURLEntities(), null, null, null);
     }
 
     public static TwitterStatusText getParsedText(final String text,
@@ -137,7 +140,9 @@ public class TwitterStatusParser {
 
         for (final String string : strings) {
             if (string.length() == 0) continue;
-            statusText.append(getSpan(string, urlEntities, mediaEntities, userMentionEntities, hashtagEntities, statusText.length()));
+            statusText.append(
+                    getSpan(string, urlEntities, mediaEntities, userMentionEntities, hashtagEntities, statusText.length())
+            );
         }
 
         return statusText;

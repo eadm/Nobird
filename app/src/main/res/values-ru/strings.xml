@@ -56,4 +56,9 @@
     <string name="feed_counter_text">%d новых твитов</string>
     <string name="active">активн.</string>
     <string name="dialog_fragment_account_add">Добавить аккаунт</string>
+    <string name="search_action_statuses">Твиты, содержащие %s</string>
+    <string name="search_action_users">Пользователи с %s</string>
+    <string name="search_action_go_to_user">Перейти к пользователю @%s</string>
+    <string name="action_create_saved_search">Сохранить</string>
+    <string name="action_destroy_saved_search">Удалить</string>
 </resources>

@@ -7,14 +7,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import ru.eadm.nobird.R;
-import ru.eadm.nobird.data.ImageMgr;
+import ru.eadm.nobird.broadcast.BroadcastMgr;
+import ru.eadm.nobird.broadcast.BroadcastReceiver;
+import ru.eadm.nobird.data.types.Element;
 import ru.eadm.nobird.design.DividerItemDecoration;
 import ru.eadm.nobird.fragment.adapter.TweetRecycleViewAdapter;
+import ru.eadm.nobird.fragment.listener.RecycleViewOnScrollListener;
+import ru.eadm.nobird.fragment.listener.Scrollable;
 
 /**
  * Abs class to create fragments with recycle view with tweets
  */
-public abstract class AbsTweetRecycleViewFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public abstract class AbsTweetRecycleViewFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, Scrollable, BroadcastReceiver<Element> {
     public static final int POSITION_START = 0;
     public static final int POSITION_END = 1;
 
@@ -39,29 +43,7 @@ public abstract class AbsTweetRecycleViewFragment extends Fragment implements Sw
         recyclerView.addItemDecoration(new DividerItemDecoration(
                 getContext(), R.drawable.list_divider, DividerItemDecoration.VERTICAL_LIST));
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            boolean scrolledToEnd = false;
-
-            @Override
-            public void onScrolled(final RecyclerView recyclerView, final int dx, final int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy <= 0) return; // ignore if you scrolls up
-                final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (layoutManager.getItemCount() - recyclerView.getChildCount()
-                        <= layoutManager.findFirstVisibleItemPosition()) {
-                    if (!scrolledToEnd) onScrolledToEnd();
-                    scrolledToEnd = true;
-                } else {
-                    scrolledToEnd = false;
-                }
-            }
-
-            @Override
-            public void onScrollStateChanged(final RecyclerView recyclerView, final int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                ImageMgr.getInstance().listener.onScrollStateChanged(null, newState);
-            }
-        });
+        recyclerView.addOnScrollListener(new RecycleViewOnScrollListener(this));
         recyclerView.setAdapter(adapter);
     }
 
@@ -90,7 +72,8 @@ public abstract class AbsTweetRecycleViewFragment extends Fragment implements Sw
         }
     }
 
-    private void onScrolledToEnd() {
+    @Override
+    public void onScrolledToEnd() {
         if (refreshTask != null &&
                 refreshTask.getState() == TaskState.COMPLETED) {
             refreshTask = createRefreshTask(POSITION_END);
@@ -110,6 +93,7 @@ public abstract class AbsTweetRecycleViewFragment extends Fragment implements Sw
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         adapter = new TweetRecycleViewAdapter();
+        BroadcastMgr.getInstance().register(BroadcastMgr.TYPE.TWEET_ELEMENT, this.getClass().getCanonicalName(), this);
     }
 
     @Override
@@ -121,6 +105,8 @@ public abstract class AbsTweetRecycleViewFragment extends Fragment implements Sw
             refreshTask.cancel(true);
             refreshTask = null;
         }
+
+        BroadcastMgr.getInstance().unregister(BroadcastMgr.TYPE.TWEET_ELEMENT, this.getClass().getCanonicalName());
     }
 
     @Override
@@ -135,5 +121,14 @@ public abstract class AbsTweetRecycleViewFragment extends Fragment implements Sw
      */
     public TweetRecycleViewAdapter getAdapter() {
         return adapter;
+    }
+
+    /**
+     * Removes tweet with specified id
+     * @param id - id of tweet to remove
+     */
+    @Override
+    public void remove(final long id) {
+        adapter.removeByElementID(id);
     }
 }

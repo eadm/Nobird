@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import ru.eadm.nobird.R;
+import ru.eadm.nobird.broadcast.BroadcastMgr;
 import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.database.DBHelper;
 import ru.eadm.nobird.data.database.DBMgr;
@@ -232,6 +233,9 @@ public class StatusFragment extends AbsTweetRecycleViewFragment implements Swipe
 
         @Override
         protected void onPostExecute(final twitter4j.Status status) {
+            if (status != null) {
+                BroadcastMgr.getInstance().remove(status.getId(), BroadcastMgr.TYPE.TWEET_ELEMENT);
+            }
             FragmentMgr.getInstance().back();
             NotificationMgr.getInstance().showSnackbar(status != null ? R.string.success_status_destroyed : R.string.error_twitter_api, null);
         }

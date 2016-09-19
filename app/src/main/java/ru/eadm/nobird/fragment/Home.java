@@ -80,12 +80,15 @@ public class Home extends Fragment implements View.OnClickListener, NavigationVi
         usernameTextView = (TextView) header.findViewById(R.id.drawer_info_username);
         userImageView = (ImageView) header.findViewById(R.id.drawer_info_image);
 
-//        header.findViewById(R.id.drawer_info_container).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                UserFragment.showUser(PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID));
-//            }
-//        });
+        final View.OnClickListener userClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                UserFragment.showUser(PreferenceMgr.getInstance().getCurrentAccountID());
+            }
+        };
+        nameTextView.setOnClickListener(userClickListener);
+        usernameTextView.setOnClickListener(userClickListener);
+        userImageView.setOnClickListener(userClickListener);
 
         header.findViewById(R.id.manage_accounts).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,8 +96,6 @@ public class Home extends Fragment implements View.OnClickListener, NavigationVi
                 AccountPickerDialogFragment.show();
             }
         });
-
-        // TODO: account picker
     }
 
     @Override

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -26,7 +25,7 @@ import ru.eadm.nobird.fragment.adapter.AccountAdapter;
  * Dialog to pick accounts
  */
 public class AccountPickerDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
-    private final static String TAG = "AccountPickerDialogFrg";
+//    private final static String TAG = "AccountPickerDialogFrg";
     private AccountAdapter adapter;
 
     @NonNull
@@ -71,7 +70,7 @@ public class AccountPickerDialogFragment extends DialogFragment implements Dialo
             FragmentMgr.getInstance().replaceFragment(0, new Home(), false);
 //            Log.d(TAG, ((AccountElement)adapter.getItem(which)).username);
         } else if (which == -1) {
-            FragmentMgr.getInstance().replaceFragment(0, new Account(), false);
+            FragmentMgr.getInstance().replaceFragment(0, new Account(), true);
         }
     }
 

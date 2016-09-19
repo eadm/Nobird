@@ -49,7 +49,7 @@ public final class Feed extends AbsTweetRecycleViewFragmentNested {
         protected void onPostExecute(final ArrayList<TweetElement> data) {
             super.onPostExecute(data);
             final AbsTweetRecycleViewFragmentNested feed = ((Feed)fragmentWeakReference.get());
-            if (source == Source.API && feed != null && data != null && !data.isEmpty()) {
+            if (source == Source.API && position == POSITION_START && feed != null && data != null && !data.isEmpty()) {
                 feed.showCounter(data.size());
             }
         }

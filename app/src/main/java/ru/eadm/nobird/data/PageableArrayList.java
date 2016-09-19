@@ -1,8 +1,10 @@
 package ru.eadm.nobird.data;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import twitter4j.CursorSupport;
+import twitter4j.PagableResponseList;
 
 public class PageableArrayList<E> extends ArrayList<E> implements CursorSupport {
     private boolean hasNext, hasPrevious;
@@ -15,6 +17,11 @@ public class PageableArrayList<E> extends ArrayList<E> implements CursorSupport 
 
     public PageableArrayList(final int size) {
         super(size);
+        setCursors(false, false, -1, -1);
+    }
+
+    public PageableArrayList(final List<E> list) {
+        super(list);
         setCursors(false, false, -1, -1);
     }
 

@@ -53,4 +53,17 @@ public abstract class AbsRecycleViewAdapter<E extends Element, V extends Recycle
     public E get(final int pos) {
         return data.get(pos);
     }
+
+    /**
+     * Removes element by its element id
+     * @param id - id of element
+     */
+    public void removeByElementID(final long id) {
+        int i = 0;
+        for (; i < data.size(); ++i) if (data.get(i).getID() == id) break; // find pos of target
+        if (i != data.size()) {
+            data.remove(i);
+            notifyItemRemoved(i);
+        }
+    }
 }

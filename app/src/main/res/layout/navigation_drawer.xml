@@ -48,8 +48,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/manage_accounts"
+            android:textColor="@color/text_color_gray_clickable"
             android:text="@string/manage_accounts"
             android:textSize="14sp"
-            android:layout_marginTop="16dp" />
+
+            android:layout_marginLeft="-16dp"
+            android:layout_marginStart="-16dp"
+            android:layout_marginBottom="-16dp"
+            android:padding="16dp" /><!-- to make element bigger -->
     </LinearLayout>
 </layout>

@@ -56,4 +56,9 @@
     <string name="feed_counter_text">%d new tweets</string>
     <string name="active">active</string>
     <string name="dialog_fragment_account_add">Add account</string>
+    <string name="search_action_statuses">Statuses with %s</string>
+    <string name="search_action_users">Users with %s</string>
+    <string name="search_action_go_to_user">Go to user @%s</string>
+    <string name="action_create_saved_search">Save</string>
+    <string name="action_destroy_saved_search">Remove saved search</string>
 </resources>

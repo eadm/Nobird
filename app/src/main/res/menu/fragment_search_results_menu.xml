@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_destroy_saved_search"
+        android:icon="@drawable/ic_star_filled"
+        android:title="@string/action_destroy_saved_search"
+        android:visible="true"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_create_saved_search"
+        android:icon="@drawable/ic_star"
+        android:title="@string/action_create_saved_search"
+        android:visible="true"
+        app:showAsAction="ifRoom"/>
+</menu>

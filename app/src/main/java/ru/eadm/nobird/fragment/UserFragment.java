@@ -1,16 +1,14 @@
 package ru.eadm.nobird.fragment;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,8 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -27,9 +23,9 @@ import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.ImageMgr;
 import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
-import ru.eadm.nobird.data.twitter.utils.TwitterStatusParser;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.data.types.UserElement;
+import ru.eadm.nobird.databinding.FragmentUserBinding;
 import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewFragment;
 import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewRefreshTask;
 import ru.eadm.nobird.fragment.task.AbsTwitterDataLoadTask;
@@ -40,13 +36,8 @@ import twitter4j.User;
 
 public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
     private long userID = 0;
+    private String userName;
 
-    private TextView name, username, description, followers, following;
-    private ImageView background, user_image;
-
-    private View user_info_small;
-    private TextView name_small, username_small, location, link;
-    private ImageView user_image_small;
     private MenuItem
             action_follow,
             action_unfollow,
@@ -57,26 +48,26 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
             action_block,
             action_unblock,
 
-            action_message;
+            action_message,
+            action_reply;
 
     private Relationship relationship;
     private User user;
     private AbsTwitterDataLoadTask<Long, ?, UserFragment> userTask;
+    private FragmentUserBinding binding;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        final View page = inflater.inflate(R.layout.fragment_user, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_user, container, false);
 
-        setRefreshLayout((SwipeRefreshLayout) page.findViewById(R.id.fragment_user_swipe_refresh_layout));
-        setRecyclerView((RecyclerView)page.findViewById(R.id.fragment_user_timeline));
+        setRefreshLayout(binding.fragmentUserSwipeRefreshLayout);
+        setRecyclerView(binding.fragmentUserTimeline);
 
-        final Toolbar toolbar = (Toolbar) page.findViewById(R.id.fragment_user_toolbar);
-        toolbar.setTitle("");
-
+        binding.fragmentUserToolbar.setTitle("");
         final AppCompatActivity activity = ((AppCompatActivity) getActivity());
-        activity.setSupportActionBar(toolbar);
+        activity.setSupportActionBar(binding.fragmentUserToolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (refreshTask == null) {
@@ -84,26 +75,35 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
             refreshTask.execute(0L, 0L);
         }
 
-        initUserFields(page);
+        binding.fragmentUserAppbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(final AppBarLayout appBarLayout, final int verticalOffset) {
+                if (binding.fragmentUserInfoContainer.getHeight() + verticalOffset < 2 * ViewCompat.getMinimumHeight(binding.fragmentUserInfoContainer)) {
+                    binding.fragmentUserInfoSmall.animate().alpha(1).setDuration(getResources().getInteger(R.integer.animation_duration));
+                } else {
+                    binding.fragmentUserInfoSmall.animate().alpha(0).setDuration(getResources().getInteger(R.integer.animation_duration));
+                }
+            }
+        });
 
         if (user != null) {
             setUser(user);
         } else {
-            name.setText(getArguments().getString("name"));
-            username.setText(String.format(getString(R.string.username_placeholder), getArguments().getString("username")));
-            ImageMgr.getInstance().displayRoundImage(getArguments().getString("image"), user_image);
+            binding.fragmentUserName.setText(getArguments().getString("name"));
+            binding.fragmentUserUsername.setText(String.format(getString(R.string.username_placeholder), getArguments().getString("username")));
+            ImageMgr.getInstance().displayRoundImage(getArguments().getString("image"), binding.fragmentUserImage);
 
             if (userTask == null) {
-                userTask = new UserLoaderTask(this);
+                userTask = new UserLoaderTask(this, userName);
                 userTask.execute(userID);
             }
         }
 
-        return page;
+        return binding.getRoot();
     }
 
     @Override
-    protected AbsTweetRecycleViewRefreshTask createRefreshTask(int pos) {
+    protected AbsTweetRecycleViewRefreshTask createRefreshTask(final int pos) {
         return new UserTimelineTask(this, userID, pos);
     }
 
@@ -111,6 +111,7 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userID = getArguments().getLong("userID");
+        userName = getArguments().getString("username");
         if (userID != PreferenceMgr.getInstance().getCurrentAccountID()) {
             setHasOptionsMenu(true);
         }
@@ -133,6 +134,11 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
 
         if (relationship != null) {
             setRelationship(relationship);
+        }
+
+        action_reply = menu.findItem(R.id.action_reply);
+        if (user != null) {
+            action_reply.setVisible(user.getId() != PreferenceMgr.getInstance().getCurrentAccountID());
         }
 
         super.onCreateOptionsMenu(menu, inflater);
@@ -191,24 +197,14 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
         action_block = null;
         action_unblock = null;
         action_message = null;
+        action_reply = null;
     }
 
     @Override
     public void onDestroyView() { // to avoid leaks
         super.onDestroyView();
-        name = null;
-        name_small = null;
-        username = null;
-        username_small = null;
-        description = null;
-        followers = null;
-        following = null;
-        background = null;
-        user_image = null;
-        user_image_small = null;
-        user_info_small = null;
-        location = null;
-        link = null;
+        binding.unbind();
+        binding = null;
     }
 
     @Override
@@ -248,82 +244,34 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
     private void setUser(final User user) {
         if (user == null || !isAdded()) return;
         Log.d(TAG, "Setting up user");
-
         this.user = user;
-        ImageMgr.getInstance().displayRoundImage(user.getOriginalProfileImageURLHttps(), user_image);
-        ImageMgr.getInstance().displayRoundImage(user.getOriginalProfileImageURLHttps(), user_image_small);
 
-        name.setText(user.getName());
-        name_small.setText(user.getName());
-
-        username.setText(String.format(getString(R.string.username_placeholder), user.getScreenName().toLowerCase()));
-        username_small.setText(String.format(getString(R.string.username_placeholder), user.getScreenName().toLowerCase()));
-
-        description.setText(TwitterStatusParser.getUserDescription(user).getText());
-        ImageMgr.getInstance().displayImage(user.getProfileBannerIPadRetinaURL(), background);
-
-        followers.setText(String.format(getString(R.string.digit_placeholder), user.getFollowersCount()));
-        following.setText(String.format(getString(R.string.digit_placeholder), user.getFriendsCount()));
+        binding.setUser(user);
 
         if (user.getLocation().length() > 0) {
-            location.setVisibility(View.VISIBLE);
-            location.setText(user.getLocation());
-            location.setOnClickListener(this);
+            binding.fragmentUserLocation.setVisibility(View.VISIBLE);
+            binding.fragmentUserLocation.setText(user.getLocation());
+            binding.fragmentUserLocation.setOnClickListener(this);
         }
 
         if (user.getURLEntity().getExpandedURL().length() > 0) {
-            link.setVisibility(View.VISIBLE);
-            link.setText(user.getURLEntity().getExpandedURL());
-            link.setOnClickListener(this);
+            binding.fragmentUserLink.setVisibility(View.VISIBLE);
+            binding.fragmentUserLink.setText(user.getURLEntity().getExpandedURL());
+            binding.fragmentUserLink.setOnClickListener(this);
         }
-    }
 
-    /**
-     * Initializes all fields on given page, sets up collapsing toolbar layout and set onclick listeners
-     * @param page {View} - page to init
-     */
-    private void initUserFields(final View page) { // init of user info fields
-        user_image = (ImageView) page.findViewById(R.id.fragment_user_image);
-        user_image.setOnClickListener(this);
-
-        user_image_small = (ImageView) page.findViewById(R.id.fragment_user_image_small);
-
-        name = (TextView) page.findViewById(R.id.fragment_user_name);
-        name_small = (TextView) page.findViewById(R.id.fragment_user_name_small);
-
-        username = (TextView) page.findViewById(R.id.fragment_user_username);
-        username_small = (TextView) page.findViewById(R.id.fragment_user_username_small);
-
-        description = (TextView) page.findViewById(R.id.fragment_user_description);
-        followers = (TextView) page.findViewById(R.id.fragment_user_followers);
-        following = (TextView) page.findViewById(R.id.fragment_user_following);
-        location = (TextView) page.findViewById(R.id.fragment_user_location);
-        link = (TextView) page.findViewById(R.id.fragment_user_link);
-
-        final CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) page.findViewById(R.id.fragment_user_info_container);
-        user_info_small = page.findViewById(R.id.fragment_user_info_small);
-        ((AppBarLayout) page.findViewById(R.id.fragment_user_appbar_layout))
-                .addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-                    @Override
-                    public void onOffsetChanged(final AppBarLayout appBarLayout, final int verticalOffset) {
-                        if (collapsingToolbar.getHeight() + verticalOffset < 2 * ViewCompat.getMinimumHeight(collapsingToolbar)) {
-                            user_info_small.animate().alpha(1).setDuration(getResources().getInteger(R.integer.animation_duration));
-                        } else {
-                            user_info_small.animate().alpha(0).setDuration(getResources().getInteger(R.integer.animation_duration));
-                        }
-                    }
-                });
-
-        background = (ImageView) page.findViewById(R.id.fragment_user_background);
-
-        page.findViewById(R.id.fragment_user_followers_container).setOnClickListener(this);
-        page.findViewById(R.id.fragment_user_following_container).setOnClickListener(this);
+        if (action_reply != null) {
+            action_reply.setVisible(user.getId() != PreferenceMgr.getInstance().getCurrentAccountID());
+        }
     }
 
     private static final String TAG = "UserFragment";
 
     public static void showUser(final long userID) {
         showUser(new UserElement(userID, "", "", ""));
+    }
+    public static void showUser(final String username) {
+        if (username != null) showUser(new UserElement(0, "", username, ""));
     }
     public static void showUser(final UserElement user) {
         Log.d(TAG, user.username);
@@ -342,12 +290,6 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
     public void onClick(final View v) {
         if (user == null) return;
         switch (v.getId()) {
-            case R.id.fragment_user_followers_container:
-                FollowersFragment.showUserFollowers(userID);
-            break;
-            case R.id.fragment_user_following_container:
-                FriendsFragment.showUserFriends(userID);
-            break;
             case R.id.fragment_user_link:
                 getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(user.getURLEntity().getExpandedURL())));
             break;
@@ -355,9 +297,6 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
                 final Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + user.getLocation()));
                 mapIntent.setPackage("com.google.android.apps.maps");
                 getContext().startActivity(mapIntent);
-            break;
-            case R.id.fragment_user_image:
-                ImagePreview.openImagePreview(user.getOriginalProfileImageURLHttps());
             break;
         }
     }
@@ -444,13 +383,19 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
      *  then calls RelationshipTask
      */
     private class UserLoaderTask extends AbsUserLoadTask {
-        private UserLoaderTask(final UserFragment fragment) {
+        private final String username;
+        private UserLoaderTask(final UserFragment fragment, final String username) {
             super(fragment);
+            this.username = username;
         }
 
         @Override
         protected User loadData(final Long[] params) throws TwitterException {
-            return TwitterMgr.getInstance().showUser(params[0]);
+            if (params[0] == 0) {
+                return TwitterMgr.getInstance().showUser(username);
+            } else {
+                return TwitterMgr.getInstance().showUser(params[0]);
+            }
         }
     }
 

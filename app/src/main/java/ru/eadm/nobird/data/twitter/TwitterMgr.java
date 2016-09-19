@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import ru.eadm.nobird.data.PageableArrayList;
@@ -21,6 +22,7 @@ import twitter4j.Paging;
 import twitter4j.Query;
 import twitter4j.RateLimitStatus;
 import twitter4j.Relationship;
+import twitter4j.SavedSearch;
 import twitter4j.Status;
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
@@ -166,6 +168,17 @@ public class TwitterMgr {
     public User showUser(final long userID) throws TwitterException {
         if (twitter == null) localAuth();
         return twitter.showUser(userID);
+    }
+
+    /**
+     * Loads info about user with given user name
+     * @param username {String} - name of user
+     * @return {User} - user info
+     * @throws TwitterException
+     */
+    public User showUser(final String username) throws TwitterException {
+        if (twitter == null) localAuth();
+        return twitter.showUser(username);
     }
 
     public PageableArrayList<UserElement> getUserFollowers(final long userID, final long cursor) throws TwitterException {
@@ -357,5 +370,80 @@ public class TwitterMgr {
     public Status destroyStatus(final long statusID) throws TwitterException {
         if (twitter == null) localAuth();
         return twitter.destroyStatus(statusID);
+    }
+
+
+    /**
+     * Search twitter for specified query
+     * @param queryString - query
+     * @param sinceID - min tweet id
+     * @param maxID - max tweet id
+     * @return Search results
+     * @throws TwitterException
+     */
+    public ArrayList<TweetElement> getSearchResults(final String queryString,
+                                                    final long sinceID, final long maxID) throws TwitterException {
+        if (twitter == null) localAuth();
+
+        final Query query = new Query(queryString);
+        if (sinceID != 0) query.setSinceId(sinceID);
+        if (maxID != 0) query.setMaxId(maxID);
+
+        final ArrayList<TweetElement> result = new ArrayList<>();
+        for (final Status status : twitter.search(query).getTweets()) {
+            result.add(TwitterUtils.statusToTweetElement(status));
+        }
+        return result;
+    }
+
+
+    /**
+     * Returns users matching query
+     * @param query - query
+     * @param page - page
+     * @return pageable list of users
+     * @throws TwitterException
+     */
+    public PageableArrayList<UserElement> getSearchUsersResults(final String query, final long page) throws TwitterException {
+        if (twitter == null) localAuth();
+        final PageableArrayList<UserElement> elements = new PageableArrayList<>();
+        for (final User user : twitter.searchUsers(query, (int)page)) {
+            elements.add(new UserElement(user));
+        }
+        elements.setCursors(true, false, page + 1, -1);
+        return elements;
+    }
+
+
+    /**
+     * Creates saved search
+     * @param query - text of query
+     * @return new saved search
+     * @throws TwitterException
+     */
+    public SavedSearch createSavedSearch(final String query) throws TwitterException {
+        if (twitter == null) localAuth();
+        return twitter.createSavedSearch(query);
+    }
+
+    /**
+     * Returns saved searches of current user
+     * @return list of saved searches
+     * @throws TwitterException
+     */
+    public List<SavedSearch> getSavedSearches() throws TwitterException {
+        if (twitter == null) localAuth();
+        return twitter.getSavedSearches();
+    }
+
+    /**
+     * Destroy saved search with given id
+     * @param searchID - id of search to destroy
+     * @return destroyed saved search
+     * @throws TwitterException
+     */
+    public SavedSearch destroySavedSearch(final long searchID) throws TwitterException {
+        if (twitter == null) localAuth();
+        return twitter.destroySavedSearch(searchID);
     }
 }

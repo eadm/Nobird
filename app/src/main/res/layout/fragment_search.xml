@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            android:id="@+id/fragment_search_appbar_layout"
+            android:theme="@style/SearchActionBarTheme">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/fragment_search_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:theme="@style/SearchActionBarTheme">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fragment_search_query"
+                    android:hint="@string/search"
+                    android:background="@null"
+                    android:theme="@style/SearchEditTextStyle"
+
+                    android:singleLine="true"
+                    android:focusableInTouchMode="true"
+
+                    android:layout_marginRight="16dp"
+                    android:layout_marginEnd="16dp"
+                    />
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_search_actions"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:visibility="gone"
+            android:layout_marginTop="4dp"
+            android:theme="@android:style/Widget.ListView">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/SearchActionsTheme"
+                android:id="@+id/fragment_search_action_statuses"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/SearchActionsTheme"
+                android:id="@+id/fragment_search_action_users"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/SearchActionsTheme"
+                android:id="@+id/fragment_search_action_go_to_user"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"/>
+        </LinearLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>
