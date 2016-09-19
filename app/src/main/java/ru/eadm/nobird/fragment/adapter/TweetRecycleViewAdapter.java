@@ -15,7 +15,7 @@ import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.databinding.FragmentFeedListItemBinding;
 import ru.eadm.nobird.fragment.listener.ImageOnClickListener;
 
-public class TweetRecycleViewAdapter extends AbsRecycleViewAdapter<TweetElement, TweetRecycleViewAdapter.ViewHolder> {
+public class TweetRecycleViewAdapter extends AbsElementRecyclerViewAdapter<TweetElement, TweetRecycleViewAdapter.ViewHolder> {
     private final LinearLayout.LayoutParams imageLayoutParams;
 
     public TweetRecycleViewAdapter() {
@@ -28,16 +28,6 @@ public class TweetRecycleViewAdapter extends AbsRecycleViewAdapter<TweetElement,
     public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_feed_list_item, parent, false));
-    }
-
-    /**
-     * Search and return index of element with targeted id
-     * @param targetID - id of target element
-     * @return index of element if element exists -1 otherwise
-     */
-    public int lookup(final long targetID) {
-        for (int i = 0; i < data.size(); ++i) if (data.get(i).getID() == targetID) return i;
-        return -1;
     }
 
     public ImageView createImageView(final String image, final Context context) {

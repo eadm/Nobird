@@ -6,37 +6,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ru.eadm.nobird.R;
-import ru.eadm.nobird.data.types.DraftElement;
+import ru.eadm.nobird.data.types.StringElement;
 
 /**
  * Adapter to display strings
  */
-public class StringRecycleViewAdapter extends RecyclerView.Adapter<StringRecycleViewAdapter.ViewHolder> {
-    private final List<DraftElement> data;
-    private final OnDataClickListener<String> onDataClickListener;
+public class StringRecycleViewAdapter extends AbsElementRecyclerViewAdapter<StringElement, StringRecycleViewAdapter.ViewHolder> {
+    private final OnDataClickListener<StringElement> onDataClickListener;
 
-    public StringRecycleViewAdapter(final OnDataClickListener<String> onDataClickListener) {
-        this.data = new ArrayList<>();
+    public StringRecycleViewAdapter(final OnDataClickListener<StringElement> onDataClickListener) {
+        super();
         this.onDataClickListener = onDataClickListener;
-    }
-
-    public void addAll(final List<DraftElement> data) {
-        final int start = getItemCount();
-        this.data.addAll(data);
-        notifyItemRangeInserted(start, data.size());
-    }
-
-    public void remove(final int pos) {
-        this.data.remove(pos);
-        notifyItemRemoved(pos);
-    }
-
-    public DraftElement get(final int pos) {
-        return data.get(pos);
     }
 
     @Override
@@ -48,11 +29,6 @@ public class StringRecycleViewAdapter extends RecyclerView.Adapter<StringRecycle
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.textView.setText(data.get(position).getText());
-    }
-
-    @Override
-    public int getItemCount() {
-        return data.size();
     }
 
     public interface OnDataClickListener<D> {
@@ -70,7 +46,7 @@ public class StringRecycleViewAdapter extends RecyclerView.Adapter<StringRecycle
 
         @Override
         public void onClick(final View v) {
-            onDataClickListener.onClick(textView.getText().toString());
+            onDataClickListener.onClick(data.get(getAdapterPosition()));
         }
     }
 }

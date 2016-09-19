@@ -48,12 +48,9 @@ public abstract class AbsRecycleViewRefreshTask<E extends Element> extends Async
             final AbsRecycleViewFragment<E> fragment = fragmentWeakReference.get();
             if (fragment != null) {
                 if (position == Position.END) { // adding to end of list
-                    final int start = fragment.adapter.getItemCount();
                     fragment.adapter.addAll(data);
-                    fragment.adapter.notifyItemRangeInserted(start, data.size());
                 } else if (position == Position.START) { // adding to start
                     fragment.adapter.addAll(0, data);
-                    fragment.adapter.notifyItemRangeInserted(0, data.size());
                 }
                 fragment.adapter.getData().setCursors(data); // setting new cursors
                 fragment.setRefreshing(false);

@@ -18,7 +18,7 @@ import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.twitter.TwitterUtils;
 import ru.eadm.nobird.data.twitter.utils.TwitterStatusText;
 import ru.eadm.nobird.data.types.AccountElement;
-import ru.eadm.nobird.data.types.DraftElement;
+import ru.eadm.nobird.data.types.StringElement;
 import ru.eadm.nobird.data.types.TweetElement;
 import twitter4j.Status;
 import twitter4j.User;
@@ -198,12 +198,12 @@ public final class DBMgr {
         db.insert(DBHelper.TABLE_DRAFTS, null, cv);
     }
 
-    public List<DraftElement> getDrafts() {
+    public List<StringElement> getDrafts() {
         final Cursor cursor = db.query(DBHelper.TABLE_DRAFTS, null, null, null, null, null, "id DESC");
-        final ArrayList<DraftElement> drafts = new ArrayList<>();
+        final ArrayList<StringElement> drafts = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
-                drafts.add(new DraftElement(
+                drafts.add(new StringElement(
                         cursor.getLong(cursor.getColumnIndex("id")),
                         cursor.getString(cursor.getColumnIndex("name"))
                 ));

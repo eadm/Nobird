@@ -1,6 +1,5 @@
 package ru.eadm.nobird.fragment.adapter;
 
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.view.LayoutInflater;
 import android.view.View;

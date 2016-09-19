@@ -7,14 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ru.eadm.nobird.R;
-import ru.eadm.nobird.data.PageableArrayList;
 import ru.eadm.nobird.data.types.UserElement;
 import ru.eadm.nobird.databinding.ListItemUserBinding;
 
-public class UserRecycleViewAdapter extends AbsRecycleViewAdapter<UserElement, UserRecycleViewAdapter.ViewHolder> {
-
+public class UserRecycleViewAdapter extends PageableRecyclerViewAdapter<UserElement, UserRecycleViewAdapter.ViewHolder> {
     public UserRecycleViewAdapter() { super(); }
-    public UserRecycleViewAdapter(final PageableArrayList<UserElement> data) { super(data); }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {

@@ -21,7 +21,8 @@ public class BroadcastMgr {
 //    private final static String TAG = "BroadcastMgr";
 
     public enum TYPE {
-        TWEET_ELEMENT
+        TWEET_ELEMENT,
+        SAVED_SEARCH_ELEMENT
     }
 
     private final HashMap<TYPE, HashMap<String, BroadcastReceiver<Element>>> receivers;
@@ -42,12 +43,12 @@ public class BroadcastMgr {
     }
 
     public void remove(final long id, final TYPE type, final String name) {
-        receivers.get(type).get(name).remove(id);
+        receivers.get(type).get(name).notifyItemRemoved(id);
     }
 
     public void remove(final long id, final TYPE type) {
         for (final BroadcastReceiver<Element> receiver : receivers.get(type).values()) {
-            receiver.remove(id);
+            receiver.notifyItemRemoved(id);
         }
     }
 

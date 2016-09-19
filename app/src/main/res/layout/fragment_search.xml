@@ -70,5 +70,10 @@
                 android:layout_marginBottom="1dp"/>
         </LinearLayout>
 
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_search_saved_queries" />
+
     </android.support.design.widget.CoordinatorLayout>
 </layout>

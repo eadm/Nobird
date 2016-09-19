@@ -14,13 +14,13 @@ import android.view.ViewGroup;
 import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.types.Element;
 import ru.eadm.nobird.design.DividerItemDecoration;
-import ru.eadm.nobird.fragment.adapter.AbsRecycleViewAdapter;
+import ru.eadm.nobird.fragment.adapter.PageableRecyclerViewAdapter;
 import ru.eadm.nobird.fragment.listener.RecycleViewOnScrollListener;
 import ru.eadm.nobird.fragment.listener.Scrollable;
 import twitter4j.CursorSupport;
 
 public abstract class AbsRecycleViewFragment<E extends Element> extends Fragment implements SwipeRefreshLayout.OnRefreshListener, Scrollable {
-    protected AbsRecycleViewAdapter<E, ?> adapter;
+    protected PageableRecyclerViewAdapter<E, ?> adapter;
     protected AbsRecycleViewRefreshTask<E> task;
 
     private SwipeRefreshLayout refreshLayout;
@@ -87,7 +87,7 @@ public abstract class AbsRecycleViewFragment<E extends Element> extends Fragment
     }
 
     protected abstract AbsRecycleViewRefreshTask<E> createTask(final AbsRecycleViewRefreshTask.Position position);
-    protected abstract AbsRecycleViewAdapter<E, ?> createAdapter();
+    protected abstract PageableRecyclerViewAdapter<E, ?> createAdapter();
 
     protected abstract String getToolbarTitle();
 

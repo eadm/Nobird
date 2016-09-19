@@ -54,12 +54,9 @@ public abstract class AbsTweetRecycleViewRefreshTask extends AsyncTask<Long, Voi
         } else {
             if (fragment.adapter != null) {
                 if (position == AbsTweetRecycleViewFragmentNested.POSITION_END) { // adding to end of list
-                    final int start = fragment.adapter.getItemCount();
                     fragment.adapter.addAll(data);
-                    fragment.adapter.notifyItemRangeInserted(start, data.size());
                 } else if (position == AbsTweetRecycleViewFragmentNested.POSITION_START) { // adding to start
                     fragment.adapter.addAll(0, data);
-                    fragment.adapter.notifyItemRangeInserted(0, data.size());
 //                    fragment.showCounter(data.size());
                 }
             }

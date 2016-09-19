@@ -128,7 +128,12 @@ public abstract class AbsTweetRecycleViewFragment extends Fragment implements Sw
      * @param id - id of tweet to remove
      */
     @Override
-    public void remove(final long id) {
+    public void notifyItemRemoved(final long id) {
         adapter.removeByElementID(id);
+    }
+
+    @Override
+    public boolean exists(final long id) {
+        return adapter.lookup(id) != -1;
     }
 }

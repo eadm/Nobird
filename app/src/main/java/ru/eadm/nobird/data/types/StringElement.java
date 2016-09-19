@@ -1,13 +1,13 @@
 package ru.eadm.nobird.data.types;
 
 /**
- * Created by ruslandavletshin on 09/09/16.
+ * Drafts elements
  */
-public class DraftElement implements Element {
+public class StringElement implements Element {
     private final long id;
     private final String text;
 
-    public DraftElement(final long id, final String text) {
+    public StringElement(final long id, final String text) {
         this.id = id;
         this.text = text;
     }

@@ -56,7 +56,6 @@ public class TweetElementObserver {
         protected void obtainData(final TweetRecycleViewAdapter adapter, final TweetElement data) {
             if (pos != -1) {
                 adapter.set(pos, data);
-                adapter.notifyItemChanged(pos);
             }
         }
     }

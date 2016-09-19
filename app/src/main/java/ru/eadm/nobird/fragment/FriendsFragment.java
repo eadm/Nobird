@@ -6,7 +6,7 @@ import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.PageableArrayList;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.UserElement;
-import ru.eadm.nobird.fragment.adapter.AbsRecycleViewAdapter;
+import ru.eadm.nobird.fragment.adapter.PageableRecyclerViewAdapter;
 import ru.eadm.nobird.fragment.adapter.UserRecycleViewAdapter;
 import ru.eadm.nobird.fragment.task.AbsRecycleViewFragment;
 import ru.eadm.nobird.fragment.task.AbsRecycleViewRefreshTask;
@@ -19,7 +19,7 @@ public class FriendsFragment extends AbsRecycleViewFragment<UserElement> {
     }
 
     @Override
-    protected AbsRecycleViewAdapter<UserElement, ?> createAdapter() {
+    protected PageableRecyclerViewAdapter<UserElement, ?> createAdapter() {
         return new UserRecycleViewAdapter();
     }
 

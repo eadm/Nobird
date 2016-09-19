@@ -1,7 +1,6 @@
 package ru.eadm.nobird.fragment;
 
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,7 +19,7 @@ import java.util.List;
 import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.database.DBHelper;
 import ru.eadm.nobird.data.database.DBMgr;
-import ru.eadm.nobird.data.types.DraftElement;
+import ru.eadm.nobird.data.types.StringElement;
 import ru.eadm.nobird.design.DividerItemDecoration;
 import ru.eadm.nobird.fragment.adapter.StringRecycleViewAdapter;
 
@@ -88,10 +87,10 @@ public class DraftListFragment extends Fragment {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        adapter = new StringRecycleViewAdapter(new StringRecycleViewAdapter.OnDataClickListener<String>() {
+        adapter = new StringRecycleViewAdapter(new StringRecycleViewAdapter.OnDataClickListener<StringElement>() {
             @Override
-            public void onClick(final String data) {
-                ComposeFragment.open(0, data);
+            public void onClick(final StringElement data) {
+                ComposeFragment.open(0, data.getText());
             }
         });
         draftListTask = new DraftListTask(this);
@@ -113,7 +112,7 @@ public class DraftListFragment extends Fragment {
         FragmentMgr.getInstance().replaceFragment(0, fragment, true);
     }
 
-    private final class DraftListTask extends AsyncTask<Void, Void, List<DraftElement>> {
+    private final class DraftListTask extends AsyncTask<Void, Void, List<StringElement>> {
         private final WeakReference<DraftListFragment> fragmentWeakReference;
 
         public DraftListTask(final DraftListFragment fragment) {
@@ -121,12 +120,12 @@ public class DraftListFragment extends Fragment {
         }
 
         @Override
-        protected List<DraftElement> doInBackground(final Void... params) {
+        protected List<StringElement> doInBackground(final Void... params) {
             return DBMgr.getInstance().getDrafts();
         }
 
         @Override
-        protected void onPostExecute(final List<DraftElement> drafts) {
+        protected void onPostExecute(final List<StringElement> drafts) {
             final DraftListFragment fragment = fragmentWeakReference.get();
             if (fragment != null) {
                 fragment.adapter.addAll(drafts);

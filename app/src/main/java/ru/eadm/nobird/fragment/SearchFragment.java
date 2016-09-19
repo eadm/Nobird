@@ -4,6 +4,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -16,17 +17,23 @@ import java.util.regex.Pattern;
 
 import ru.eadm.nobird.R;
 import ru.eadm.nobird.Util;
+import ru.eadm.nobird.broadcast.BroadcastReceiver;
+import ru.eadm.nobird.data.types.StringElement;
 import ru.eadm.nobird.databinding.FragmentSearchBinding;
+import ru.eadm.nobird.design.DividerItemDecoration;
 import ru.eadm.nobird.design.animation.OnEndAnimationListener;
 import ru.eadm.nobird.design.animation.OnStartAnimationListener;
+import ru.eadm.nobird.fragment.adapter.StringRecycleViewAdapter;
 
 /**
  * Fragment with search quires
  */
-public class SearchFragment extends Fragment implements View.OnClickListener {
+public class SearchFragment extends Fragment implements View.OnClickListener /*, BroadcastReceiver<StringElement>*/ {
     private FragmentSearchBinding binding;
     private String query;
     private Pattern usernamePattern;
+
+    private StringRecycleViewAdapter adapter;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle state) {
@@ -47,6 +54,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         binding.fragmentSearchActionGoToUser.setOnClickListener(this);
         binding.fragmentSearchActionStatuses.setOnClickListener(this);
         binding.fragmentSearchActionUsers.setOnClickListener(this);
+
+        binding.fragmentSearchSavedQueries.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.fragmentSearchSavedQueries.addItemDecoration(new DividerItemDecoration(
+                getContext(), R.drawable.list_divider, DividerItemDecoration.VERTICAL_LIST));
+        binding.fragmentSearchSavedQueries.setAdapter(adapter);
 
         if (state == null) {
             binding.fragmentSearchQuery.requestFocus();
@@ -89,13 +101,19 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             query = getArguments().getString(SearchResultFragment.ARG_QUERY);
         }
         usernamePattern = Pattern.compile("[A-Za-z0-9_]+");
-        query = null;
+        adapter = new StringRecycleViewAdapter(new StringRecycleViewAdapter.OnDataClickListener<StringElement>() {
+            @Override
+            public void onClick(final StringElement data) {
+                SearchResultFragment.show(data.getText());
+            }
+        });
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         usernamePattern = null;
+        query = null;
     }
 
     @Override
@@ -124,4 +142,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     public static void show() {
         FragmentMgr.getInstance().replaceFragment(0, new SearchFragment(), true);
     }
+
+//    @Override
+//    public void notifyItemRemoved(long id) {
+////        adapter.remove();
+//    }
+
+
 }

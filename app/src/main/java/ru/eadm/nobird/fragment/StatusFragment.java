@@ -159,7 +159,6 @@ public class StatusFragment extends AbsTweetRecycleViewFragment implements Swipe
             }
 
             fragment.adapter.add(0, tweetElement);
-            fragment.adapter.notifyItemInserted(0);
             conversationEnd++;
 
             if (status.getInReplyToStatusId() != -1) {
@@ -204,11 +203,8 @@ public class StatusFragment extends AbsTweetRecycleViewFragment implements Swipe
             if (!fragment.isAdded()) return; // if fragment removed
             if (position == POSITION_START) {
                 fragment.getAdapter().addAll(conversationEnd, data);
-                fragment.getAdapter().notifyItemRangeInserted(conversationEnd, data.size());
             } else {
-                final int start = fragment.getAdapter().getItemCount();
                 fragment.getAdapter().addAll(data);
-                fragment.getAdapter().notifyItemRangeInserted(start, data.size());
             }
         }
     }
