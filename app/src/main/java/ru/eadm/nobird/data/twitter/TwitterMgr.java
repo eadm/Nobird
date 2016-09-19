@@ -1,6 +1,5 @@
 package ru.eadm.nobird.data.twitter;
 
-import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 
@@ -32,10 +31,9 @@ import twitter4j.User;
 import twitter4j.auth.AccessToken;
 
 public class TwitterMgr {
-    public final static int TWEETS_PER_PAGE = 100;
+    public final static int TWEETS_PER_PAGE = 200;
     public final static int USER_PER_PAGE = 100;
 
-    private final Context context;
     private static TwitterMgr instance;
     private final TwitterFactory factory;
 
@@ -50,15 +48,14 @@ public class TwitterMgr {
     private Twitter twitter;
     public AccountElement account;
 
-    private TwitterMgr(final Context context) {
+    private TwitterMgr() {
         Log.d(TwitterMgr.TAG, "create new twitter");
-        this.context = context;
         factory = new TwitterFactory();
     }
 
-    public synchronized static void init(final Context context) {
+    public synchronized static void init() {
         if (instance == null) {
-            instance = new TwitterMgr(context);
+            instance = new TwitterMgr();
         }
     }
 
@@ -86,10 +83,10 @@ public class TwitterMgr {
      */
     public synchronized void authSuccess(final String verifier) throws TwitterException {
         final AccessToken accessToken = login.getAccessToken(verifier);
-        if (!DBMgr.getInstance().isExistWithID(DBHelper.TABLE_ACCOUNTS, accessToken.getUserId())) { // if such user already in db no need to add it again
+        if (!DBMgr.getInstance().isExistWithID(DBHelper.TABLE_ACCOUNTS, "id", accessToken.getUserId())) { // if such user already in db no need to add it again
             DBMgr.getInstance().saveAccount(accessToken, login.twitter.showUser(accessToken.getUserId()));
         }
-        PreferenceMgr.getInstance().saveLong(PreferenceMgr.CURRENT_ACCOUNT_ID, accessToken.getUserId()); // making active that user
+        PreferenceMgr.getInstance().setCurrentAccountID(accessToken.getUserId()); // making active that user
         this.twitter = login.twitter;
     }
 

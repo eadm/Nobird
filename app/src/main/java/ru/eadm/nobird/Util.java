@@ -27,7 +27,7 @@ public final class Util {
         DBMgr.init(context);
         FontMgr.init(context);
         ImageMgr.init(context);
-        TwitterMgr.init(context);
+        TwitterMgr.init();
         NotificationMgr.init(context);
         PreferenceMgr.init(context);
         FragmentMgr.init(context);
@@ -87,6 +87,6 @@ public final class Util {
 
     public static List<String> split(final String string, final String delimiter) {
         if (string.isEmpty()) return Collections.emptyList();
-        return Arrays.asList(string.split("\\|"));
+        return Arrays.asList(string.split(delimiter));
     }
 }

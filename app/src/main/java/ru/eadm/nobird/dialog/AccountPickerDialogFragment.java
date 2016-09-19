@@ -66,7 +66,7 @@ public class AccountPickerDialogFragment extends DialogFragment implements Dialo
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
         if (which >= 0) {
-            PreferenceMgr.getInstance().saveLong(PreferenceMgr.CURRENT_ACCOUNT_ID, (adapter.getItemId(which)));
+            PreferenceMgr.getInstance().setCurrentAccountID(adapter.getItemId(which));
             FragmentMgr.getInstance().replaceFragment(0, new Home(), false);
 //            Log.d(TAG, ((AccountElement)adapter.getItem(which)).username);
         } else if (which == -1) {

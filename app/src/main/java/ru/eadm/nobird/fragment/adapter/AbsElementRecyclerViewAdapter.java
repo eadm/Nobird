@@ -36,6 +36,15 @@ public abstract class AbsElementRecyclerViewAdapter<E extends Element, VH extend
     }
 
     /**
+     * Check if element with given id exists in data set
+     * @param id - id of element
+     * @return true if exists false otherwise
+     */
+    public boolean exists(final long id) {
+        return lookup(id) != -1;
+    }
+
+    /**
      * Add element
      * @param e - element
      */

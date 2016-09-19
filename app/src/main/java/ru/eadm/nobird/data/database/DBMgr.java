@@ -30,14 +30,12 @@ public final class DBMgr {
     public final static int TYPE_FEED = 0;
     public final static int TYPE_MENTIONS = 1;
 
-    private final Context context;
     private static DBMgr instance;
 
     private final SQLiteDatabase db;
 
     private DBMgr(final Context context) {
-        this.context = context;
-        db = new DBHelper(this.context).getWritableDatabase();
+        db = new DBHelper(context).getWritableDatabase();
     }
 
     public synchronized static void init(final Context context) {
@@ -50,8 +48,8 @@ public final class DBMgr {
         return instance;
     }
 
-    public boolean isExistWithID(final String table, final long id) {
-        final Cursor cursor = db.query(table, null, "id = " + id, null, null, null, "id DESC");
+    public boolean isExistWithID(final String table, final String fieldName, final long id) {
+        final Cursor cursor = db.query(table, null, fieldName + " = " + id, null, null, null, "id DESC");
         final boolean r = cursor.moveToFirst();
         cursor.close();
         return r;

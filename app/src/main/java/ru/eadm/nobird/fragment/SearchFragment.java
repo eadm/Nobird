@@ -17,7 +17,9 @@ import java.util.regex.Pattern;
 
 import ru.eadm.nobird.R;
 import ru.eadm.nobird.Util;
+import ru.eadm.nobird.broadcast.BroadcastMgr;
 import ru.eadm.nobird.broadcast.BroadcastReceiver;
+import ru.eadm.nobird.data.types.Element;
 import ru.eadm.nobird.data.types.StringElement;
 import ru.eadm.nobird.databinding.FragmentSearchBinding;
 import ru.eadm.nobird.design.DividerItemDecoration;
@@ -28,7 +30,7 @@ import ru.eadm.nobird.fragment.adapter.StringRecycleViewAdapter;
 /**
  * Fragment with search quires
  */
-public class SearchFragment extends Fragment implements View.OnClickListener /*, BroadcastReceiver<StringElement>*/ {
+public class SearchFragment extends Fragment implements View.OnClickListener, BroadcastReceiver<Element> {
     private FragmentSearchBinding binding;
     private String query;
     private Pattern usernamePattern;
@@ -107,6 +109,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener /*,
                 SearchResultFragment.show(data.getText());
             }
         });
+
+        BroadcastMgr.getInstance().register(BroadcastMgr.TYPE.SAVED_SEARCH_ELEMENT, SearchFragment.class.getCanonicalName(), this);
     }
 
     @Override
@@ -114,6 +118,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener /*,
         super.onDestroy();
         usernamePattern = null;
         query = null;
+        BroadcastMgr.getInstance().unregister(BroadcastMgr.TYPE.SAVED_SEARCH_ELEMENT, SearchFragment.class.getCanonicalName());
     }
 
     @Override
@@ -143,10 +148,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener /*,
         FragmentMgr.getInstance().replaceFragment(0, new SearchFragment(), true);
     }
 
-//    @Override
-//    public void notifyItemRemoved(long id) {
-////        adapter.remove();
-//    }
+    @Override
+    public void notifyItemRemoved(final long id) {
+        adapter.removeByElementID(id);
+    }
 
-
+    @Override
+    public boolean exists(final long id) {
+        return adapter.exists(id);
+    }
 }
