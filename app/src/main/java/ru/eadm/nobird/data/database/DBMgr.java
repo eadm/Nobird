@@ -20,6 +20,7 @@ import ru.eadm.nobird.data.twitter.utils.TwitterStatusText;
 import ru.eadm.nobird.data.types.AccountElement;
 import ru.eadm.nobird.data.types.StringElement;
 import ru.eadm.nobird.data.types.TweetElement;
+import twitter4j.SavedSearch;
 import twitter4j.Status;
 import twitter4j.User;
 import twitter4j.auth.AccessToken;
@@ -100,7 +101,7 @@ public final class DBMgr {
     }
 
     public ArrayList<TweetElement> getCachedStatuses(final int type) {
-        return getCachedStatuses(PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID), type);
+        return getCachedStatuses(PreferenceMgr.getInstance().getCurrentAccountID(), type);
     }
     public ArrayList<TweetElement> getCachedStatuses(final long userID, final int type) {
         final ArrayList<TweetElement> tweets = new ArrayList<>();
@@ -190,12 +191,20 @@ public final class DBMgr {
                 });
     }
 
+    /**
+     * Saves draft
+     * @param text - text of draft
+     */
     public void saveDraft(final String text) {
         final ContentValues cv = new ContentValues();
         cv.put("name", text);
         db.insert(DBHelper.TABLE_DRAFTS, null, cv);
     }
 
+    /**
+     * Returns list of drafts
+     * @return - list of drafts
+     */
     public List<StringElement> getDrafts() {
         final Cursor cursor = db.query(DBHelper.TABLE_DRAFTS, null, null, null, null, null, "id DESC");
         final ArrayList<StringElement> drafts = new ArrayList<>();
@@ -210,6 +219,86 @@ public final class DBMgr {
 
         cursor.close();
         return drafts;
+    }
+
+    /**
+     * Saves search
+     * @param search - search to save
+     * @return - string element based on saved search
+     */
+    public StringElement saveSearch(final SavedSearch search) {
+        final ContentValues cv = new ContentValues();
+        cv.put("id", search.getId());
+        cv.put("name", search.getQuery());
+        cv.put("userID", PreferenceMgr.getInstance().getCurrentAccountID());
+        db.insert(DBHelper.TABLE_SAVED_SEARCHES, null, cv);
+        return new StringElement(search);
+    }
+
+    /**
+     * Saves list of searches and removes old elements
+     * @param searches - list of searches
+     * @return - list of searches converted to string elements
+     */
+    public List<StringElement> saveSearches(final List<SavedSearch> searches) {
+        db.delete(DBHelper.TABLE_SAVED_SEARCHES, "userID = " + PreferenceMgr.getInstance().getCurrentAccountID(), null);
+
+        final List<StringElement> result = new ArrayList<>(searches.size());
+
+        db.beginTransaction();
+        final SQLiteStatement st = db.compileStatement(DBHelper.TABLE_SAVED_SEARCHES_PATTERN);
+        for (final SavedSearch search : searches) {
+            st.bindLong(1, search.getId());
+            st.bindLong(2, PreferenceMgr.getInstance().getCurrentAccountID());
+            st.bindString(3, search.getQuery());
+            st.executeInsert();
+
+            result.add(new StringElement(search));
+        }
+        st.close();
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        return result;
+    }
+
+    /**
+     * Returns list of saved searches from cache
+     * @return list of saved searches
+     */
+    public List<StringElement> getSearches() {
+        final Cursor cursor = db.query(DBHelper.TABLE_SAVED_SEARCHES, null, "userID = " + PreferenceMgr.getInstance().getCurrentAccountID(), null, null, null, "id");
+        final List<StringElement> searches = new ArrayList<>(cursor.getCount());
+        if (cursor.moveToFirst()) {
+            do {
+                final long searchID = cursor.getLong(cursor.getColumnIndex("id"));
+                final String name = cursor.getString(cursor.getColumnIndex("name"));
+                searches.add(new StringElement(searchID, name));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return searches;
+    }
+
+    /**
+     * Gets saved search by query
+     * @param query - search query
+     * @return saved search if exists or null otherwise
+     */
+    public StringElement getSearchByQuery(final String query) {
+        final Cursor cursor = db.rawQuery("SELECT * FROM " + DBHelper.TABLE_SAVED_SEARCHES + " " +
+                "WHERE userID = ? " +
+                "AND name = ?", new String[]{
+                Long.toString(PreferenceMgr.getInstance().getCurrentAccountID()),
+                query
+        });
+        StringElement r = null;
+        if (cursor.moveToFirst()) {
+            final long searchID = cursor.getLong(cursor.getColumnIndex("id"));
+            final String name = cursor.getString(cursor.getColumnIndex("name"));
+            r = new StringElement(searchID, name);
+        }
+        cursor.close();
+        return r;
     }
 
     public void removeElementFromTableByID(final String table, final String fieldName, final long id){

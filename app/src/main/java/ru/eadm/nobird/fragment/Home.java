@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
@@ -27,6 +26,7 @@ import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.AccountElement;
 import ru.eadm.nobird.dialog.AccountPickerDialogFragment;
 import ru.eadm.nobird.fragment.adapter.HomeViewPagerAdapter;
+import ru.eadm.nobird.fragment.search.SearchFragment;
 import ru.eadm.nobird.notification.NotificationMgr;
 
 

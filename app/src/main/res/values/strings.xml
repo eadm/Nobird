@@ -61,4 +61,8 @@
     <string name="search_action_go_to_user">Go to user @%s</string>
     <string name="action_create_saved_search">Save</string>
     <string name="action_destroy_saved_search">Remove saved search</string>
+    <string name="drawer_edit_account">Edit account</string>
+    <string name="drawer_analytics">Stats</string>
+    <string name="drawer_settings">Settings</string>
+    <string name="drawer_messages">Messages</string>
 </resources>

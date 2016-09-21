@@ -77,6 +77,11 @@ public abstract class AbsElementRecyclerViewAdapter<E extends Element, VH extend
         notifyItemRemoved(pos);
     }
 
+    public void clear() {
+        data.clear();
+        notifyDataSetChanged();
+    }
+
     public E get(final int pos) {
         return data.get(pos);
     }

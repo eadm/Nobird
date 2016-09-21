@@ -13,6 +13,7 @@ import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.database.DBHelper;
 import ru.eadm.nobird.data.database.DBMgr;
 import ru.eadm.nobird.data.types.AccountElement;
+import ru.eadm.nobird.data.types.StringElement;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.data.types.UserElement;
 import twitter4j.GeoLocation;
@@ -418,9 +419,9 @@ public class TwitterMgr {
      * @return new saved search
      * @throws TwitterException
      */
-    public SavedSearch createSavedSearch(final String query) throws TwitterException {
+    public StringElement createSavedSearch(final String query) throws TwitterException {
         if (twitter == null) localAuth();
-        return twitter.createSavedSearch(query);
+        return DBMgr.getInstance().saveSearch(twitter.createSavedSearch(query));
     }
 
     /**
@@ -428,19 +429,19 @@ public class TwitterMgr {
      * @return list of saved searches
      * @throws TwitterException
      */
-    public List<SavedSearch> getSavedSearches() throws TwitterException {
+    public List<StringElement> getSavedSearches() throws TwitterException {
         if (twitter == null) localAuth();
-        return twitter.getSavedSearches();
+        return DBMgr.getInstance().saveSearches(twitter.getSavedSearches());
     }
 
     /**
      * Destroy saved search with given id
      * @param searchID - id of search to destroy
-     * @return destroyed saved search
      * @throws TwitterException
      */
-    public SavedSearch destroySavedSearch(final long searchID) throws TwitterException {
+    public void destroySavedSearch(final long searchID) throws TwitterException {
         if (twitter == null) localAuth();
-        return twitter.destroySavedSearch(searchID);
+        final SavedSearch search = twitter.destroySavedSearch(searchID);
+        DBMgr.getInstance().removeElementFromTableByID(DBHelper.TABLE_SAVED_SEARCHES, "id", search.getId());
     }
 }

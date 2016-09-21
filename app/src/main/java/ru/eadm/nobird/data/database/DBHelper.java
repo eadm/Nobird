@@ -19,6 +19,9 @@ public final class DBHelper extends SQLiteOpenHelper {
             "(SELECT id FROM " + TABLE_TWEETS + " WHERE ownerID = ? AND type = ? " +
             "ORDER BY tweetID ASC LIMIT ?)";
 
+    public final static String TABLE_SAVED_SEARCHES = "saved_searches";
+    public final static String TABLE_SAVED_SEARCHES_PATTERN = "insert into " + TABLE_SAVED_SEARCHES +
+            " values (?, ?, ?)";
 
     public DBHelper(final Context context) {
         super(context, "nobirdDB", null, 1);
@@ -49,8 +52,13 @@ public final class DBHelper extends SQLiteOpenHelper {
                 "ownerID integer," +
                 "type integer);"); // 0 for feed, 1 for mentions
 
-        db.execSQL("create table "+ TABLE_DRAFTS +" ("
+        db.execSQL("create table " + TABLE_DRAFTS + " ("
                 + "id integer primary key autoincrement,"
+                + "name text" + ");");
+
+        db.execSQL("create table " + TABLE_SAVED_SEARCHES + " ("
+                + "id integer primary key autoincrement,"
+                + "userID integer,"
                 + "name text" + ");");
     }
 

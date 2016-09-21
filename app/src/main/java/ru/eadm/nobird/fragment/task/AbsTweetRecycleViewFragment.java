@@ -9,7 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import ru.eadm.nobird.R;
 import ru.eadm.nobird.broadcast.BroadcastMgr;
 import ru.eadm.nobird.broadcast.BroadcastReceiver;
-import ru.eadm.nobird.data.types.Element;
+import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.design.DividerItemDecoration;
 import ru.eadm.nobird.fragment.adapter.TweetRecycleViewAdapter;
 import ru.eadm.nobird.fragment.listener.RecycleViewOnScrollListener;
@@ -18,7 +18,7 @@ import ru.eadm.nobird.fragment.listener.Scrollable;
 /**
  * Abs class to create fragments with recycle view with tweets
  */
-public abstract class AbsTweetRecycleViewFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, Scrollable, BroadcastReceiver<Element> {
+public abstract class AbsTweetRecycleViewFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, Scrollable, BroadcastReceiver<TweetElement> {
     public static final int POSITION_START = 0;
     public static final int POSITION_END = 1;
 

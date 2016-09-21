@@ -11,6 +11,7 @@ import android.util.Log;
 import java.lang.ref.WeakReference;
 
 import ru.eadm.nobird.R;
+import ru.eadm.nobird.fragment.search.SearchFragment;
 
 public class FragmentMgr {
     private WeakReference<AppCompatActivity> app;
@@ -69,6 +70,17 @@ public class FragmentMgr {
         if (app.get() == null) return;
 
         app.get().getSupportFragmentManager().popBackStack();
+    }
+
+    public<F extends Fragment> F lookup(final Class<F> targetClass) {
+        if (app.get() != null) {
+            for(final Fragment fragment : app.get().getSupportFragmentManager().getFragments()){
+                if (fragment.getClass().equals(targetClass)) {
+                    return (F) fragment;
+                }
+            }
+        }
+        return null;
     }
 
     public Context getContext() { return app.get(); }

@@ -25,16 +25,16 @@ public class BroadcastMgr {
         SAVED_SEARCH_ELEMENT
     }
 
-    private final HashMap<TYPE, HashMap<String, BroadcastReceiver<Element>>> receivers;
+    private final HashMap<TYPE, HashMap<String, BroadcastReceiver<? extends Element>>> receivers;
 
     public BroadcastMgr() {
         receivers = new HashMap<>();
         for (final TYPE type : TYPE.values()) {
-            receivers.put(type, new HashMap<String, BroadcastReceiver<Element>>());
+            receivers.put(type, new HashMap<String, BroadcastReceiver<? extends Element>>());
         }
     }
 
-    public void register(final TYPE type, final String name, final BroadcastReceiver<Element> receiver) {
+    public void register(final TYPE type, final String name, final BroadcastReceiver<? extends Element> receiver) {
         receivers.get(type).put(name, receiver);
     }
 
@@ -47,10 +47,11 @@ public class BroadcastMgr {
     }
 
     public void remove(final long id, final TYPE type) {
-        for (final BroadcastReceiver<Element> receiver : receivers.get(type).values()) {
+        for (final BroadcastReceiver<? extends Element> receiver : receivers.get(type).values()) {
             receiver.notifyItemRemoved(id);
         }
     }
+
 
 //    public void dump() {
 //        for (final HashMap<String, BroadcastReceiver<Element>> broadcastReceiverHashMap : receivers.values()) {

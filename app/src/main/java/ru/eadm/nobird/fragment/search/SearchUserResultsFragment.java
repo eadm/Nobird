@@ -1,4 +1,4 @@
-package ru.eadm.nobird.fragment;
+package ru.eadm.nobird.fragment.search;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import ru.eadm.nobird.data.PageableArrayList;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.UserElement;
+import ru.eadm.nobird.fragment.FragmentMgr;
 import ru.eadm.nobird.fragment.adapter.PageableRecyclerViewAdapter;
 import ru.eadm.nobird.fragment.adapter.UserRecycleViewAdapter;
 import ru.eadm.nobird.fragment.task.AbsRecycleViewFragment;

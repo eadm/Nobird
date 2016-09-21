@@ -61,4 +61,8 @@
     <string name="search_action_go_to_user">Перейти к пользователю @%s</string>
     <string name="action_create_saved_search">Сохранить</string>
     <string name="action_destroy_saved_search">Удалить</string>
+    <string name="drawer_edit_account">Редактировать аккаунт</string>
+    <string name="drawer_analytics">Статистика</string>
+    <string name="drawer_settings">Настройки</string>
+    <string name="drawer_messages">Сообщения</string>
 </resources>

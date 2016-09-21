@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:title="@string/drawer_edit_account"
+        android:id="@+id/drawer_edit_account"
+        android:icon="@drawable/drawer_edit_account"
+        android:visible="true"/>
+
+    <item
         android:title="@string/drafts"
         android:id="@+id/drawer_drafts"
         android:icon="@drawable/drawer_drafts"
@@ -11,4 +17,23 @@
         android:id="@+id/drawer_lists"
         android:icon="@drawable/drawer_lists"
         android:visible="true"/>
+
+    <item
+        android:title="@string/drawer_messages"
+        android:id="@+id/drawer_messages"
+        android:icon="@drawable/drawer_messages"
+        android:visible="true"/>
+
+    <item
+        android:title="@string/drawer_settings"
+        android:id="@+id/drawer_settings"
+        android:icon="@drawable/drawer_settings"
+        android:visible="true"/>
+
+    <item
+        android:title="@string/drawer_analytics"
+        android:id="@+id/drawer_analytics"
+        android:icon="@drawable/drawer_analytics"
+        android:visible="true"
+        android:enabled="false"/>
 </menu>

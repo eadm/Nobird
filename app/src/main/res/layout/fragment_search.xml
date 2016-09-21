@@ -36,44 +36,68 @@
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/fragment_search_actions"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:visibility="gone"
-            android:layout_marginTop="4dp"
-            android:theme="@android:style/Widget.ListView">
-            <TextView
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            <android.support.v7.widget.ButtonBarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/SearchActionsTheme"
-                android:id="@+id/fragment_search_action_statuses"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"/>
+                android:id="@+id/fragment_search_browse"
+                android:visibility="gone">
+                <Button
+                    android:layout_width="wrap_content"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_height="wrap_content"
+                    android:text="@string/search"
+                    android:layout_weight="1"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_height="wrap_content"
+                    android:text="@string/search"
+                    android:layout_weight="1"/>
+            </android.support.v7.widget.ButtonBarLayout>
 
-            <TextView
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/fragment_search_browse"
+                android:id="@+id/fragment_search_saved_queries"
+                android:layout_alignParentBottom="true"/>
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/SearchActionsTheme"
-                android:id="@+id/fragment_search_action_users"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/SearchActionsTheme"
-                android:id="@+id/fragment_search_action_go_to_user"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"/>
-        </LinearLayout>
-
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/fragment_search_saved_queries" />
+                android:id="@+id/fragment_search_actions"
+                android:layout_alignParentTop="true"
+                android:visibility="gone"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:theme="@android:style/Widget.ListView">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/SearchActionsTheme"
+                    android:id="@+id/fragment_search_action_statuses"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/SearchActionsTheme"
+                    android:id="@+id/fragment_search_action_users"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/SearchActionsTheme"
+                    android:id="@+id/fragment_search_action_go_to_user"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp"/>
+            </LinearLayout>
+        </RelativeLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

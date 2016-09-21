@@ -1,5 +1,7 @@
 package ru.eadm.nobird.data.types;
 
+import twitter4j.SavedSearch;
+
 /**
  * Drafts elements
  */
@@ -10,6 +12,11 @@ public class StringElement implements Element {
     public StringElement(final long id, final String text) {
         this.id = id;
         this.text = text;
+    }
+
+    public StringElement(final SavedSearch search) {
+        this.id = search.getId();
+        this.text = search.getQuery();
     }
 
     public String getText() {

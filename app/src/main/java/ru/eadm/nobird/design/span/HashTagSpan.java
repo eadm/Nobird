@@ -1,11 +1,9 @@
 package ru.eadm.nobird.design.span;
 
 import android.text.TextPaint;
-import android.text.style.ClickableSpan;
-import android.util.Log;
 import android.view.View;
 
-import ru.eadm.nobird.fragment.SearchResultFragment;
+import ru.eadm.nobird.fragment.search.SearchResultFragment;
 
 public class HashTagSpan extends AbsSpan {
     public final static String TAG = "HashTagSpan";

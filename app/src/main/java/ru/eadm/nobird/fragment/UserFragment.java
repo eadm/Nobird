@@ -70,11 +70,6 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
         activity.setSupportActionBar(binding.fragmentUserToolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        if (refreshTask == null) {
-            refreshTask = createRefreshTask(POSITION_END);
-            refreshTask.execute(0L, 0L);
-        }
-
         binding.fragmentUserAppbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(final AppBarLayout appBarLayout, final int verticalOffset) {
@@ -245,6 +240,8 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
         if (user == null || !isAdded()) return;
         Log.d(TAG, "Setting up user");
         this.user = user;
+        this.userName = user.getScreenName();
+        this.userID = user.getId();
 
         binding.setUser(user);
 
@@ -395,6 +392,15 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
                 return TwitterMgr.getInstance().showUser(username);
             } else {
                 return TwitterMgr.getInstance().showUser(params[0]);
+            }
+        }
+
+        @Override
+        protected void obtainData(final UserFragment fragment, final User data) {
+            super.obtainData(fragment, data);
+            if (fragment.refreshTask == null) {
+                fragment.refreshTask = fragment.createRefreshTask(POSITION_END);
+                fragment.refreshTask.execute(0L, 0L);
             }
         }
     }
