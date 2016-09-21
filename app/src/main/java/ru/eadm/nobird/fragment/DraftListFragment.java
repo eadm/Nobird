@@ -21,6 +21,7 @@ import ru.eadm.nobird.data.database.DBHelper;
 import ru.eadm.nobird.data.database.DBMgr;
 import ru.eadm.nobird.data.types.StringElement;
 import ru.eadm.nobird.design.DividerItemDecoration;
+import ru.eadm.nobird.fragment.implementation.FragmentMgr;
 import ru.eadm.nobird.fragment.implementation.adapter.StringRecycleViewAdapter;
 
 /**

@@ -17,7 +17,7 @@ import ru.eadm.nobird.data.ImageMgr;
 import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.database.DBMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
-import ru.eadm.nobird.fragment.FragmentMgr;
+import ru.eadm.nobird.fragment.implementation.FragmentMgr;
 import ru.eadm.nobird.notification.NotificationMgr;
 
 public final class Util {

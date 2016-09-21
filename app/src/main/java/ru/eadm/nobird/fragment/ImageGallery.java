@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import ru.eadm.nobird.R;
+import ru.eadm.nobird.fragment.implementation.FragmentMgr;
 import ru.eadm.nobird.fragment.implementation.adapter.HomeViewPagerAdapter;
 
 /**

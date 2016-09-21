@@ -1,17 +1,14 @@
-package ru.eadm.nobird.fragment;
+package ru.eadm.nobird.fragment.implementation;
 
 import android.content.Context;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import java.lang.ref.WeakReference;
 
 import ru.eadm.nobird.R;
-import ru.eadm.nobird.fragment.search.SearchFragment;
 
 public class FragmentMgr {
     private WeakReference<AppCompatActivity> app;

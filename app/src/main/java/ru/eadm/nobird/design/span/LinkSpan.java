@@ -8,7 +8,7 @@ import android.view.View;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ru.eadm.nobird.fragment.FragmentMgr;
+import ru.eadm.nobird.fragment.implementation.FragmentMgr;
 import ru.eadm.nobird.fragment.StatusFragment;
 
 

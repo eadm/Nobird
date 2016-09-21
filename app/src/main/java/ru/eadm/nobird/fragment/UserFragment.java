@@ -26,6 +26,7 @@ import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.data.types.UserElement;
 import ru.eadm.nobird.databinding.FragmentUserBinding;
+import ru.eadm.nobird.fragment.implementation.FragmentMgr;
 import ru.eadm.nobird.fragment.implementation.task.AbsTweetRecycleViewFragment;
 import ru.eadm.nobird.fragment.implementation.task.AbsTweetRecycleViewRefreshTask;
 import ru.eadm.nobird.fragment.implementation.task.AbsTwitterDataLoadTask;

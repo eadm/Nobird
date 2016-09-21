@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 
 import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.types.TweetElement;
-import ru.eadm.nobird.fragment.FragmentMgr;
+import ru.eadm.nobird.fragment.implementation.FragmentMgr;
 
 public class TweetActionsDialogFragment extends DialogFragment {
     private DialogInterface.OnClickListener listener;

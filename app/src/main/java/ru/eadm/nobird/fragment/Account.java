@@ -16,6 +16,7 @@ import android.widget.TextView;
 import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.FontMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
+import ru.eadm.nobird.fragment.implementation.FragmentMgr;
 import ru.eadm.nobird.notification.NotificationMgr;
 import twitter4j.TwitterException;
 

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.ImageMgr;
+import ru.eadm.nobird.fragment.implementation.FragmentMgr;
 
 public class ImagePreview extends Fragment {
 //    private final static String TAG = "ImagePreview";

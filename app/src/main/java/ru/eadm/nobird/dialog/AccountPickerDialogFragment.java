@@ -16,7 +16,7 @@ import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.database.DBMgr;
 import ru.eadm.nobird.data.types.AccountElement;
 import ru.eadm.nobird.fragment.Account;
-import ru.eadm.nobird.fragment.FragmentMgr;
+import ru.eadm.nobird.fragment.implementation.FragmentMgr;
 import ru.eadm.nobird.fragment.Home;
 import ru.eadm.nobird.fragment.implementation.adapter.AccountAdapter;
 

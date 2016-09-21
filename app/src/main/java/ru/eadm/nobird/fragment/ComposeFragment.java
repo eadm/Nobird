@@ -43,6 +43,7 @@ import ru.eadm.nobird.databinding.FragmentComposeBinding;
 import ru.eadm.nobird.design.animation.OnEndAnimationListener;
 import ru.eadm.nobird.design.animation.OnStartAnimationListener;
 import ru.eadm.nobird.dialog.DraftDialogFragment;
+import ru.eadm.nobird.fragment.implementation.FragmentMgr;
 import ru.eadm.nobird.notification.NotificationMgr;
 import twitter4j.Status;
 import twitter4j.TwitterException;
