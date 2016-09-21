@@ -33,8 +33,8 @@ import ru.eadm.nobird.design.animation.OnEndAnimationListener;
 import ru.eadm.nobird.design.animation.OnStartAnimationListener;
 import ru.eadm.nobird.fragment.FragmentMgr;
 import ru.eadm.nobird.fragment.UserFragment;
-import ru.eadm.nobird.fragment.adapter.StringRecycleViewAdapter;
-import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewRefreshTask;
+import ru.eadm.nobird.fragment.implementation.adapter.StringRecycleViewAdapter;
+import ru.eadm.nobird.fragment.implementation.task.AbsTweetRecycleViewRefreshTask;
 import twitter4j.TwitterException;
 
 /**

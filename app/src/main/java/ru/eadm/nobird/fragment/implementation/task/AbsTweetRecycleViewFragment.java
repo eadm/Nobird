@@ -1,4 +1,4 @@
-package ru.eadm.nobird.fragment.task;
+package ru.eadm.nobird.fragment.implementation.task;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,9 +11,9 @@ import ru.eadm.nobird.broadcast.BroadcastMgr;
 import ru.eadm.nobird.broadcast.BroadcastReceiver;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.design.DividerItemDecoration;
-import ru.eadm.nobird.fragment.adapter.TweetRecycleViewAdapter;
-import ru.eadm.nobird.fragment.listener.RecycleViewOnScrollListener;
-import ru.eadm.nobird.fragment.listener.Scrollable;
+import ru.eadm.nobird.fragment.implementation.adapter.TweetRecycleViewAdapter;
+import ru.eadm.nobird.fragment.implementation.listener.RecycleViewOnScrollListener;
+import ru.eadm.nobird.fragment.implementation.listener.Scrollable;
 
 /**
  * Abs class to create fragments with recycle view with tweets

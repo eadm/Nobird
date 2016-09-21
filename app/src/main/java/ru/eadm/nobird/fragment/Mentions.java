@@ -6,8 +6,8 @@ import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.database.DBMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.TweetElement;
-import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewFragmentNested;
-import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewRefreshTask;
+import ru.eadm.nobird.fragment.implementation.task.AbsTweetRecycleViewFragmentNested;
+import ru.eadm.nobird.fragment.implementation.task.AbsTweetRecycleViewRefreshTask;
 import ru.eadm.nobird.notification.NotificationMgr;
 import twitter4j.TwitterException;
 

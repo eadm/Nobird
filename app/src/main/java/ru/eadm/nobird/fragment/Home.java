@@ -25,7 +25,7 @@ import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.AccountElement;
 import ru.eadm.nobird.dialog.AccountPickerDialogFragment;
-import ru.eadm.nobird.fragment.adapter.HomeViewPagerAdapter;
+import ru.eadm.nobird.fragment.implementation.adapter.HomeViewPagerAdapter;
 import ru.eadm.nobird.fragment.search.SearchFragment;
 import ru.eadm.nobird.notification.NotificationMgr;
 

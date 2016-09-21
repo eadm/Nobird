@@ -1,4 +1,4 @@
-package ru.eadm.nobird.fragment.adapter;
+package ru.eadm.nobird.fragment.implementation.adapter;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -13,7 +13,7 @@ import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.ImageMgr;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.databinding.FragmentFeedListItemBinding;
-import ru.eadm.nobird.fragment.listener.ImageOnClickListener;
+import ru.eadm.nobird.fragment.implementation.listener.ImageOnClickListener;
 
 public class TweetRecycleViewAdapter extends AbsElementRecyclerViewAdapter<TweetElement, TweetRecycleViewAdapter.ViewHolder> {
     private final LinearLayout.LayoutParams imageLayoutParams;

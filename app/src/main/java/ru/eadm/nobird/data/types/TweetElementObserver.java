@@ -5,8 +5,8 @@ import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.twitter.TwitterUtils;
 import ru.eadm.nobird.dialog.TweetActionsDialogFragment;
 import ru.eadm.nobird.fragment.ComposeFragment;
-import ru.eadm.nobird.fragment.adapter.TweetRecycleViewAdapter;
-import ru.eadm.nobird.fragment.task.AbsTwitterDataLoadTask;
+import ru.eadm.nobird.fragment.implementation.adapter.TweetRecycleViewAdapter;
+import ru.eadm.nobird.fragment.implementation.task.AbsTwitterDataLoadTask;
 import twitter4j.TwitterException;
 
 /**

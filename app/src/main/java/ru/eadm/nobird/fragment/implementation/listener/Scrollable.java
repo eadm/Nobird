@@ -1,4 +1,4 @@
-package ru.eadm.nobird.fragment.listener;
+package ru.eadm.nobird.fragment.implementation.listener;
 
 /**
  * Interface to catch on scroll to end

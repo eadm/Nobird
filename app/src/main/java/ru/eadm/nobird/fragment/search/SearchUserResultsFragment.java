@@ -7,10 +7,10 @@ import ru.eadm.nobird.data.PageableArrayList;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.UserElement;
 import ru.eadm.nobird.fragment.FragmentMgr;
-import ru.eadm.nobird.fragment.adapter.PageableRecyclerViewAdapter;
-import ru.eadm.nobird.fragment.adapter.UserRecycleViewAdapter;
-import ru.eadm.nobird.fragment.task.AbsRecycleViewFragment;
-import ru.eadm.nobird.fragment.task.AbsRecycleViewRefreshTask;
+import ru.eadm.nobird.fragment.implementation.adapter.PageableRecyclerViewAdapter;
+import ru.eadm.nobird.fragment.implementation.adapter.UserRecycleViewAdapter;
+import ru.eadm.nobird.fragment.implementation.task.AbsRecycleViewFragment;
+import ru.eadm.nobird.fragment.implementation.task.AbsRecycleViewRefreshTask;
 import twitter4j.TwitterException;
 
 /**

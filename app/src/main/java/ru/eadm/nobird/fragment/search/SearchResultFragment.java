@@ -24,8 +24,8 @@ import ru.eadm.nobird.data.twitter.utils.TwitterExceptionResolver;
 import ru.eadm.nobird.data.types.StringElement;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.fragment.FragmentMgr;
-import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewFragment;
-import ru.eadm.nobird.fragment.task.AbsTweetRecycleViewRefreshTask;
+import ru.eadm.nobird.fragment.implementation.task.AbsTweetRecycleViewFragment;
+import ru.eadm.nobird.fragment.implementation.task.AbsTweetRecycleViewRefreshTask;
 import ru.eadm.nobird.notification.NotificationMgr;
 import twitter4j.TwitterException;
 

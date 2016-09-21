@@ -1,4 +1,4 @@
-package ru.eadm.nobird.fragment.task;
+package ru.eadm.nobird.fragment.implementation.task;
 
 /**
  * Enum that display states of async tasks

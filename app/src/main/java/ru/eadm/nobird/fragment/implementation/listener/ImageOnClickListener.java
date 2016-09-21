@@ -1,4 +1,4 @@
-package ru.eadm.nobird.fragment.listener;
+package ru.eadm.nobird.fragment.implementation.listener;
 
 import android.view.View;
 

@@ -1,4 +1,4 @@
-package ru.eadm.nobird.fragment.task;
+package ru.eadm.nobird.fragment.implementation.task;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,9 +14,9 @@ import android.view.ViewGroup;
 import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.types.Element;
 import ru.eadm.nobird.design.DividerItemDecoration;
-import ru.eadm.nobird.fragment.adapter.PageableRecyclerViewAdapter;
-import ru.eadm.nobird.fragment.listener.RecycleViewOnScrollListener;
-import ru.eadm.nobird.fragment.listener.Scrollable;
+import ru.eadm.nobird.fragment.implementation.adapter.PageableRecyclerViewAdapter;
+import ru.eadm.nobird.fragment.implementation.listener.RecycleViewOnScrollListener;
+import ru.eadm.nobird.fragment.implementation.listener.Scrollable;
 import twitter4j.CursorSupport;
 
 public abstract class AbsRecycleViewFragment<E extends Element> extends Fragment implements SwipeRefreshLayout.OnRefreshListener, Scrollable {

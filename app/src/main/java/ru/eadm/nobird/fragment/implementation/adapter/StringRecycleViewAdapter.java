@@ -1,4 +1,4 @@
-package ru.eadm.nobird.fragment.adapter;
+package ru.eadm.nobird.fragment.implementation.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

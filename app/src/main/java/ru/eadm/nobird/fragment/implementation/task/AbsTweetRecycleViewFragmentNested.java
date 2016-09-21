@@ -1,4 +1,4 @@
-package ru.eadm.nobird.fragment.task;
+package ru.eadm.nobird.fragment.implementation.task;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
