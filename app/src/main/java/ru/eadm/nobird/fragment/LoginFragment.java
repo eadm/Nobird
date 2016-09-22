@@ -21,7 +21,7 @@ import ru.eadm.nobird.notification.NotificationMgr;
 import twitter4j.TwitterException;
 
 
-public final class Account extends Fragment implements View.OnClickListener {
+public final class LoginFragment extends Fragment implements View.OnClickListener {
     public static final String TAG = "account_fragment";
     private WebView webView;
     private TextView sign_in_button, processing;
@@ -30,7 +30,7 @@ public final class Account extends Fragment implements View.OnClickListener {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        final View page = inflater.inflate(R.layout.fragment_account, container, false);
+        final View page = inflater.inflate(R.layout.fragment_login, container, false);
 
 
         ((TextView) page.findViewById(R.id.account_fragment_title)).setTypeface(FontMgr.getInstance().RobotoLight);
@@ -49,7 +49,7 @@ public final class Account extends Fragment implements View.OnClickListener {
             CookieManager.getInstance().removeAllCookie();
         }
 
-        Log.d(Account.TAG, "onCreate");
+        Log.d(LoginFragment.TAG, "onCreate");
         return page;
     }
 
@@ -94,9 +94,9 @@ public final class Account extends Fragment implements View.OnClickListener {
     }
 
     private final static class AuthURLTask extends AsyncTask<Void, Void, String> {
-        private Account fragment;
+        private LoginFragment fragment;
 
-        private AuthURLTask(final Account fragment) {
+        private AuthURLTask(final LoginFragment fragment) {
             this.fragment = fragment;
         }
 
@@ -105,7 +105,7 @@ public final class Account extends Fragment implements View.OnClickListener {
             try {
                 return TwitterMgr.getInstance().getAuthURL();
             } catch (final TwitterException e) {
-                Log.e(Account.TAG, e.getMessage());
+                Log.e(LoginFragment.TAG, e.getMessage());
             }
             return null;
         }
@@ -128,7 +128,7 @@ public final class Account extends Fragment implements View.OnClickListener {
                 TwitterMgr.getInstance().authSuccess(params[0]);
                 return true;
             } catch (TwitterException e) {
-                Log.e(Account.TAG, e.getMessage());
+                Log.e(LoginFragment.TAG, e.getMessage());
             }
             return false;
         }

@@ -65,6 +65,16 @@ public class TwitterMgr {
     }
 
     /**
+     * Return twitter object
+     * @return twitter object
+     */
+    public static Twitter getTwitter() {
+        final TwitterMgr mgr = getInstance();
+        if (mgr.twitter == null) mgr.localAuth();
+        return mgr.twitter;
+    }
+
+    /**
      * Generates auth url
      * @return {String} auth url
      * @throws TwitterException
@@ -265,14 +275,6 @@ public class TwitterMgr {
         return twitter.reportSpam(targetID);
     }
 
-    public void getRateLimits() throws TwitterException {
-        final Map<String, RateLimitStatus> stats  = twitter.getRateLimitStatus();
-        for (final Map.Entry<String, RateLimitStatus> stat: stats.entrySet()) {
-            if (stat.getValue().getRemaining() != stat.getValue().getLimit())
-                Log.d("LIMITS", stat.getKey() + ": " + stat.getValue().getRemaining() + "/" + stat.getValue().getLimit());
-        }
-    }
-
     /**
      * Requests status with specified id
      * @param statusID - id of tweet
@@ -329,7 +331,6 @@ public class TwitterMgr {
      */
     public Status like(final long statusID, final boolean create) throws TwitterException {
         if (twitter == null) localAuth();
-//        twitter.new
         if (create) {
             return twitter.createFavorite(statusID);
         } else {
@@ -368,80 +369,5 @@ public class TwitterMgr {
     public Status destroyStatus(final long statusID) throws TwitterException {
         if (twitter == null) localAuth();
         return twitter.destroyStatus(statusID);
-    }
-
-
-    /**
-     * Search twitter for specified query
-     * @param queryString - query
-     * @param sinceID - min tweet id
-     * @param maxID - max tweet id
-     * @return Search results
-     * @throws TwitterException
-     */
-    public ArrayList<TweetElement> getSearchResults(final String queryString,
-                                                    final long sinceID, final long maxID) throws TwitterException {
-        if (twitter == null) localAuth();
-
-        final Query query = new Query(queryString);
-        if (sinceID != 0) query.setSinceId(sinceID);
-        if (maxID != 0) query.setMaxId(maxID);
-
-        final ArrayList<TweetElement> result = new ArrayList<>();
-        for (final Status status : twitter.search(query).getTweets()) {
-            result.add(TwitterUtils.statusToTweetElement(status));
-        }
-        return result;
-    }
-
-
-    /**
-     * Returns users matching query
-     * @param query - query
-     * @param page - page
-     * @return pageable list of users
-     * @throws TwitterException
-     */
-    public PageableArrayList<UserElement> getSearchUsersResults(final String query, final long page) throws TwitterException {
-        if (twitter == null) localAuth();
-        final PageableArrayList<UserElement> elements = new PageableArrayList<>();
-        for (final User user : twitter.searchUsers(query, (int)page)) {
-            elements.add(new UserElement(user));
-        }
-        elements.setCursors(true, false, page + 1, -1);
-        return elements;
-    }
-
-
-    /**
-     * Creates saved search
-     * @param query - text of query
-     * @return new saved search
-     * @throws TwitterException
-     */
-    public StringElement createSavedSearch(final String query) throws TwitterException {
-        if (twitter == null) localAuth();
-        return DBMgr.getInstance().saveSearch(twitter.createSavedSearch(query));
-    }
-
-    /**
-     * Returns saved searches of current user
-     * @return list of saved searches
-     * @throws TwitterException
-     */
-    public List<StringElement> getSavedSearches() throws TwitterException {
-        if (twitter == null) localAuth();
-        return DBMgr.getInstance().saveSearches(twitter.getSavedSearches());
-    }
-
-    /**
-     * Destroy saved search with given id
-     * @param searchID - id of search to destroy
-     * @throws TwitterException
-     */
-    public void destroySavedSearch(final long searchID) throws TwitterException {
-        if (twitter == null) localAuth();
-        final SavedSearch search = twitter.destroySavedSearch(searchID);
-        DBMgr.getInstance().removeElementFromTableByID(DBHelper.TABLE_SAVED_SEARCHES, "id", search.getId());
     }
 }

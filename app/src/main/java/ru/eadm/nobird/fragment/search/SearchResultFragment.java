@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.database.DBMgr;
-import ru.eadm.nobird.data.twitter.TwitterMgr;
+import ru.eadm.nobird.data.twitter.resources.SearchResources;
 import ru.eadm.nobird.data.twitter.utils.TwitterExceptionResolver;
 import ru.eadm.nobird.data.types.StringElement;
 import ru.eadm.nobird.data.types.TweetElement;
@@ -141,7 +141,7 @@ public class SearchResultFragment extends AbsTweetRecycleViewFragment {
         @Override
         protected ArrayList<TweetElement> doInBackground(final Long... params) {
             try {
-                return TwitterMgr.getInstance().getSearchResults(query, params[0], params[1]);
+                return SearchResources.getSearchResults(query, params[0], params[1]);
             } catch (final TwitterException e) {
                 NotificationMgr.getInstance().showSnackbar(TwitterExceptionResolver.resolve(e), null);
                 e.printStackTrace();
@@ -198,7 +198,7 @@ public class SearchResultFragment extends AbsTweetRecycleViewFragment {
         @Override
         protected StringElement doInBackground(final String... params) {
             try {
-                TwitterMgr.getInstance().destroySavedSearch(searchID);
+                SearchResources.destroySavedSearch(searchID);
             } catch (final TwitterException e) {
                 e.printStackTrace();
             }
@@ -227,7 +227,7 @@ public class SearchResultFragment extends AbsTweetRecycleViewFragment {
         @Override
         protected StringElement doInBackground(final String... params) {
             try {
-                return TwitterMgr.getInstance().createSavedSearch(query);
+                return SearchResources.createSavedSearch(query);
             } catch (final TwitterException e) {
                 e.printStackTrace();
                 return null;

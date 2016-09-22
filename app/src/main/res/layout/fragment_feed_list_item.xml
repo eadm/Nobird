@@ -11,7 +11,7 @@
         <import type="ru.eadm.nobird.data.types.TweetElementObserver"/>
 
         <variable name="tweet" type="ru.eadm.nobird.data.types.TweetElement" />
-        <variable name="adapter" type="ru.eadm.nobird.fragment.adapter.TweetRecycleViewAdapter" />
+        <variable name="adapter" type="ru.eadm.nobird.fragment.implementation.adapter.TweetRecycleViewAdapter" />
     </data>
     <LinearLayout
         android:orientation="vertical"

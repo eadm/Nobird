@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import ru.eadm.nobird.data.PreferenceMgr;
-import ru.eadm.nobird.fragment.Account;
+import ru.eadm.nobird.fragment.LoginFragment;
 import ru.eadm.nobird.fragment.implementation.FragmentMgr;
 import ru.eadm.nobird.fragment.Home;
 import ru.eadm.nobird.notification.NotificationMgr;
@@ -27,7 +27,7 @@ public class MainScreen extends AppCompatActivity {
             if (PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID) != 0) {
                 FragmentMgr.getInstance().addFragment(0, new Home(), false);
             } else {
-                FragmentMgr.getInstance().addFragment(0, new Account(), false);
+                FragmentMgr.getInstance().addFragment(0, new LoginFragment(), false);
             }
         }
     }

@@ -15,7 +15,7 @@ import ru.eadm.nobird.R;
 import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.database.DBMgr;
 import ru.eadm.nobird.data.types.AccountElement;
-import ru.eadm.nobird.fragment.Account;
+import ru.eadm.nobird.fragment.LoginFragment;
 import ru.eadm.nobird.fragment.implementation.FragmentMgr;
 import ru.eadm.nobird.fragment.Home;
 import ru.eadm.nobird.fragment.implementation.adapter.AccountAdapter;
@@ -70,7 +70,7 @@ public class AccountPickerDialogFragment extends DialogFragment implements Dialo
             FragmentMgr.getInstance().replaceFragment(0, new Home(), false);
 //            Log.d(TAG, ((AccountElement)adapter.getItem(which)).username);
         } else if (which == -1) {
-            FragmentMgr.getInstance().replaceFragment(0, new Account(), true);
+            FragmentMgr.getInstance().replaceFragment(0, new LoginFragment(), true);
         }
     }
 

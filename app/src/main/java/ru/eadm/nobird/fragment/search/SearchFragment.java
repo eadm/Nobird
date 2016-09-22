@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 import ru.eadm.nobird.R;
 import ru.eadm.nobird.Util;
 import ru.eadm.nobird.data.database.DBMgr;
-import ru.eadm.nobird.data.twitter.TwitterMgr;
+import ru.eadm.nobird.data.twitter.resources.SearchResources;
 import ru.eadm.nobird.data.types.StringElement;
 import ru.eadm.nobird.databinding.FragmentSearchBinding;
 import ru.eadm.nobird.design.DividerItemDecoration;
@@ -229,7 +229,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             if (source == AbsTweetRecycleViewRefreshTask.Source.CACHE) {
                 return DBMgr.getInstance().getSearches();
             } else try {
-                return TwitterMgr.getInstance().getSavedSearches();
+                return SearchResources.getSavedSearches();
             } catch (final TwitterException e) {
                 e.printStackTrace();
                 return null;

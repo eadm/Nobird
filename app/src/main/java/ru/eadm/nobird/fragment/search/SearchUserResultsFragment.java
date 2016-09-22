@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import ru.eadm.nobird.data.PageableArrayList;
-import ru.eadm.nobird.data.twitter.TwitterMgr;
+import ru.eadm.nobird.data.twitter.resources.SearchResources;
 import ru.eadm.nobird.data.types.UserElement;
 import ru.eadm.nobird.fragment.implementation.FragmentMgr;
 import ru.eadm.nobird.fragment.implementation.adapter.PageableRecyclerViewAdapter;
@@ -59,7 +59,7 @@ public class SearchUserResultsFragment extends AbsRecycleViewFragment<UserElemen
         @Override
         protected PageableArrayList<UserElement> doInBackground(final Long... params) {
             try {
-                return TwitterMgr.getInstance().getSearchUsersResults(query, params[1]);
+                return SearchResources.getSearchUsersResults(query, params[1]);
             } catch (final TwitterException e) {
                 return null;
             }
