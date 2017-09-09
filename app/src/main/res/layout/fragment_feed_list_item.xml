@@ -6,13 +6,13 @@
         <import type="android.view.View"/>
         <import type="android.text.method.LinkMovementMethod"/>
 
-        <import type="ru.eadm.nobird.Util"/>
-        <import type="ru.eadm.nobird.data.FontMgr"/>
-        <import type="ru.eadm.nobird.fragment.ImagePreview"/>
-        <import type="ru.eadm.nobird.data.types.TweetElementObserver"/>
+        <import type="ru.nobird.android.Util"/>
+        <import type="ru.nobird.android.data.FontMgr"/>
+        <import type="ru.nobird.android.fragment.ImagePreview"/>
+        <import type="ru.nobird.android.data.types.TweetElementObserver"/>
 
-        <variable name="tweet" type="ru.eadm.nobird.data.types.TweetElement" />
-        <variable name="adapter" type="ru.eadm.nobird.fragment.implementation.adapter.TweetRecycleViewAdapter" />
+        <variable name="tweet" type="ru.nobird.android.data.types.TweetElement" />
+        <variable name="adapter" type="ru.nobird.android.fragment.implementation.adapter.TweetRecycleViewAdapter" />
     </data>
     <LinearLayout
         android:orientation="vertical"

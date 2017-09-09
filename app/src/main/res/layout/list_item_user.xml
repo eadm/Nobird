@@ -2,9 +2,9 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-        <import type="ru.eadm.nobird.data.FontMgr"/>
+        <import type="ru.nobird.android.data.FontMgr"/>
 
-        <variable name="user" type="ru.eadm.nobird.data.types.UserElement" />
+        <variable name="user" type="ru.nobird.android.data.types.UserElement" />
     </data>
     <RelativeLayout
         android:orientation="vertical"
