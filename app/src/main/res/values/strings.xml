@@ -9,8 +9,8 @@
     <string name="fragment_home_tab_mentions">Mentions</string>
     <string name="search">Search</string>
     <string name="menu">Menu</string>
-    <string name="username_placeholder" translatable="false">\@%s</string>
-    <string name="digit_placeholder" translatable="false">%d</string>
+    <string name="username_placeholder">\@%s</string>
+    <string name="digit_placeholder">%d</string>
     <string name="followers">Followers</string>
     <string name="following">Following</string>
     <string name="type_something">Type something…</string>

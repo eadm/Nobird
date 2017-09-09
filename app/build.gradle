@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion '25.0.0'
 
     dataBinding {
         enabled = true
@@ -27,8 +27,9 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
-    compile 'org.twitter4j:twitter4j-core:4.0.4'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.github.nguyenhoanglam:ImagePicker:1.0.3'
+    compile 'org.twitter4j:twitter4j-core:4.0.5'
+    compile 'org.twitter4j:twitter4j-stream:4.0.5'
 }

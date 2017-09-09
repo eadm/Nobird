@@ -51,7 +51,7 @@ import twitter4j.TwitterException;
 public final class ComposeFragment extends Fragment implements View.OnClickListener, LocationListener {
     private final static String TAG = "ComposeFragment";
 
-    private final static int ATTACHMENT_SIZE = 23;
+    private final static int ATTACHMENT_SIZE = 0; //23
 
     private int count = 140;
     private FragmentComposeBinding binding;

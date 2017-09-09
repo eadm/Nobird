@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import ru.eadm.nobird.data.twitter.utils.TwitterStatusParser;
 import ru.eadm.nobird.data.types.TweetElement;
+import twitter4j.EntitySupport;
 import twitter4j.MediaEntity;
 import twitter4j.Status;
 import twitter4j.URLEntity;
@@ -21,7 +22,7 @@ public class TwitterUtils {
             Pattern.compile("/(?:(?:http|https)://)?(?:www.)?(?:youtube.com/watch\\?v=|youtu.be/)([^&]+)")
     };
 
-    public static List<String> getAttachments(final Status status) {
+    public static List<String> getAttachments(final EntitySupport status) {
         final ArrayList<String> attachments = new ArrayList<>();
 
         for (final MediaEntity entity : status.getExtendedMediaEntities()) {
@@ -69,7 +70,7 @@ public class TwitterUtils {
                 status.getUser().getScreenName().toLowerCase(),
                 status.getUser().getOriginalProfileImageURL(),
 
-                TwitterStatusParser.getTweetText(status),
+                TwitterStatusParser.getTweetText(status.getText(), status),
                 status.getCreatedAt(),
                 getAttachments(status));
         if (keepStatus) tweetElement.status = status;

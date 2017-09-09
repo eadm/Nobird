@@ -12,7 +12,7 @@
     <string name="followers">Подписчики</string>
     <string name="following">Подписки</string>
     <string name="type_something">Напишите что-нибудь…</string>
-    <string name="username_placeholder" translatable="false"></string>
+    <string name="username_placeholder">\@%s</string>
     <string name="fragment_create_status_title">Новый твит</string>
     <string name="action_block">Заблокировать</string>
     <string name="follow">Подписаться</string>
@@ -43,7 +43,7 @@
     <string name="send">Отправить</string>
     <string name="error_location">Ошибка при определении вашего местоположения</string>
     <string name="draft_dialog_title">Черновик</string>
-    <string name="digit_placeholder" translatable="false"></string>
+    <string name="digit_placeholder">%d</string>
     <string name="draft_dialog_message">Хотите ли вы сохранить этот твит в черновики?</string>
     <string name="action_destroy_status">Удалить твит</string>
     <string name="success_status_destroyed">Твит был удалён</string>

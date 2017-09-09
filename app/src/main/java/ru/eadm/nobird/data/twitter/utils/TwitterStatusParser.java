@@ -9,9 +9,9 @@ import ru.eadm.nobird.design.span.LinkSpan;
 import ru.eadm.nobird.design.span.MediaSpan;
 import ru.eadm.nobird.design.span.UserSpan;
 
+import twitter4j.EntitySupport;
 import twitter4j.HashtagEntity;
 import twitter4j.MediaEntity;
-import twitter4j.Status;
 import twitter4j.URLEntity;
 import twitter4j.User;
 import twitter4j.UserMentionEntity;
@@ -111,11 +111,12 @@ public class TwitterStatusParser {
 
     /**
      * Parsing status text
-     * @param status - status
+     * @param text - text to parse
+     * @param status - EntitySupport element
      * @return twitter status parser text
      */
-    public static TwitterStatusText getTweetText(final Status status) {
-        return getParsedText(status.getText(),
+    public static TwitterStatusText getTweetText(final String text, final EntitySupport status) {
+        return getParsedText(text,
                 status.getURLEntities(), status.getMediaEntities(),
                 status.getUserMentionEntities(), status.getHashtagEntities());
     }

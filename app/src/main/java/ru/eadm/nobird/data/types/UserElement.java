@@ -1,5 +1,7 @@
 package ru.eadm.nobird.data.types;
 
+import android.database.Cursor;
+
 import ru.eadm.nobird.fragment.UserFragment;
 import twitter4j.User;
 
@@ -29,6 +31,15 @@ public class UserElement implements Element {
         this.user = user;
     }
 
+    public UserElement(final Cursor cursor) {
+        this.userID = cursor.getLong(cursor.getColumnIndex("userID"));
+        this.name = cursor.getString(cursor.getColumnIndex("name"));
+        this.username = cursor.getString(cursor.getColumnIndex("username"));
+        this.image = cursor.getString(cursor.getColumnIndex("profile_image_url"));
+
+        this.user = null;
+    }
+
     @Override
     public long getID() {
         return userID;
@@ -36,5 +47,10 @@ public class UserElement implements Element {
 
     public void onClick() {
         UserFragment.showUser(this);
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.valueOf(userID).hashCode();
     }
 }

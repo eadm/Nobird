@@ -26,6 +26,7 @@ import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.types.AccountElement;
 import ru.eadm.nobird.dialog.AccountPickerDialogFragment;
 import ru.eadm.nobird.fragment.implementation.adapter.HomeViewPagerAdapter;
+import ru.eadm.nobird.fragment.message.ConversationListFragment;
 import ru.eadm.nobird.fragment.search.SearchFragment;
 import ru.eadm.nobird.notification.NotificationMgr;
 
@@ -133,6 +134,10 @@ public class Home extends Fragment implements View.OnClickListener, NavigationVi
         switch (item.getItemId()) {
             case R.id.drawer_drafts:
                 DraftListFragment.show();
+                return true;
+
+            case R.id.drawer_messages:
+                ConversationListFragment.show();
                 return true;
         }
         Log.d(TAG, "item clicked: " + item.getItemId());

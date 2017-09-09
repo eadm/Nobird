@@ -5,24 +5,19 @@ import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import ru.eadm.nobird.data.PageableArrayList;
 import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.database.DBHelper;
 import ru.eadm.nobird.data.database.DBMgr;
 import ru.eadm.nobird.data.types.AccountElement;
-import ru.eadm.nobird.data.types.StringElement;
 import ru.eadm.nobird.data.types.TweetElement;
 import ru.eadm.nobird.data.types.UserElement;
 import twitter4j.GeoLocation;
 import twitter4j.PagableResponseList;
 import twitter4j.Paging;
 import twitter4j.Query;
-import twitter4j.RateLimitStatus;
 import twitter4j.Relationship;
-import twitter4j.SavedSearch;
 import twitter4j.Status;
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
@@ -126,7 +121,7 @@ public class TwitterMgr {
      */
     public ArrayList<TweetElement> getHomeTimeline (final long sinceID, final long maxID) throws TwitterException {
         if (twitter == null) localAuth();
-        return DBMgr.getInstance().saveStatuses(twitter.getHomeTimeline(getPaging(sinceID, maxID)), DBMgr.TYPE_FEED);
+        return DBMgr.getInstance().saveStatuses(twitter.getHomeTimeline(getPaging(sinceID, maxID, TWEETS_PER_PAGE)), DBMgr.TYPE_FEED);
     }
 
     /**
@@ -138,7 +133,7 @@ public class TwitterMgr {
      */
     public ArrayList<TweetElement> getMentionsTimeline (final long sinceID, final long maxID) throws TwitterException {
         if (twitter == null) localAuth();
-        return DBMgr.getInstance().saveStatuses(twitter.getMentionsTimeline(getPaging(sinceID, maxID)), DBMgr.TYPE_MENTIONS);
+        return DBMgr.getInstance().saveStatuses(twitter.getMentionsTimeline(getPaging(sinceID, maxID, TWEETS_PER_PAGE)), DBMgr.TYPE_MENTIONS);
     }
 
     /**
@@ -150,7 +145,7 @@ public class TwitterMgr {
      */
     public ArrayList<TweetElement> getUserTimeline(final long userID, final long sinceID, final long maxID) throws TwitterException {
         if (twitter == null) localAuth();
-        return TwitterUtils.statusToTweetElement(twitter.getUserTimeline(userID, getPaging(sinceID, maxID)));
+        return TwitterUtils.statusToTweetElement(twitter.getUserTimeline(userID, getPaging(sinceID, maxID, TWEETS_PER_PAGE)));
     }
 
     /**
@@ -159,9 +154,9 @@ public class TwitterMgr {
      * @param maxID {Long} - maximum id of tweet, ignored if equals 0
      * @return {Paging} - paging for request
      */
-    private Paging getPaging(final long sinceID, final long maxID) {
+    public static Paging getPaging(final long sinceID, final long maxID, final int number) {
         final Paging paging = new Paging();
-        paging.setCount(TWEETS_PER_PAGE);
+        if (number != 0) paging.setCount(number);
         if (sinceID != 0) paging.setSinceId(sinceID);
         if (maxID != 0) paging.setMaxId(maxID);
         return paging;

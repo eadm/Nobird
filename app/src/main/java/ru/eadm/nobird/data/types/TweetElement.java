@@ -1,8 +1,11 @@
 package ru.eadm.nobird.data.types;
 
+import android.database.Cursor;
+
 import java.util.Date;
 import java.util.List;
 
+import ru.eadm.nobird.Util;
 import ru.eadm.nobird.data.twitter.utils.TwitterStatusText;
 import ru.eadm.nobird.fragment.StatusFragment;
 import twitter4j.Status;
@@ -46,6 +49,18 @@ public class TweetElement implements Element {
         this.images = images;
         this.text = text;
         this.date = date;
+    }
+
+    public TweetElement(final Cursor cursor) {
+        this.tweetID = cursor.getLong(cursor.getColumnIndex("tweetID"));
+        this.user = new UserElement(cursor);
+
+        this.text = TwitterStatusText.parse(
+                cursor.getString(cursor.getColumnIndex("tweet_text")),
+                cursor.getString(cursor.getColumnIndex("tweet_text_parse_key"))
+        );
+        this.date = new Date(cursor.getLong(cursor.getColumnIndex("pubDate")));
+        this.images = Util.split(cursor.getString(cursor.getColumnIndex("attachment_url")), "\\|");
     }
 
     @Override

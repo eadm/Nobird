@@ -6,20 +6,24 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.support.annotation.Nullable;
+import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import ru.eadm.nobird.Util;
 import ru.eadm.nobird.data.PreferenceMgr;
 import ru.eadm.nobird.data.twitter.TwitterMgr;
 import ru.eadm.nobird.data.twitter.TwitterUtils;
-import ru.eadm.nobird.data.twitter.utils.TwitterStatusText;
 import ru.eadm.nobird.data.types.AccountElement;
+import ru.eadm.nobird.data.types.ConversationElement;
+import ru.eadm.nobird.data.types.MessageElement;
 import ru.eadm.nobird.data.types.StringElement;
 import ru.eadm.nobird.data.types.TweetElement;
+import ru.eadm.nobird.data.types.UserElement;
+import twitter4j.DirectMessage;
 import twitter4j.SavedSearch;
 import twitter4j.Status;
 import twitter4j.User;
@@ -103,7 +107,7 @@ public final class DBMgr {
     public ArrayList<TweetElement> getCachedStatuses(final int type) {
         return getCachedStatuses(PreferenceMgr.getInstance().getCurrentAccountID(), type);
     }
-    public ArrayList<TweetElement> getCachedStatuses(final long userID, final int type) {
+    private ArrayList<TweetElement> getCachedStatuses(final long userID, final int type) {
         final ArrayList<TweetElement> tweets = new ArrayList<>();
         final Cursor cursor = db.rawQuery("SELECT * FROM " + DBHelper.TABLE_TWEETS + " " +
                 "WHERE type = ? " +
@@ -112,20 +116,7 @@ public final class DBMgr {
                 "LIMIT ?", new String[]{type + "", userID + "", TwitterMgr.TWEETS_PER_PAGE + ""});
         if (cursor.moveToFirst()) {
             do {
-                tweets.add(new TweetElement(
-                        cursor.getLong(cursor.getColumnIndex("tweetID")),
-                        cursor.getLong(cursor.getColumnIndex("userID")),
-
-                        cursor.getString(cursor.getColumnIndex("name")),
-                        cursor.getString(cursor.getColumnIndex("username")),
-                        cursor.getString(cursor.getColumnIndex("profile_image_url")),
-                        TwitterStatusText.parse(
-                                cursor.getString(cursor.getColumnIndex("tweet_text")),
-                                cursor.getString(cursor.getColumnIndex("tweet_text_parse_key"))
-                        ),
-                        new Date(cursor.getLong(cursor.getColumnIndex("pubDate"))),
-                        Util.split(cursor.getString(cursor.getColumnIndex("attachment_url")), "\\|")
-                ));
+                tweets.add(new TweetElement(cursor));
             } while (cursor.moveToNext());
         }
 
@@ -152,7 +143,7 @@ public final class DBMgr {
             st.bindString(8, Util.join(tweet.images, "|"));
             st.bindLong(9, tweet.date.getTime());
 
-            st.bindLong(10, PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID));
+            st.bindLong(10, PreferenceMgr.getInstance().getCurrentAccountID());
             st.bindLong(11, type);
             st.executeInsert(); // add to db
         }
@@ -303,5 +294,137 @@ public final class DBMgr {
 
     public void removeElementFromTableByID(final String table, final String fieldName, final long id){
         Log.d(TAG, "removeElementFromTableByID: " + db.delete(table, fieldName + " = " + id, null));
+    }
+
+
+    /**
+     * Saves list of direct messages to db
+     * @param messages - list of DMs
+     * @return - list of DM converted to message element
+     */
+    public List<MessageElement> saveMessages(final List<DirectMessage> messages) {
+        final List<MessageElement> result = new ArrayList<>(messages.size());
+        final LongSparseArray<Integer> messagesCount = new LongSparseArray<>(); // to count new messages for each sender
+
+        final long currentUser = PreferenceMgr.getInstance().getCurrentAccountID();
+
+        db.beginTransaction();
+        final SQLiteStatement st = db.compileStatement(DBHelper.TABLE_MESSAGES_PATTERN);
+        final SQLiteStatement senderPattern = db.compileStatement(DBHelper.TABLE_CONVERSATIONS_PATTERN);
+        for (final DirectMessage message : messages) {
+            final MessageElement element = new MessageElement(message);
+
+            st.bindLong(1, element.getID());
+            st.bindLong(2, element.senderID);
+
+            st.bindString(3, element.text.getText().toString());
+            st.bindString(4, element.text.getParseKey());
+            st.bindString(5, Util.join(element.images, "|"));
+
+            st.bindLong(6, element.date.getTime());
+            st.bindLong(7, PreferenceMgr.getInstance().getCurrentAccountID());
+
+            st.executeInsert();
+
+            final long conversationID = element.senderID == currentUser ? message.getRecipientId() : element.senderID;
+            messagesCount.put(conversationID, messagesCount.get(conversationID, 0) + 1);
+            saveConversation(message, senderPattern);
+
+            result.add(element);
+        }
+        st.close();
+        senderPattern.close();
+
+        updateConversations(messagesCount);
+
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        return result;
+    }
+
+    /**
+     * Add conversation to db, use only in saveMessages
+     * @param message - targeted message
+     * @param st - SQLite statement of TABLE_SENDERS_PATTERN
+     */
+    private void saveConversation(final DirectMessage message, final SQLiteStatement st) {
+        final long currentUser = PreferenceMgr.getInstance().getCurrentAccountID();
+        final User sender = message.getSenderId() == currentUser ? message.getRecipient() : message.getSender();
+        st.bindLong(1, sender.getId());
+        st.bindString(2, sender.getName());
+        st.bindString(3, sender.getScreenName());
+        st.bindString(4, sender.getBiggerProfileImageURLHttps());
+        st.bindLong(5, currentUser);
+//        st.bindLong(6, 0);
+        st.bindLong(6, message.getCreatedAt().getTime());
+        st.executeInsert();
+    }
+
+    /**
+     * Updates count of new messages in specified conversations
+     * @param messagesCount map: conversationID -> new messages counts
+     */
+    private void updateConversations(final LongSparseArray<Integer> messagesCount) {
+        final StringBuilder queryCase = new StringBuilder("UPDATE " + DBHelper.TABLE_CONVERSATIONS +
+                " SET unread_count = CASE userID");
+        final StringBuilder queryWhere = new StringBuilder(" END WHERE recipientID = ");
+        queryWhere.append(PreferenceMgr.getInstance().getCurrentAccountID());
+        queryWhere.append(" AND userID in (");
+
+        for (int i = 0; i < messagesCount.size(); ++i) {
+            queryCase.append(" WHEN ");
+            queryCase.append(messagesCount.keyAt(i));
+            queryCase.append(" THEN unread_count + ");
+            queryCase.append(messagesCount.valueAt(i));
+
+            queryWhere.append(messagesCount.keyAt(i));
+            queryWhere.append(", ");
+        }
+        queryWhere.append(")");
+
+        queryCase.append(queryWhere);
+        db.execSQL(queryCase.toString());
+    }
+
+
+    public List<ConversationElement> getConversations() {
+        final Cursor cursor = db.query(DBHelper.TABLE_CONVERSATIONS, null, "recipientID = " + PreferenceMgr.getInstance().getCurrentAccountID(), null, null, null, "lastDate DESC");
+        final List<ConversationElement> conversations = new ArrayList<>(cursor.getCount());
+        if (cursor.moveToFirst()) {
+            do {
+                final UserElement user = new UserElement(cursor);
+                conversations.add(new ConversationElement(user, getLastMessageBySender(user.getID())));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return conversations;
+    }
+
+    @Nullable
+    private MessageElement getLastMessageBySender(final long senderID) {
+        final List<MessageElement> elements = getMessages(senderID, 1);
+        if (elements.isEmpty()) return null;
+        return elements.get(0);
+    }
+
+    /**
+     * Gets list of messages from DB
+     * @param senderID - id of sender
+     * @param limit - limit of messages, if eq 0 -> no limit
+     * @return list of cached messages
+     */
+    public List<MessageElement> getMessages(final long senderID, final int limit) {
+        final Cursor cursor = db.query(DBHelper.TABLE_MESSAGES, null,
+                "( recipientID = " + PreferenceMgr.getInstance().getCurrentAccountID() + "AND senderID = " + senderID + " ) OR ( " +
+                        "recipientID = " + senderID + " AND senderID = " + PreferenceMgr.getInstance().getCurrentAccountID() + " )",
+                null, null, null, "lastDate DESC", limit != 0 ? Integer.toString(limit) : "");
+        final List<MessageElement> messages = new ArrayList<>(cursor.getCount());
+        if (cursor.moveToFirst()) {
+            do {
+                messages.add(new MessageElement(cursor));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return messages;
     }
 }
