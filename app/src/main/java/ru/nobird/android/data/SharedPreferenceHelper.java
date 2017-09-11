@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-public final class PreferenceMgr {
-    private static PreferenceMgr instance;
+public final class SharedPreferenceHelper {
+    private static SharedPreferenceHelper instance;
 
     private static long currentAccountID = 0;
     public final static String CURRENT_ACCOUNT_ID = "current_account_id";
@@ -13,13 +13,13 @@ public final class PreferenceMgr {
 
     private final SharedPreferences sharedPreferences;
 
-    private PreferenceMgr(final Context context) {
+    public SharedPreferenceHelper(final Context context) {
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     public synchronized static void init(final Context context) {
         if (instance == null) {
-            instance = new PreferenceMgr(context);
+            instance = new SharedPreferenceHelper(context);
         }
     }
 
@@ -32,7 +32,7 @@ public final class PreferenceMgr {
         saveLong(CURRENT_ACCOUNT_ID, id);
     }
 
-    public synchronized static PreferenceMgr getInstance() {
+    public synchronized static SharedPreferenceHelper getInstance() {
         return instance;
     }
 

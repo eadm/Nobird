@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import ru.nobird.android.data.PreferenceMgr;
+import ru.nobird.android.data.SharedPreferenceHelper;
 import ru.nobird.android.fragment.LoginFragment;
 import ru.nobird.android.fragment.implementation.FragmentMgr;
 import ru.nobird.android.fragment.Home;
@@ -24,7 +24,7 @@ public class MainScreen extends AppCompatActivity {
         NotificationMgr.getInstance().attach(this, findViewById(R.id.fragment_container));
 
         if (savedInstanceState == null) {
-            if (PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID) != 0) {
+            if (SharedPreferenceHelper.getInstance().getLong(SharedPreferenceHelper.CURRENT_ACCOUNT_ID) != 0) {
                 FragmentMgr.getInstance().addFragment(0, new Home(), false);
             } else {
                 FragmentMgr.getInstance().addFragment(0, new LoginFragment(), false);

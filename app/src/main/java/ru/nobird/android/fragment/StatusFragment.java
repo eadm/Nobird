@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 import ru.nobird.android.R;
 import ru.nobird.android.broadcast.BroadcastMgr;
-import ru.nobird.android.data.PreferenceMgr;
+import ru.nobird.android.data.SharedPreferenceHelper;
 import ru.nobird.android.data.database.DBHelper;
 import ru.nobird.android.data.database.DBMgr;
 import ru.nobird.android.data.twitter.TwitterMgr;
@@ -148,7 +148,7 @@ public class StatusFragment extends AbsTweetRecycleViewFragment implements Swipe
 
             final TweetElement tweetElement = TwitterUtils.statusToTweetElement(status, fragment.username == null);
             if (fragment.username == null) {
-                if (fragment.action_delete != null && status.getUser().getId() == PreferenceMgr.getInstance().getCurrentAccountID()) {
+                if (fragment.action_delete != null && status.getUser().getId() == SharedPreferenceHelper.getInstance().getCurrentAccountID()) {
                     action_delete.setVisible(true);
                 }
 

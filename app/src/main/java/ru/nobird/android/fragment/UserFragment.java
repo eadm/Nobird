@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 import ru.nobird.android.R;
 import ru.nobird.android.data.ImageMgr;
-import ru.nobird.android.data.PreferenceMgr;
+import ru.nobird.android.data.SharedPreferenceHelper;
 import ru.nobird.android.data.twitter.TwitterMgr;
 import ru.nobird.android.data.types.TweetElement;
 import ru.nobird.android.data.types.UserElement;
@@ -108,7 +108,7 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
         super.onCreate(savedInstanceState);
         userID = getArguments().getLong("userID");
         userName = getArguments().getString("username");
-        if (userID != PreferenceMgr.getInstance().getCurrentAccountID()) {
+        if (userID != SharedPreferenceHelper.getInstance().getCurrentAccountID()) {
             setHasOptionsMenu(true);
         }
     }
@@ -134,7 +134,7 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
 
         action_reply = menu.findItem(R.id.action_reply);
         if (user != null) {
-            action_reply.setVisible(user.getId() != PreferenceMgr.getInstance().getCurrentAccountID());
+            action_reply.setVisible(user.getId() != SharedPreferenceHelper.getInstance().getCurrentAccountID());
         }
 
         super.onCreateOptionsMenu(menu, inflater);
@@ -259,7 +259,7 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
         }
 
         if (action_reply != null) {
-            action_reply.setVisible(user.getId() != PreferenceMgr.getInstance().getCurrentAccountID());
+            action_reply.setVisible(user.getId() != SharedPreferenceHelper.getInstance().getCurrentAccountID());
         }
     }
 
@@ -365,7 +365,7 @@ public class UserFragment extends AbsTweetRecycleViewFragment implements SwipeRe
             fragment.setUser(data);
 
             new RelationshipLoaderTask(fragment).execute(
-                    PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID),
+                    SharedPreferenceHelper.getInstance().getLong(SharedPreferenceHelper.CURRENT_ACCOUNT_ID),
                     data.getId()
             );
 

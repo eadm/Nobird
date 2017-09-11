@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.nobird.android.R;
-import ru.nobird.android.data.PreferenceMgr;
+import ru.nobird.android.data.SharedPreferenceHelper;
 import ru.nobird.android.data.types.AccountElement;
 import ru.nobird.android.databinding.DialogFragmentAccountItemBinding;
 
@@ -23,7 +23,7 @@ public class AccountAdapter extends BaseAdapter {
 
     public AccountAdapter() {
         accounts = new ArrayList<>();
-        currentAccount = PreferenceMgr.getInstance().getCurrentAccountID();
+        currentAccount = SharedPreferenceHelper.getInstance().getCurrentAccountID();
     }
 
     public void addAll(final List<AccountElement> arg) {

@@ -28,7 +28,6 @@ import ru.nobird.android.R;
 public final class ImageMgr {
     private final static String CACHE_DIR = "Android/data/ru.eadm.nobird/cache";
 
-    private final Context context;
     private static ImageMgr instance;
 
     public final ImageLoader imageLoader;
@@ -36,7 +35,6 @@ public final class ImageMgr {
     public final DisplayImageOptions options, options_round, options_dark;
 
     private ImageMgr(final Context context) {
-        this.context = context;
 
         imageLoader = ImageLoader.getInstance();
         final File cacheDir = StorageUtils.getOwnCacheDirectory(context, CACHE_DIR);
@@ -113,13 +111,10 @@ public final class ImageMgr {
     }
 
     public void loadBackgroundImage(final String url, final View target) {
-        final WeakReference<View> targetReference = new WeakReference<>(target);
         imageLoader.loadImage(url, new ImageSize(target.getWidth(), target.getHeight()), options, new SimpleImageLoadingListener() {
             @Override
             public void onLoadingComplete(final String imageUri, final View view, final Bitmap loadedImage) {
-                if (targetReference.get() != null) {
-                    targetReference.get().setBackground(new BitmapDrawable(context.getResources(), loadedImage));
-                }
+                view.setBackground(new BitmapDrawable(view.getContext().getResources(), loadedImage));
             }
         });
     }

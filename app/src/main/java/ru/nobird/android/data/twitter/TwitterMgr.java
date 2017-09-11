@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import ru.nobird.android.data.PageableArrayList;
-import ru.nobird.android.data.PreferenceMgr;
+import ru.nobird.android.data.SharedPreferenceHelper;
 import ru.nobird.android.data.database.DBHelper;
 import ru.nobird.android.data.database.DBMgr;
 import ru.nobird.android.data.types.AccountElement;
@@ -92,7 +92,7 @@ public class TwitterMgr {
         if (!DBMgr.getInstance().isExistWithID(DBHelper.TABLE_ACCOUNTS, "id", accessToken.getUserId())) { // if such user already in db no need to add it again
             DBMgr.getInstance().saveAccount(accessToken, login.twitter.showUser(accessToken.getUserId()));
         }
-        PreferenceMgr.getInstance().setCurrentAccountID(accessToken.getUserId()); // making active that user
+        SharedPreferenceHelper.getInstance().setCurrentAccountID(accessToken.getUserId()); // making active that user
         this.twitter = login.twitter;
     }
 
@@ -106,7 +106,7 @@ public class TwitterMgr {
      */
     public synchronized AccountElement localAuth() {
         account = DBMgr.getInstance()
-                .getAccount(PreferenceMgr.getInstance().getCurrentAccountID());
+                .getAccount(SharedPreferenceHelper.getInstance().getCurrentAccountID());
         this.twitter = new TwitterLogin(factory, account).twitter;
 
         return account;

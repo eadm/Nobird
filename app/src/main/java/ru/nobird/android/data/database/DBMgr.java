@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.nobird.android.Util;
-import ru.nobird.android.data.PreferenceMgr;
+import ru.nobird.android.data.SharedPreferenceHelper;
 import ru.nobird.android.data.twitter.TwitterMgr;
 import ru.nobird.android.data.twitter.TwitterUtils;
 import ru.nobird.android.data.types.AccountElement;
@@ -105,7 +105,7 @@ public final class DBMgr {
     }
 
     public ArrayList<TweetElement> getCachedStatuses(final int type) {
-        return getCachedStatuses(PreferenceMgr.getInstance().getCurrentAccountID(), type);
+        return getCachedStatuses(SharedPreferenceHelper.getInstance().getCurrentAccountID(), type);
     }
     private ArrayList<TweetElement> getCachedStatuses(final long userID, final int type) {
         final ArrayList<TweetElement> tweets = new ArrayList<>();
@@ -143,7 +143,7 @@ public final class DBMgr {
             st.bindString(8, Util.join(tweet.images, "|"));
             st.bindLong(9, tweet.date.getTime());
 
-            st.bindLong(10, PreferenceMgr.getInstance().getCurrentAccountID());
+            st.bindLong(10, SharedPreferenceHelper.getInstance().getCurrentAccountID());
             st.bindLong(11, type);
             st.executeInsert(); // add to db
         }
@@ -159,7 +159,7 @@ public final class DBMgr {
 
     private void clearCachedStatuses(final long count, final int type) { // delete last n tweets in table
         db.execSQL(DBHelper.TABLE_TWEET_CLEAR_PATTERN, new Object[]{
-                PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID),
+                SharedPreferenceHelper.getInstance().getLong(SharedPreferenceHelper.CURRENT_ACCOUNT_ID),
                 type,
                 count
         });
@@ -178,7 +178,7 @@ public final class DBMgr {
         return getItemCount(DBHelper.TABLE_TWEETS, "type = ? AND ownerID = ?",
                 new String[]{
                         type + "",
-                        PreferenceMgr.getInstance().getLong(PreferenceMgr.CURRENT_ACCOUNT_ID) + ""
+                        SharedPreferenceHelper.getInstance().getLong(SharedPreferenceHelper.CURRENT_ACCOUNT_ID) + ""
                 });
     }
 
@@ -221,7 +221,7 @@ public final class DBMgr {
         final ContentValues cv = new ContentValues();
         cv.put("id", search.getId());
         cv.put("name", search.getQuery());
-        cv.put("userID", PreferenceMgr.getInstance().getCurrentAccountID());
+        cv.put("userID", SharedPreferenceHelper.getInstance().getCurrentAccountID());
         db.insert(DBHelper.TABLE_SAVED_SEARCHES, null, cv);
         return new StringElement(search);
     }
@@ -232,7 +232,7 @@ public final class DBMgr {
      * @return - list of searches converted to string elements
      */
     public List<StringElement> saveSearches(final List<SavedSearch> searches) {
-        db.delete(DBHelper.TABLE_SAVED_SEARCHES, "userID = " + PreferenceMgr.getInstance().getCurrentAccountID(), null);
+        db.delete(DBHelper.TABLE_SAVED_SEARCHES, "userID = " + SharedPreferenceHelper.getInstance().getCurrentAccountID(), null);
 
         final List<StringElement> result = new ArrayList<>(searches.size());
 
@@ -240,7 +240,7 @@ public final class DBMgr {
         final SQLiteStatement st = db.compileStatement(DBHelper.TABLE_SAVED_SEARCHES_PATTERN);
         for (final SavedSearch search : searches) {
             st.bindLong(1, search.getId());
-            st.bindLong(2, PreferenceMgr.getInstance().getCurrentAccountID());
+            st.bindLong(2, SharedPreferenceHelper.getInstance().getCurrentAccountID());
             st.bindString(3, search.getQuery());
             st.executeInsert();
 
@@ -257,7 +257,7 @@ public final class DBMgr {
      * @return list of saved searches
      */
     public List<StringElement> getSearches() {
-        final Cursor cursor = db.query(DBHelper.TABLE_SAVED_SEARCHES, null, "userID = " + PreferenceMgr.getInstance().getCurrentAccountID(), null, null, null, "id");
+        final Cursor cursor = db.query(DBHelper.TABLE_SAVED_SEARCHES, null, "userID = " + SharedPreferenceHelper.getInstance().getCurrentAccountID(), null, null, null, "id");
         final List<StringElement> searches = new ArrayList<>(cursor.getCount());
         if (cursor.moveToFirst()) {
             do {
@@ -279,7 +279,7 @@ public final class DBMgr {
         final Cursor cursor = db.rawQuery("SELECT * FROM " + DBHelper.TABLE_SAVED_SEARCHES + " " +
                 "WHERE userID = ? " +
                 "AND name = ?", new String[]{
-                Long.toString(PreferenceMgr.getInstance().getCurrentAccountID()),
+                Long.toString(SharedPreferenceHelper.getInstance().getCurrentAccountID()),
                 query
         });
         StringElement r = null;
@@ -306,7 +306,7 @@ public final class DBMgr {
         final List<MessageElement> result = new ArrayList<>(messages.size());
         final LongSparseArray<Integer> messagesCount = new LongSparseArray<>(); // to count new messages for each sender
 
-        final long currentUser = PreferenceMgr.getInstance().getCurrentAccountID();
+        final long currentUser = SharedPreferenceHelper.getInstance().getCurrentAccountID();
 
         db.beginTransaction();
         final SQLiteStatement st = db.compileStatement(DBHelper.TABLE_MESSAGES_PATTERN);
@@ -322,7 +322,7 @@ public final class DBMgr {
             st.bindString(5, Util.join(element.images, "|"));
 
             st.bindLong(6, element.date.getTime());
-            st.bindLong(7, PreferenceMgr.getInstance().getCurrentAccountID());
+            st.bindLong(7, SharedPreferenceHelper.getInstance().getCurrentAccountID());
 
             st.executeInsert();
 
@@ -348,7 +348,7 @@ public final class DBMgr {
      * @param st - SQLite statement of TABLE_SENDERS_PATTERN
      */
     private void saveConversation(final DirectMessage message, final SQLiteStatement st) {
-        final long currentUser = PreferenceMgr.getInstance().getCurrentAccountID();
+        final long currentUser = SharedPreferenceHelper.getInstance().getCurrentAccountID();
         final User sender = message.getSenderId() == currentUser ? message.getRecipient() : message.getSender();
         st.bindLong(1, sender.getId());
         st.bindString(2, sender.getName());
@@ -368,7 +368,7 @@ public final class DBMgr {
         final StringBuilder queryCase = new StringBuilder("UPDATE " + DBHelper.TABLE_CONVERSATIONS +
                 " SET unread_count = CASE userID");
         final StringBuilder queryWhere = new StringBuilder(" END WHERE recipientID = ");
-        queryWhere.append(PreferenceMgr.getInstance().getCurrentAccountID());
+        queryWhere.append(SharedPreferenceHelper.getInstance().getCurrentAccountID());
         queryWhere.append(" AND userID in (");
 
         for (int i = 0; i < messagesCount.size(); ++i) {
@@ -388,7 +388,7 @@ public final class DBMgr {
 
 
     public List<ConversationElement> getConversations() {
-        final Cursor cursor = db.query(DBHelper.TABLE_CONVERSATIONS, null, "recipientID = " + PreferenceMgr.getInstance().getCurrentAccountID(), null, null, null, "lastDate DESC");
+        final Cursor cursor = db.query(DBHelper.TABLE_CONVERSATIONS, null, "recipientID = " + SharedPreferenceHelper.getInstance().getCurrentAccountID(), null, null, null, "lastDate DESC");
         final List<ConversationElement> conversations = new ArrayList<>(cursor.getCount());
         if (cursor.moveToFirst()) {
             do {
@@ -415,8 +415,8 @@ public final class DBMgr {
      */
     public List<MessageElement> getMessages(final long senderID, final int limit) {
         final Cursor cursor = db.query(DBHelper.TABLE_MESSAGES, null,
-                "( recipientID = " + PreferenceMgr.getInstance().getCurrentAccountID() + "AND senderID = " + senderID + " ) OR ( " +
-                        "recipientID = " + senderID + " AND senderID = " + PreferenceMgr.getInstance().getCurrentAccountID() + " )",
+                "( recipientID = " + SharedPreferenceHelper.getInstance().getCurrentAccountID() + "AND senderID = " + senderID + " ) OR ( " +
+                        "recipientID = " + senderID + " AND senderID = " + SharedPreferenceHelper.getInstance().getCurrentAccountID() + " )",
                 null, null, null, "lastDate DESC", limit != 0 ? Integer.toString(limit) : "");
         final List<MessageElement> messages = new ArrayList<>(cursor.getCount());
         if (cursor.moveToFirst()) {
