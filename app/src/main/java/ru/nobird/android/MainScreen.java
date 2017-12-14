@@ -15,7 +15,7 @@ public class MainScreen extends AppCompatActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        Util.initMgr(this);
+        FragmentMgr.init(this);
         FragmentMgr.getInstance().attach(this);
 
         super.onCreate(savedInstanceState);
