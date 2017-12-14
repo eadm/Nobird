@@ -2,7 +2,6 @@ package ru.nobird.android;
 
 import android.content.Context;
 import android.os.IBinder;
-import android.support.v7.app.AppCompatActivity;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -14,23 +13,22 @@ import java.util.List;
 import ru.nobird.android.broadcast.BroadcastMgr;
 import ru.nobird.android.data.FontMgr;
 import ru.nobird.android.data.ImageMgr;
-import ru.nobird.android.data.PreferenceMgr;
+import ru.nobird.android.data.SharedPreferenceHelper;
 import ru.nobird.android.data.database.DBMgr;
 import ru.nobird.android.data.twitter.TwitterMgr;
-import ru.nobird.android.fragment.implementation.FragmentMgr;
 import ru.nobird.android.notification.NotificationMgr;
 
 public final class Util {
 
-    public static void initMgr(final AppCompatActivity context) {
+    public static void initMgr(final Context context) {
         BroadcastMgr.init();
         DBMgr.init(context);
         FontMgr.init(context);
         ImageMgr.init(context);
         TwitterMgr.init();
         NotificationMgr.init(context);
-        PreferenceMgr.init(context);
-        FragmentMgr.init(context);
+        SharedPreferenceHelper.init(context);
+//        FragmentMgr.init(context);
     }
 
     private static char[] numberShortcuts = { 0, 'k', 'm', 'b'};

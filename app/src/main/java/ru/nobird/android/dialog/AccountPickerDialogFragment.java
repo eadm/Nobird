@@ -12,7 +12,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import ru.nobird.android.R;
-import ru.nobird.android.data.PreferenceMgr;
+import ru.nobird.android.data.SharedPreferenceHelper;
 import ru.nobird.android.data.database.DBMgr;
 import ru.nobird.android.data.types.AccountElement;
 import ru.nobird.android.fragment.LoginFragment;
@@ -66,7 +66,7 @@ public class AccountPickerDialogFragment extends DialogFragment implements Dialo
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
         if (which >= 0) {
-            PreferenceMgr.getInstance().setCurrentAccountID(adapter.getItemId(which));
+            SharedPreferenceHelper.getInstance().setCurrentAccountID(adapter.getItemId(which));
             FragmentMgr.getInstance().replaceFragment(0, new Home(), false);
 //            Log.d(TAG, ((AccountElement)adapter.getItem(which)).username);
         } else if (which == -1) {

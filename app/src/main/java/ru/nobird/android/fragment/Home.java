@@ -21,7 +21,7 @@ import java.lang.ref.WeakReference;
 
 import ru.nobird.android.R;
 import ru.nobird.android.data.ImageMgr;
-import ru.nobird.android.data.PreferenceMgr;
+import ru.nobird.android.data.SharedPreferenceHelper;
 import ru.nobird.android.data.twitter.TwitterMgr;
 import ru.nobird.android.data.types.AccountElement;
 import ru.nobird.android.dialog.AccountPickerDialogFragment;
@@ -84,7 +84,7 @@ public class Home extends Fragment implements View.OnClickListener, NavigationVi
         final View.OnClickListener userClickListener = new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                UserFragment.showUser(PreferenceMgr.getInstance().getCurrentAccountID());
+                UserFragment.showUser(SharedPreferenceHelper.getInstance().getCurrentAccountID());
             }
         };
         nameTextView.setOnClickListener(userClickListener);
