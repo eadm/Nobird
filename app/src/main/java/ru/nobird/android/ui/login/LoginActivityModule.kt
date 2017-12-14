@@ -8,8 +8,6 @@ import ru.nobird.android.di.ActivityScope
 class LoginActivityModule {
 
     @Provides
-    fun provideLoginView(activity: LoginActivity) : LoginView = activity
-
-    @Provides
     fun provideLoginPresenter() : LoginPresenter = LoginPresenterImpl()
+
 }
