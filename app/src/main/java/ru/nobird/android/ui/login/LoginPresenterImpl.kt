@@ -12,4 +12,6 @@ class LoginPresenterImpl : LoginPresenter, PresenterBase<LoginView>() {
         super.attachView(view)
         Log.d(javaClass.canonicalName, "attachView")
     }
+
+    override fun destroy() {}
 }
