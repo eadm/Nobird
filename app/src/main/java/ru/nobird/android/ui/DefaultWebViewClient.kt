@@ -10,10 +10,5 @@ class DefaultWebViewClient(
         private val urlLoadingListener: (String) -> Boolean
 ) : WebViewClient() {
 
-    override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-        url?.let {
-            return urlLoadingListener.invoke(it)
-        }
-        return false
-    }
+    override fun shouldOverrideUrlLoading(view: WebView?, url: String): Boolean = urlLoadingListener.invoke(url)
 }

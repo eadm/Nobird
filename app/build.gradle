@@ -10,7 +10,7 @@ android {
         enabled = true
     }
     defaultConfig {
-        applicationId "ru.nobird.adnroid"
+        applicationId "ru.nobird.android"
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 1

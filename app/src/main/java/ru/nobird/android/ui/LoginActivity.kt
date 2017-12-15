@@ -1,27 +1,19 @@
-package ru.nobird.android.ui.login
+package ru.nobird.android.ui
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
-import android.webkit.WebResourceRequest
+import android.support.v7.app.AppCompatActivity
 import android.webkit.WebView
 import dagger.android.AndroidInjection
 import ru.nobird.android.R
-import ru.nobird.android.core.container.BaseContainerActivity
 import ru.nobird.android.data.twitter.TwitterMgr
-import ru.nobird.android.ui.DefaultWebViewClient
-import javax.inject.Inject
 
 
-class LoginActivity : BaseContainerActivity<LoginContainer>(), LoginView {
+class LoginActivity : AppCompatActivity() {
     private lateinit var authWebView: WebView
 
-    @Inject
-    lateinit var loginContainerFactory: LoginContainerFactory
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this) // Important to inject before super call
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
@@ -42,26 +34,15 @@ class LoginActivity : BaseContainerActivity<LoginContainer>(), LoginView {
             false
         })
 
-        if (savedInstanceState == null)
+        if (savedInstanceState == null) {
             authWebView.loadUrl(authUrl)
-        else
+        } else {
             authWebView.restoreState(savedInstanceState)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        container?.loginPresenter?.attachView(this)
-    }
-
-    override fun onStop() {
-        container?.loginPresenter?.detachView(this)
-        super.onStop()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         authWebView.saveState(outState)
     }
-
-    override fun getContainerFactory() = loginContainerFactory
 }

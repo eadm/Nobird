@@ -6,15 +6,15 @@ import android.databinding.DataBindingUtil
 import android.net.Uri
 import ru.nobird.android.databinding.ActivitySplashBinding
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.util.Log
 import android.view.View
 import dagger.android.AndroidInjection
+import ru.nobird.android.MainScreen
 import ru.nobird.android.R
 import ru.nobird.android.core.container.BaseContainerActivity
-import ru.nobird.android.data.SharedPreferenceHelper
 import ru.nobird.android.data.twitter.TwitterMgr
-import ru.nobird.android.ui.home.HomeActivity
-import ru.nobird.android.ui.login.LoginActivity
+import ru.nobird.android.ui.LoginActivity
 import javax.inject.Inject
 
 /**
@@ -35,8 +35,6 @@ class SplashActivity : BaseContainerActivity<SplashContainer>(), SplashView {
         AndroidInjection.inject(this) // Important to inject before super call
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
-
-        Log.d(javaClass.canonicalName, container.toString())
     }
 
     private fun showLoginScreen(url: Uri) {
@@ -46,7 +44,7 @@ class SplashActivity : BaseContainerActivity<SplashContainer>(), SplashView {
     }
 
     private fun showHomeScreen() {
-        startActivity(Intent(this, HomeActivity::class.java))
+        startActivity(Intent(this, MainScreen::class.java))
     }
 
     override fun onStart() {
@@ -65,13 +63,14 @@ class SplashActivity : BaseContainerActivity<SplashContainer>(), SplashView {
                 data?.let {
                     container?.splashPresenter?.authWithCode(it.data.getQueryParameter(TwitterMgr.OAUTH_VERIFIER))
                 }
-            } else
+            } else {
                 onNetworkError()
+            }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    override fun setUrl(url: String) = showLoginScreen(Uri.parse(url))
+    override fun showLoginScreen(url: String) = showLoginScreen(Uri.parse(url))
 
     override fun onSuccess() = showHomeScreen()
 
@@ -79,9 +78,7 @@ class SplashActivity : BaseContainerActivity<SplashContainer>(), SplashView {
         binding.accountFragmentProcessing.visibility = View.VISIBLE
     }
 
-    override fun onNetworkError() {
-        Log.d(javaClass.canonicalName, "Network error")
-    }
+    override fun onNetworkError() = Snackbar.make(binding.root, R.string.error_twitter_api, Snackbar.LENGTH_LONG).show()
 
     override fun getContainerFactory() = splashContainerFactory
 }
