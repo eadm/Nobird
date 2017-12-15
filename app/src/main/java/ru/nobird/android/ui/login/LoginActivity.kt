@@ -41,7 +41,11 @@ class LoginActivity : BaseContainerActivity<LoginContainer>(), LoginView {
             }
             false
         })
-        authWebView.loadUrl(authUrl)
+
+        if (savedInstanceState == null)
+            authWebView.loadUrl(authUrl)
+        else
+            authWebView.restoreState(savedInstanceState)
     }
 
     override fun onStart() {
@@ -52,6 +56,11 @@ class LoginActivity : BaseContainerActivity<LoginContainer>(), LoginView {
     override fun onStop() {
         container?.loginPresenter?.detachView(this)
         super.onStop()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        authWebView.saveState(outState)
     }
 
     override fun getContainerFactory() = loginContainerFactory
