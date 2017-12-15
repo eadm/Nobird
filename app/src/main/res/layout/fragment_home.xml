@@ -78,7 +78,7 @@
             android:clickable="true"
             android:src="@mipmap/tweet"
 
-            app:layout_behavior="ru.eadm.nobird.design.FloatingActionButtonRecyclerViewBehavior"
+            app:layout_behavior=".design.FloatingActionButtonRecyclerViewBehavior"
 
             app:fabSize="normal"
             app:backgroundTint="@color/colorPrimary"

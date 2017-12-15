@@ -4,15 +4,17 @@ import android.app.Application
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import ru.nobird.android.ui.login.LoginActivityComponent
+import ru.nobird.android.ui.splash.SplashActivityComponent
 import javax.inject.Singleton
 
 @Module
-(subcomponents = arrayOf(LoginActivityComponent::class))
+(subcomponents = arrayOf(
+        SplashActivityComponent::class
+))
 abstract class AppModule {
 
     @Provides
     @Singleton
-    fun provideContext(app: Application) : Context = app
+    fun provideContext(app: Application): Context = app
 
 }

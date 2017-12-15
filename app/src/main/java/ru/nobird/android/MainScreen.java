@@ -24,11 +24,7 @@ public class MainScreen extends AppCompatActivity {
         NotificationMgr.getInstance().attach(this, findViewById(R.id.fragment_container));
 
         if (savedInstanceState == null) {
-            if (SharedPreferenceHelper.getInstance().getLong(SharedPreferenceHelper.CURRENT_ACCOUNT_ID) != 0) {
-                FragmentMgr.getInstance().addFragment(0, new Home(), false);
-            } else {
-                FragmentMgr.getInstance().addFragment(0, new LoginFragment(), false);
-            }
+            FragmentMgr.getInstance().addFragment(0, new Home(), false);
         }
     }
 
