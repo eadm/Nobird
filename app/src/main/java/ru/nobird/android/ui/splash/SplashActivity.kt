@@ -44,7 +44,10 @@ class SplashActivity : BaseContainerActivity<SplashContainer>(), SplashView {
     }
 
     private fun showHomeScreen() {
-        startActivity(Intent(this, MainScreen::class.java))
+        val intent = Intent(this, MainScreen::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
     }
 
     override fun onStart() {
