@@ -2,14 +2,14 @@ package ru.nobird.android.ui.login
 
 import android.os.Bundle
 import dagger.android.AndroidInjection
-import ru.nobird.android.core.presenter.BasePresenterActivity
+import ru.nobird.android.core.presenter.BaseContainerActivity
 import javax.inject.Inject
 
 
-class LoginActivity : BasePresenterActivity<LoginPresenter, LoginView>(), LoginView {
+class LoginActivity : BaseContainerActivity<LoginContainer>(), LoginView {
 
     @Inject
-    lateinit var loginPresenterFactory: LoginPresenterFactory
+    lateinit var loginContainerFactory: LoginContainerFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this) // Important to inject before super call
@@ -18,13 +18,13 @@ class LoginActivity : BasePresenterActivity<LoginPresenter, LoginView>(), LoginV
 
     override fun onStart() {
         super.onStart()
-        presenter?.attachView(this)
+        container?.loginPresenter?.attachView(this)
     }
 
     override fun onStop() {
-        presenter?.detachView(this)
+        container?.loginPresenter?.detachView(this)
         super.onStop()
     }
 
-    override fun getPresenterFactory() = loginPresenterFactory
+    override fun getContainerFactory() = loginContainerFactory
 }
