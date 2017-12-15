@@ -1,6 +1,6 @@
 package ru.nobird.android.ui.login
 
-import ru.nobird.android.core.presenter.ContainerFactory
+import ru.nobird.android.core.container.ContainerFactory
 import javax.inject.Inject
 
 /**

@@ -3,8 +3,8 @@ package ru.nobird.android.core.loader
 import android.content.Context
 import android.support.v4.content.Loader
 
-import ru.nobird.android.core.presenter.Container
-import ru.nobird.android.core.presenter.ContainerFactory
+import ru.nobird.android.core.container.Container
+import ru.nobird.android.core.container.ContainerFactory
 
 /**
  * Created by lytr777 on 15/12/2017.

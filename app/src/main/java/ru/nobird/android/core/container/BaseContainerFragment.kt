@@ -1,4 +1,4 @@
-package ru.nobird.android.core.presenter
+package ru.nobird.android.core.container
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
